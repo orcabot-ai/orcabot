@@ -1,0 +1,21 @@
+# Local octo-spec standards and generated agent integrations
+/.octospec/
+/.claude/
+/AGENTS.md
+/CLAUDE.md
+/.github/PULL_REQUEST_TEMPLATE.md
+
+# Local configuration and credentials
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Dependencies and generated output
+node_modules/
+dist/
+build/
+coverage/
+*.log
+.DS_Store
