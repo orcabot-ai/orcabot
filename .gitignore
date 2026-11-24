@@ -19,3 +19,13 @@ build/
 coverage/
 *.log
 .DS_Store
+
+# Private runtime state and local databases
+.orcabot/
+*.sqlite
+*.sqlite-*
+*.tsbuildinfo
+.playwright/
+
+# TanStack build cache
+.tanstack/

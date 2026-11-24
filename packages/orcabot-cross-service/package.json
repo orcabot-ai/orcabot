@@ -1,0 +1,31 @@
+{
+  "name": "orcabot-cross-service",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Native current-user service lifecycle backends for Orcabot",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE",
+    "UPSTREAM.md"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "iconv-lite": "0.7.3"
+  },
+  "engines": {
+    "node": "^24.0.0 || ^26.0.0"
+  },
+  "license": "Apache-2.0"
+}

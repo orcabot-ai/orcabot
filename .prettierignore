@@ -1,0 +1,10 @@
+pnpm-lock.yaml
+.octospec/
+.claude/
+AGENTS.md
+CLAUDE.md
+node_modules/
+**/dist/
+.orcabot/
+
+apps/web/src/routeTree.gen.ts

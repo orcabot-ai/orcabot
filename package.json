@@ -1,0 +1,29 @@
+{
+  "name": "orcabot",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "packageManager": "pnpm@11.25.0",
+  "engines": {
+    "node": "^24.0.0 || ^26.0.0"
+  },
+  "scripts": {
+    "dev": "pnpm build:packages && concurrently -k \"pnpm --filter @orcabot/server dev\" \"pnpm --filter @orcabot/web dev\"",
+    "build:packages": "pnpm --filter \"./packages/**\" -r build",
+    "build": "pnpm build:packages && pnpm --filter \"./apps/**\" -r build",
+    "typecheck": "pnpm build:packages && pnpm -r typecheck && tsc -p tsconfig.tests.json",
+    "test": "pnpm build:packages && tsx --test tests/*.test.ts tests/cross-service/*.test.js",
+    "start": "node apps/server/dist/cli.js",
+    "check": "pnpm typecheck && pnpm test && pnpm build",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "board": "node apps/server/dist/board-cli.js"
+  },
+  "devDependencies": {
+    "@types/node": "^26.0.0",
+    "concurrently": "^9.2.1",
+    "prettier": "3.9.10",
+    "tsx": "^4.20.0",
+    "typescript": "^6.0.3"
+  }
+}
