@@ -397,19 +397,62 @@ try {
   const command = (path, body) =>
     request(path, { commandId: crypto.randomUUID(), ...body });
   const fixtureAgent = (await request("/state")).agents[0];
-  const work = await command("/board/work", {
-    title: "Prepare the release brief",
-    goal: "Summarize the changes, call out risks, and list the checks needed before release.",
-    criteria: [
-      "Include a concise summary",
-      "List risks and verification steps",
-    ],
-    agentId: fixtureAgent.id,
-    channelId: "general",
-    definitionId: "standard-delivery",
-    definitionVersion: 1,
+  await ev("sessionStorage.setItem('orcabot.locale','en')");
+  await S("Emulation.setDeviceMetricsOverride", {
+    width: 1440,
+    height: 900,
+    deviceScaleFactor: 1,
+    mobile: false,
   });
+  await go("/work");
+  await wait('document.body.textContent.includes("New task")');
+  const beforeCreate = (await request("/board")).items.length;
+  await click("New task");
+  await wait('!!document.querySelector(".task-create-panel")');
+  await field("Title", "Unsaved task");
+  await click("Cancel");
+  await wait('!document.querySelector("[role=dialog]")');
+  assert.equal((await request("/board")).items.length, beforeCreate);
+  await click("New task");
+  await wait('!!document.querySelector(".task-create-panel")');
+  assert.equal(
+    await ev('document.querySelector(".task-create-form input").value'),
+    "",
+  );
+  assert.equal(
+    await ev('document.querySelector(".task-create-form details").open'),
+    false,
+  );
+  await field("Title", "Prepare the release brief");
+  await field(
+    "Goal",
+    "Summarize the changes, call out risks, and list the checks needed before release.",
+  );
+  await field(
+    "Acceptance criteria",
+    "Include a concise summary\nList risks and verification steps",
+  );
+  await click("Create task");
+  await wait(
+    'location.pathname.startsWith("/work/")&&!document.querySelector("[role=dialog]")',
+  );
+  const work = (await request("/board")).items.find(
+    (w) => w.title === "Prepare the release brief",
+  );
+  assert.ok(work);
+  assert.equal(work.agentId, fixtureAgent.id);
+  assert.equal(work.channelId, "general");
+  reports.push(
+    "Task creation sheet keeps advanced options collapsed, Cancel saves nothing and submission opens the real task",
+  );
   let detail = await request("/board/work/" + work.id);
+  await wait(
+    'document.querySelector(".work-events")?.textContent.includes("Task created")',
+  );
+  assert.equal(
+    await ev('document.querySelector(".event-technical").open'),
+    false,
+  );
   const claimed = await command("/board/tasks/" + detail.task.id + "/claim", {
     expectedRevision: detail.task.revision,
   });
@@ -677,17 +720,32 @@ try {
   reports.push(
     "home request returns to its original conversation and remains discoverable without becoming an accepted delivery",
   );
-  const makeTask = async (title) =>
+  const makeTask = async (title, goal = "Deliver a verified fixture result") =>
     await command("/board/work", {
       title,
-      goal: "Deliver a verified fixture result",
+      goal,
       criteria: ["Result is recorded"],
       agentId: fixtureAgent.id,
       channelId: "general",
       definitionId: "standard-delivery",
       definitionVersion: 1,
     });
-  await makeTask("Older unfinished task");
+  const shortMultilineGoal = Array.from(
+    { length: 12 },
+    (_, i) => `Step ${i + 1}: verify`,
+  ).join("\n");
+  const olderTask = await makeTask("Older unfinished task", shortMultilineGoal);
+  await go("/work/" + olderTask.id);
+  await wait('!!document.querySelector(".work-context .board-prose")');
+  assert.ok(
+    await ev(
+      "(()=>{const e=document.querySelector('.work-context .board-prose');return e.clientHeight>=e.scrollHeight-1})()",
+    ),
+    "Short multiline goals must not be clipped without expansion",
+  );
+  reports.push(
+    "Short multiline task goals remain fully readable when no expansion control is offered",
+  );
   for (let i = 0; i < 20; i++) {
     const work = await makeTask("Accepted recent task " + i);
     let d = await request("/board/work/" + work.id);
@@ -842,6 +900,27 @@ try {
   assert.equal(await ev("location.pathname"), "/work/" + work.id);
   reports.push(
     "Landing unlock rejects an invalid key and preserves the original protected task URL after retry",
+  );
+  await command("/board/channels/general/archive", { archived: true });
+  await go("/work");
+  await wait('document.body.textContent.includes("New task")');
+  await click("New task");
+  await wait('!!document.querySelector(".task-create-panel [role=alert]")');
+  assert.match(
+    await ev(
+      'document.querySelector(".task-create-panel [role=alert]").textContent',
+    ),
+    /No active channels/,
+  );
+  assert.equal(
+    await ev(
+      'document.querySelector(".task-create-form button.primary").disabled',
+    ),
+    true,
+  );
+  await click("Cancel");
+  reports.push(
+    "Task sheet explains missing active channels before submission instead of hiding invalid required configuration",
   );
   assert.deepEqual(exceptions, []);
   console.log(

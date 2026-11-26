@@ -34,7 +34,7 @@ Agent、本机连接、远端连接三个配置变体按照第一张生成图整
 
 ## 剩余工作
 
-[任务三屏实际图稿](references/tasks-gemini.jpg)已生成，对应列表、详情与创建界面，接下来按图实现。[项目三屏实际图稿](references/projects-gemini.jpg)也已下载，等待实现。其他页面已完成文字审阅，没有标为完成。
+[任务三屏实际图稿](references/tasks-gemini.jpg)已生成，对应列表、详情与创建界面，已按图实现列表、交付/活动详情和右侧创建抽屉，见[任务实现说明](references/task-review.md)。[项目三屏实际图稿](references/projects-gemini.jpg)也已下载，等待实现。其他页面已完成文字审阅，没有标为完成。
 
 后续重点包括结果优先的对话、可理解的任务活动、明确的待决策入口和统一弹窗页脚。每个核心页面都获得实际图稿、完成整改和验证后，整个流程才算完成。[个人助手方向](../../zh-CN/personal-agent-experience.md)说明了统一的产品模型。
 

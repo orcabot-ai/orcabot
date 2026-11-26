@@ -608,7 +608,7 @@ export function App() {
               {automationMode
                 ? t(automationMode === "projects" ? "Projects" : "Routines")
                 : workMode
-                  ? t("Work items")
+                  ? t("Tasks")
                   : (selected?.title ?? t("Home"))}
             </span>
           </div>
@@ -644,7 +644,7 @@ export function App() {
                 ? "Projects"
                 : automationMode === "routines"
                   ? "Routines"
-                  : "Work items"
+                  : "Tasks"
               : conversationId
                 ? "Conversation history"
                 : "Your assistant",

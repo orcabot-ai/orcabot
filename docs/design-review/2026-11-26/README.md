@@ -51,7 +51,7 @@ The image quota reset. The [actual home/landing comparison image](references/per
 
 ## Remaining work
 
-The [actual task comparison image](references/tasks-gemini.jpg) covers the list, task details and creation surface; these implementations are next. The [project comparison image](references/projects-gemini.jpg) has also been downloaded; implementation is pending. Remaining surfaces have text critiques and are not marked complete.
+The [actual task comparison image](references/tasks-gemini.jpg) covers the list, task details and creation surface; these surfaces now follow its list, delivery/timeline and right-side creation layout. See [task implementation decisions](references/task-review.md). The [project comparison image](references/projects-gemini.jpg) has also been downloaded; implementation is pending. Remaining surfaces have text critiques and are not marked complete.
 
 Follow-ups include a result-first conversation, human-readable task activity, a clearer decision queue and compact dialog footers. The completion gate requires actual images and verification for every core page, not only setup and Home. The [personal assistant direction](../../en/personal-agent-experience.md) describes this shared product model.
 

@@ -8,7 +8,7 @@
       "before": "before/01-unlock.jpg",
       "geminiThread": "https://gemini.google.com/app/09cf8496cd38905e",
       "generatedImage": "references/personal-home-landing-gemini.jpg",
-      "status": "implemented",
+      "status": "verified",
       "changes": [
         "Personal assistant home places the real composer above progress, decisions and accepted deliveries",
         "Completed conversations remain discoverable without becoming accepted business work",
@@ -22,7 +22,7 @@
         "Actual light/dark and mobile screenshots; independent standards and spec phase reviews approved",
         "pnpm e2e:21checks passed, including actual particle pixel changes, stable manual pause and reduced-motion fallback"
       ],
-      "commit": null,
+      "commit": "ea0ba84f5fd7c80279584335950640b610849c82",
       "critique": "references/personal-home-review.md"
     },
     {
@@ -30,7 +30,7 @@
       "before": "before/02-new-thread.jpg",
       "geminiThread": "https://gemini.google.com/app/09cf8496cd38905e",
       "generatedImage": "references/personal-home-landing-gemini.jpg",
-      "status": "implemented",
+      "status": "verified",
       "changes": [
         "Personal assistant home places the real composer above progress, decisions and accepted deliveries",
         "Completed conversations remain discoverable without becoming accepted business work",
@@ -44,7 +44,7 @@
         "Actual light/dark and mobile screenshots; independent standards and spec phase reviews approved",
         "pnpm e2e:21checks passed, including actual particle pixel changes, stable manual pause and reduced-motion fallback"
       ],
-      "commit": null,
+      "commit": "ea0ba84f5fd7c80279584335950640b610849c82",
       "critique": "references/personal-home-review.md"
     },
     {
@@ -64,36 +64,69 @@
       "before": "before/04-work-list-empty.jpg",
       "geminiThread": "https://gemini.google.com/app/09cf8496cd38905e",
       "generatedImage": "references/tasks-gemini.jpg",
-      "status": "reviewed-with-image",
-      "changes": [],
-      "after": null,
-      "verification": [],
+      "status": "implemented",
+      "changes": [
+        "Task creation uses a focused Base UI side sheet with Cancel and one primary action",
+        "Channel and workflow are progressively disclosed; missing active-channel prerequisites stay visible",
+        "List rows show actual update dates; readable activity retains protocol details on demand",
+        "Review approval is stage-neutral for custom multi-stage workflows; acceptance remains terminal business state"
+      ],
+      "after": "after/04-tasks-light.png",
+      "verification": [
+        "Web typecheck and build passed",
+        "Browser fixture covers actual creation, Cancel without persistence, collapsed advanced settings and original task identity",
+        "Existing workflow evidence/review behavior and responsive context rail remain covered; screenshots retained",
+        "pnpm e2e:24checks passed; missing active-channel prerequisite explicitly covered"
+      ],
       "commit": null,
-      "critique": "references/workspace-review.md"
+      "critique": "references/workspace-review.md",
+      "followUpReview": "references/task-review.md"
     },
     {
       "id": "work-create",
       "before": "before/11-create-work.jpg",
       "geminiThread": "https://gemini.google.com/app/09cf8496cd38905e",
       "generatedImage": "references/tasks-gemini.jpg",
-      "status": "reviewed-with-image",
-      "changes": [],
-      "after": null,
-      "verification": [],
+      "status": "implemented",
+      "changes": [
+        "Task creation uses a focused Base UI side sheet with Cancel and one primary action",
+        "Channel and workflow are progressively disclosed; missing active-channel prerequisites stay visible",
+        "List rows show actual update dates; readable activity retains protocol details on demand",
+        "Review approval is stage-neutral for custom multi-stage workflows; acceptance remains terminal business state"
+      ],
+      "after": "after/11-create-task-light.png",
+      "verification": [
+        "Web typecheck and build passed",
+        "Browser fixture covers actual creation, Cancel without persistence, collapsed advanced settings and original task identity",
+        "Existing workflow evidence/review behavior and responsive context rail remain covered; screenshots retained",
+        "pnpm e2e:24checks passed; missing active-channel prerequisite explicitly covered"
+      ],
       "commit": null,
-      "critique": "references/workspace-review.md"
+      "critique": "references/workspace-review.md",
+      "followUpReview": "references/task-review.md"
     },
     {
       "id": "work-detail",
       "before": "before/12-work-detail.jpg",
       "geminiThread": "https://gemini.google.com/app/09cf8496cd38905e",
       "generatedImage": "references/tasks-gemini.jpg",
-      "status": "reviewed-with-image",
-      "changes": [],
-      "after": null,
-      "verification": [],
+      "status": "implemented",
+      "changes": [
+        "Task creation uses a focused Base UI side sheet with Cancel and one primary action",
+        "Channel and workflow are progressively disclosed; missing active-channel prerequisites stay visible",
+        "List rows show actual update dates; readable activity retains protocol details on demand",
+        "Review approval is stage-neutral for custom multi-stage workflows; acceptance remains terminal business state"
+      ],
+      "after": "after/12-task-detail-light.png",
+      "verification": [
+        "Web typecheck and build passed",
+        "Browser fixture covers actual creation, Cancel without persistence, collapsed advanced settings and original task identity",
+        "Existing workflow evidence/review behavior and responsive context rail remain covered; screenshots retained",
+        "pnpm e2e:24checks passed; missing active-channel prerequisite explicitly covered"
+      ],
       "commit": null,
-      "critique": "references/workspace-review.md"
+      "critique": "references/workspace-review.md",
+      "followUpReview": "references/task-review.md"
     },
     {
       "id": "projects",
@@ -271,7 +304,7 @@
       "before": "before/01-unlock.jpg",
       "geminiThread": "https://gemini.google.com/app/09cf8496cd38905e",
       "generatedImage": "references/personal-home-landing-gemini.jpg",
-      "status": "implemented",
+      "status": "verified",
       "changes": [
         "Personal assistant home places the real composer above progress, decisions and accepted deliveries",
         "Completed conversations remain discoverable without becoming accepted business work",
@@ -285,7 +318,7 @@
         "Actual light/dark and mobile screenshots; independent standards and spec phase reviews approved",
         "pnpm e2e:21checks passed, including actual particle pixel changes, stable manual pause and reduced-motion fallback"
       ],
-      "commit": null,
+      "commit": "ea0ba84f5fd7c80279584335950640b610849c82",
       "critique": "references/personal-home-review.md"
     }
   ],
