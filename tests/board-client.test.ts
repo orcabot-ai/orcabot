@@ -12,7 +12,14 @@ async function cli(url: string, args: string[], input?: unknown) {
     (resolve, reject) => {
       const child = spawn(
         process.execPath,
-        ["--import", "tsx", "apps/server/src/board-cli.ts", ...args],
+        [
+          "--import",
+          "tsx",
+          "apps/cli/src/index.ts",
+          "--json",
+          "board",
+          ...args,
+        ],
         {
           env: { ...process.env, ORCABOT_URL: url, ORCABOT_TOKEN: token },
           stdio: ["pipe", "pipe", "pipe"],
@@ -124,7 +131,8 @@ test("worker CLI and SDK complete the same headless delivery loop without persis
       note: "Stale",
     });
     assert.equal(invalid.status, 1);
-    assert.equal(JSON.parse(invalid.stderr).error, "STALE_WORK_REVISION");
+    assert.equal(JSON.parse(invalid.stdout).error.code, "STALE_WORK_REVISION");
+    assert.equal(invalid.stderr, "");
     assert.equal(invalid.stderr.includes(token), false);
   } finally {
     await s.close();

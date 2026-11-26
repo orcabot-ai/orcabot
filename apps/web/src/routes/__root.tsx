@@ -17,7 +17,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         { name: "viewport", content: "width=device-width, initial-scale=1" },
         { title: "Orcabot — Agent workspace" },
       ],
-      links: [{ rel: "stylesheet", href: css }],
+      links: [
+        { rel: "stylesheet", href: css },
+        { rel: "icon", type: "image/png", href: "/favicon.png" },
+      ],
     }),
     component: Root,
     shellComponent: Document,

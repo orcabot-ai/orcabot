@@ -16,5 +16,10 @@
   "dependencies": {
     "orcabot-contracts": "workspace:*",
     "@mininglamp-oss/octo-runtime-client": "1.1.15"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/orcabot-ai/orcabot.git"
   }
 }

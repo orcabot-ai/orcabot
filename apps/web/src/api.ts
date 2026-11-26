@@ -26,6 +26,22 @@ export function friendly(error: unknown): string {
   if (!(error instanceof Error))
     return "Something went wrong. Please try again.";
   const messages: Record<string, string> = {
+    STALE_THREAD_REVISION:
+      "This thread changed. Refresh it before saving again.",
+    STALE_ROUTINE_REVISION:
+      "This routine changed. Refresh it before trying again.",
+    ROUTINE_LIMIT:
+      "The routine limit has been reached. Pause an enabled routine before creating another.",
+    PROJECT_WORKSPACE_MISMATCH:
+      "This agent belongs to another execution workspace.",
+    THREAD_ARCHIVED:
+      "This thread is archived. Restore it before starting new work.",
+    ROUTINE_EXECUTION_UNKNOWN:
+      "Investigate the unknown execution before running again.",
+    ROUTINE_THREAD_BUSY:
+      "This thread already has active work. Wait for it to finish.",
+    ROUTINE_BUDGET_EXHAUSTED:
+      "This routine has reached its run budget or end time.",
     STALE_WORK_REVISION:
       "This item changed. Refresh it and review the latest state before trying again.",
     CLAIM_LOST:

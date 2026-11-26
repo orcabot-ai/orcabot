@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { Engine } from "../apps/server/src/engine.js";
+import { Engine } from "../apps/worker/src/engine.js";
 import { Store } from "../packages/orcabot-store/src/index.js";
 import { completed, invocation } from "./helpers.js";
 

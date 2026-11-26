@@ -1,3 +1,5 @@
+import { Automation } from "./Automation.js";
+import { BrandMark } from "./BrandMark.js";
 import { Board } from "./Board.js";
 import { LanguageControl, useI18n } from "./i18n.js";
 import { useCallback, useRef, useState } from "react";
@@ -61,7 +63,14 @@ export function App() {
   const client = useQueryClient();
   const navigate = useNavigate();
   const { conversationId, workId } = useParams({ strict: false });
-  const workMode = useLocation().pathname.startsWith("/work");
+  const path = useLocation().pathname;
+  const automationMode =
+    path === "/projects"
+      ? "projects"
+      : path === "/routines"
+        ? "routines"
+        : null;
+  const workMode = path.startsWith("/work") || !!automationMode;
   const [error, setError] = useState("");
   const [setup, setSetup] = useState(false);
   const [attention, setAttention] = useState(false);
@@ -213,11 +222,13 @@ export function App() {
       (a) => a.id === (selected?.agentId ?? agentId),
     ),
     target = state.targets.find((t) => t.id === agent?.targetId);
-  const busy = runs.some((r) => active(r.status) || r.status === "unknown");
+  const busy =
+    !!selected?.archived ||
+    runs.some((r) => active(r.status) || r.status === "unknown");
   if (!ready)
     return (
       <div className="gate">
-        <div className="brand-mark">◒</div>
+        <BrandMark />
         <p className="muted">{t("Opening your workspace…")}</p>
       </div>
     );
@@ -229,7 +240,7 @@ export function App() {
           <ThemeControl />
         </div>
         <section className="unlock-card">
-          <div className="brand-mark">◒</div>
+          <BrandMark />
           <div className="eyebrow mt-7">{t("YOUR AGENTS. ONE WORKSPACE.")}</div>
           <h1>{t("Welcome to Orcabot")}</h1>
           <p className="muted mt-3 mb-7">
@@ -287,7 +298,7 @@ export function App() {
       {sidebar && (
         <aside className="sidebar">
           <div className="brand">
-            <div className="brand-mark small">◒</div>
+            <BrandMark small />
             <span>Orcabot</span>
             <span className="preview-tag">{t("PREVIEW")}</span>
             <button
@@ -321,7 +332,7 @@ export function App() {
             <span>↗</span>
           </button>
           <button
-            className={`work-nav ${workMode ? "selected" : ""}`}
+            className={`work-nav ${path.startsWith("/work") ? "selected" : ""}`}
             onClick={() => {
               void navigate({ to: "/work" });
               if (window.matchMedia("(max-width: 600px)").matches)
@@ -330,6 +341,20 @@ export function App() {
           >
             <ClipboardList size={16} />
             {t("Work items")}
+          </button>
+          <button
+            className={`work-nav ${automationMode === "projects" ? "selected" : ""}`}
+            onClick={() => void navigate({ to: "/projects" })}
+          >
+            <ClipboardList size={16} />
+            {t("Projects")}
+          </button>
+          <button
+            className={`work-nav ${automationMode === "routines" ? "selected" : ""}`}
+            onClick={() => void navigate({ to: "/routines" })}
+          >
+            <BellDot size={16} />
+            {t("Routines")}
           </button>
           <div className="section-heading">
             {t("CONVERSATIONS")}
@@ -423,7 +448,9 @@ export function App() {
           aria-label={t("Conversation history")}
           tabIndex={0}
         >
-          {workMode ? (
+          {automationMode ? (
+            <Automation mode={automationMode} state={state} />
+          ) : workMode ? (
             <Board
               state={state}
               workId={workId}

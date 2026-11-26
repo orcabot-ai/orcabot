@@ -1,3 +1,4 @@
+import { initializeAutomation } from "./automation.js";
 import { initializeBoard } from "./board.js";
 import { DatabaseSync } from "node:sqlite";
 import { randomUUID, createHash } from "node:crypto";
@@ -43,7 +44,7 @@ export class Store {
       "PRAGMA journal_mode=WAL; PRAGMA foreign_keys=ON; PRAGMA busy_timeout=5000;",
     );
     const version = this.db.prepare("PRAGMA user_version").get() as Row;
-    if (Number(version.user_version) > 3)
+    if (Number(version.user_version) > 4)
       throw new AppError("DATABASE_VERSION_TOO_NEW", 500);
     this.db.exec(`
       CREATE TABLE IF NOT EXISTS targets (id TEXT PRIMARY KEY, data TEXT NOT NULL);
@@ -61,7 +62,10 @@ export class Store {
       CREATE INDEX IF NOT EXISTS artifacts_run ON artifacts(run_id,ordinal DESC);
 
     `);
-    this.transaction(() => initializeBoard(this.db));
+    this.transaction(() => {
+      initializeBoard(this.db);
+      initializeAutomation(this.db);
+    });
     // Never resubmit an execution whose outcome was not observed before shutdown.
     for (const r of this.db
       .prepare("SELECT data FROM runs WHERE status IN ('running','waiting')")
@@ -147,7 +151,11 @@ export class Store {
     if (!c) throw new AppError("CONVERSATION_NOT_FOUND", 404);
     return c;
   }
-  addConversation(agentId: string, title: string): Conversation {
+  addConversation(
+    agentId: string,
+    title: string,
+    projectId?: string,
+  ): Conversation {
     this.agent(agentId);
     const c = {
       id: randomUUID(),
@@ -155,6 +163,8 @@ export class Store {
       title,
       createdAt: Date.now(),
       sessionId: randomUUID(),
+      ...(projectId ? { projectId } : {}),
+      revision: 0,
     };
     this.db
       .prepare("INSERT INTO conversations VALUES (?,?,?,?)")
@@ -479,3 +489,5 @@ export class Store {
 }
 
 export { BoardStore } from "./board.js";
+
+export { AutomationStore } from "./automation.js";

@@ -1,0 +1,29 @@
+{
+  "name": "orcabot-worker",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "orcabot-contracts": "workspace:*",
+    "orcabot-store": "workspace:*",
+    "orcabot-runtime": "workspace:*",
+    "fastify": "^5.0.0",
+    "@mininglamp-oss/octo-runtime-client": "1.1.15",
+    "zod": "^4.0.0"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/server.d.ts",
+      "import": "./dist/server.js"
+    }
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/orcabot-ai/orcabot.git"
+  }
+}

@@ -16,7 +16,7 @@ const backend = createServiceBackend();
 const spec: ServiceSpec = {
   id: "orcabot.workbench",
   command: "/absolute/path/to/node",
-  args: ["/absolute/path/to/orcabot/apps/server/dist/cli.js"],
+  args: ["/absolute/path/to/orcabot/apps/cli/dist/index.js", "worker", "run"],
   workingDirectory: "/absolute/path/to/orcabot",
   enabled: true,
 };

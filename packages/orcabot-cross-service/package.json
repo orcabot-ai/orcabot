@@ -27,5 +27,9 @@
   "engines": {
     "node": "^24.0.0 || ^26.0.0"
   },
-  "license": "Apache-2.0"
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/orcabot-ai/orcabot.git"
+  }
 }

@@ -1,158 +1,123 @@
+<p align="center"><picture><source media="(prefers-color-scheme: dark)" srcset="apps/web/public/brand/orca-dark.png" /><img src="apps/web/public/brand/orca-light.png" width="150" alt="Orcabot" /></picture></p>
+
 # Orcabot
 
-An execution workbench for agents across machines and clouds, built on OctoRuntime.
+**A task-centered assistant workbench across machines and clouds.**
 
-Orcabot provides the application layer: configure an Agent, choose an execution
-machine, start a conversation, and inspect durable results from a browser.
-OctoRuntime owns harness execution. One control service owns the workspace;
-remote machines expose an authenticated execution bridge rather than synchronizing
-a shared database.
+English · [简体中文](README.zh-CN.md) · [Documentation](docs/en/README.md)
 
-This implementation includes the conversation/execution foundation and an initial
-operational continuity slice: restart observation recovery, operator attention,
-investigation notes and artifact references. The frontend uses TanStack Start,
-Router, Query, Form, Table and Virtual, with React and Tailwind. Both light and dark
-themes are available, along with system appearance. The interface supports
-English and Simplified Chinese; language selection is remembered for the current
-browser tab session, including reloads.
-Business work items now support configured sequential workflows, explicit task
-claims, pinned execution, immutable text evidence, and human acceptance. Open
-`/work` to use the delivery workspace; see [P1 delivery](docs/p1-delivery.md) for the
-API, JSON worker CLI and `orcabot-client` SDK. Automatic planning/activation,
-external channel connectors, scoped worker credentials and the visual workflow
-editor remain later milestones.
+Orcabot brings conversations, execution and reviewed deliverables into one workspace.
+Describe the goal, keep the decisions in a thread, run work on the right machine,
+and review the result against explicit acceptance criteria.
 
-## Run locally
+## What works today
 
-Requires Node.js 24 or 26 and pnpm 11.25.0. SQLite uses Node's built-in `node:sqlite`
-module. Install OctoRuntime and prepare its harness credentials separately.
+- Persistent conversations, streamed execution events, interactions and cancellation.
+- Local and remote execution through OctoRuntime, with automatic local prerequisite setup.
+- Task boards, versioned workflows, exclusive claims, evidence and human accept/reject decisions.
+- Project-scoped persistent threads with rename/archive and workspace boundaries.
+- Bounded standing routines that return results to their original thread.
+- Independent worker and web client; CLI and SDK for headless business commands.
+- English by default, Simplified Chinese, light/dark/system themes and a responsive layout.
+- SQLite persistence and observation recovery using the original execution identity.
+
+Perception connectors, autonomous coordination, A2UI and Electron/DMG distribution are
+planned directions, not features shipped by this repository today. See [product direction](docs/en/product-direction.md).
+
+## Quick start
+
+Requires **Node.js 24 or 26**, **pnpm 11.25.0**, and provider credentials for your chosen
+execution harness. First local startup needs network access, npm and a supported
+current-user service manager.
 
 ```sh
-pnpm install
+git clone https://github.com/orcabot-ai/orcabot.git
+cd orcabot
+pnpm install --frozen-lockfile
 pnpm build
-pnpm start --runtime-endpoint /absolute/path/to/kernel.sock
+pnpm start worker run
 ```
 
-The service binds to `127.0.0.1:4310` and prints a one-time entry URL containing a
-service key in its fragment. Open that URL to exchange the key for an HttpOnly
-session cookie. The browser immediately removes the fragment. No OAuth account
-is required. Keep that URL and stdout private: the key grants execution access.
-
-The workbench can start without a Runtime. Add an execution target in **Configure**,
-then create an Agent with an absolute working directory on that execution machine.
-Choose its harness adapter, optional model, effort level, and MCP configuration.
-The workbench does not create the working directory or install the harness.
-Adapter/model availability comes from your Runtime installation.
-
-### Configuration
-
-The CLI reads environment variables; `.env.example` is documentation, not an
-automatically loaded configuration file. Export values in your shell or process manager.
-
-| Variable                   | Default              | Purpose                                                        |
-| -------------------------- | -------------------- | -------------------------------------------------------------- |
-| `ORCABOT_TOKEN`            | Random on each start | Stable shared key, 32–512 characters                           |
-| `ORCABOT_RUNTIME_ENDPOINT` | Unset                | Local Kernel socket or Windows named pipe                      |
-| `ORCABOT_DATA_DIR`         | `.orcabot`           | Local SQLite database directory                                |
-| `ORCABOT_HOST`             | `127.0.0.1`          | Bind interface                                                 |
-| `ORCABOT_PORT`             | `4310`               | HTTP port                                                      |
-| `ORCABOT_PUBLIC_URL`       | Bound HTTP origin    | Canonical HTTP(S) origin for a reverse proxy or development UI |
-
-CLI flags `--host`, `--port`, `--data-dir`, and `--runtime-endpoint` override their
-matching environment variables. `--help` prints usage. Public URLs must be origins
-without paths or credentials. For remote browser access, bind the required
-interface and put the service behind a trusted HTTPS proxy. This is a shared-key
-operator tool; it does not yet provide separate user accounts or authorization roles.
-
-### Connect another machine
-
-On the execution machine, run a second Orcabot service alongside its local Runtime:
+In another terminal:
 
 ```sh
-export ORCABOT_TOKEN='replace-with-a-stable-random-key-of-at-least-32-characters'
-pnpm start --host 0.0.0.0 --runtime-endpoint /absolute/worker/kernel.sock
+pnpm start web run
 ```
 
-Expose that service through your protected network or HTTPS proxy. In the control
-workbench, create a **Remote service** target using its base URL and key, then create
-an Agent assigned to that target. The Agent's working directory belongs to the
-execution machine. Each service keeps its own database. Remote keys stay on the
-control server and are excluded from browser configuration responses.
+Open **http://127.0.0.1:4320** and enter the service key printed by the worker.
+The API binds to port **4310**. Keep the key and worker stdout private. Set
+`ORCABOT_TOKEN` to preserve the key between restarts. The worker automatically
+prepares its local execution prerequisite; provider login is still required.
 
-OctoRuntime's client uses local IPC. Orcabot's bridge supplies the cross-machine
-HTTP/S transport and preserves run identities, event cursors, interactions, and
-cancellation requests. A cancellation acknowledgement does not establish a terminal
-outcome; the Runtime event stream does.
+For a controller using only remote targets:
+
+```sh
+pnpm start worker run --execution remote
+pnpm start web run --worker-url https://worker.example.com
+```
+
+Configure an execution target and Agent, then start a conversation or create a work
+item at `/work`. Prepare the Agent's working directory on its execution machine.
+A completed execution still needs explicit evidence and review for business acceptance.
+
+## Command line
+
+```sh
+pnpm start --help
+pnpm start version
+pnpm start doctor
+pnpm board list --json
+pnpm board create --input work.json --json
+```
+
+An installed/linked CLI uses `orcabot` in place of `pnpm start`. Configuration is
+through flags and environment variables; `.env.example` is a reference, not an
+automatically loaded file. See [CLI and deployment](docs/en/cli-and-deployment.md).
 
 ## Development
 
 ```sh
-export ORCABOT_PUBLIC_URL=http://127.0.0.1:5173
 pnpm dev
-```
-
-The API runs on port 4310 and Vite on port 5173. Open the printed entry URL for the
-Vite origin. Changes to shared packages require `pnpm build:packages`; application
-sources are watched. Production `pnpm start` serves the built UI and API together.
-
-```sh
 pnpm typecheck
 pnpm test
 pnpm build
 pnpm format:check
+pnpm licenses:report
 ```
 
-The tests use deterministic execution fixtures, two real HTTP services, and the
-published OctoRuntime SDK connected to an IPC protocol fixture. They do not spend
-model credits or claim a live provider integration. See [validation](docs/validation.md).
-
-## Repository
+For Vite development set `ORCABOT_PUBLIC_URL=http://127.0.0.1:5173`; use
+`ORCABOT_EXECUTION=remote` to develop without preparing local execution. API port:
+4310, Vite port: 5173. Production web hosting uses the independent `web run` command.
 
 ```text
-apps/server          HTTP API, execution orchestration, CLI
-apps/web             React + Tailwind workbench
-packages/orcabot-contracts   Validated API and event contracts
-packages/orcabot-store       SQLite conversations, runs, events, continuations
-packages/orcabot-runtime     Public OctoRuntime client and remote bridge transport
-packages/orcabot-workflows   Configurable, versioned transition validation
-packages/orcabot-cross-service Native per-user process lifecycle backends
-packages/orcabot-client        Headless Board API client for CLI and scripts
+apps/cli                     Commander CLI and prerequisite preparation
+apps/worker                  Authenticated API, SQLite and execution control
+apps/web                     React, Tailwind and TanStack workbench
+packages/orcabot-web-server   Static client host and same-origin API proxy
+packages/orcabot-*            Contracts, persistence, workflows, SDK and adapters
 ```
 
-See the [product specification](docs/product-spec.md) for requirements and milestones,
-and [architecture](docs/architecture.md) for ownership and API boundaries.
+## Project status and trust boundary
 
-Execution observations are durable before they are broadcast. Closing a browser
-keeps execution running. An interrupted observation becomes **unknown**, blocks
-another turn in that conversation, and can reconnect using its saved original
-identity and cursor. Recovery never submits the prompt again. Changed Kernel
-instances, expired history and missing identities remain unknown for investigation.
-**Needs attention** gathers unresolved interactions and failures; investigation
-notes acknowledge a particular event revision without changing the execution outcome.
-Run artifacts are unverified references, with no automatic file or URL fetch.
-See [operational continuity](docs/operational-continuity.md) for the exact contract.
+Orcabot is an early-stage OSS project. One service key/session represents one
+trusted operator; independent users, scoped Agent credentials and independent
+reviewer guarantees are not implemented. Use trusted networks or HTTPS ingress for
+remote access. SQLite holds private conversations and configuration secrets.
+Unknown execution outcomes are held for investigation, never silently re-submitted.
 
-SQLite contains configuration secrets and conversation data; protect and back up
-its data directory. History APIs are cursor paginated and long conversations use
-virtual rendering. The **Color theme** selector in the top bar supports Light,
-Dark and System, and remembers the browser preference. See [frontend architecture](docs/frontend.md).
+[Projects and routines](docs/en/threads-and-routines.md) · [Architecture](docs/en/architecture.md) · [P1 contract](docs/en/p1-delivery.md) ·
+[Validation and limitations](docs/en/validation.md) · [Brand](docs/en/brand.md)
 
-## Local specifications
+## Contributing and security
 
-This checkout uses octo-spec v1.2.0. Its local rules, task records, and generated
-agent integrations are intentionally excluded from Git. Initialize them separately
-in a fresh checkout. The public requirements and architectural decisions live in
-`docs/` so collaborators can review them without local tooling.
+Read [CONTRIBUTING](CONTRIBUTING.md), use the issue templates for bugs/feature
+requests, and follow [SECURITY](SECURITY.md) for private vulnerability reports.
+Repository-local octo-spec rules and agent integrations are intentionally ignored;
+public contracts live in `docs/`.
 
-Library package names and directories follow `orcabot-xxx`; see [packages](packages/README.md).
-The imported native service manager is documented in [cross-service](packages/orcabot-cross-service/README.md).
-The proposed delivery model and next slice are in [Vercel Board and OpenBot design research](docs/reference-designs.md).
+## License
 
-The [Board-inspired ten-dimension plan](docs/board-dimensions.md) details responsibilities,
-implementation phases, acceptance criteria, and open product decisions.
-
-The [dimension readiness review](docs/board-readiness-review.md) scores clarity,
-implementation and acceptance readiness and lists the specifications still needed.
-
-The [DS-Bot reference analysis](docs/ds-bot-reference.md) maps Bot-team interaction ideas
-to Orcabot without changing its OctoRuntime execution boundary.
+Original Orcabot code, documentation and supplied project assets are [MIT](LICENSE).
+Imported OctoRuntime portions retain Apache-2.0. Dependencies retain their own
+licenses; see [THIRD_PARTY_NOTICES](THIRD_PARTY_NOTICES.md), the reproducible
+[dependency inventory](licenses/dependencies.json) and [licensing guide](docs/en/licensing.md).

@@ -153,6 +153,9 @@ export type RunStatus =
 export const active = (s: RunStatus) => s === "running" || s === "waiting";
 export const terminal = (s: RunStatus) => !active(s);
 export type Conversation = {
+  projectId?: string;
+  archived?: boolean;
+  revision?: number;
   id: string;
   agentId: string;
   title: string;
@@ -320,3 +323,4 @@ export type Artifact = ArtifactInput & {
 export type ArtifactPage = { items: Artifact[]; nextBefore: number | null };
 
 export * from "./board.js";
+export * from "./automation.js";

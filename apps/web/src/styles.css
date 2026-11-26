@@ -4,38 +4,38 @@
     "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 :root {
-  --background: #1c1c23;
-  --sidebar: #202027;
-  --panel: #28282f;
-  --surface: #25252d;
-  --surface-raised: #303038;
-  --hover: #37363f;
-  --input: #23232a;
-  --code-bg: #1e1e25;
-  --border: #3c3b46;
-  --border-strong: #9590bf;
-  --purple-bg: #3d3858;
-  --purple-text: #ddd5ff;
-  --accent-soft: #353148;
-  --accent: #edecf3;
-  --on-accent: #222127;
+  --background: #101824;
+  --sidebar: #131e2d;
+  --panel: #192638;
+  --surface: #172233;
+  --surface-raised: #203047;
+  --hover: #273a52;
+  --input: #111d2b;
+  --code-bg: #0c1521;
+  --border: #2b3d54;
+  --border-strong: #70b4ff;
+  --purple-bg: #193c66;
+  --purple-text: #b7daff;
+  --accent-soft: #183451;
+  --accent: #82bdff;
+  --on-accent: #09213e;
   --accent-hover: #ffffff;
-  --accent-text: #c4b9f5;
-  --accent-muted: #b2a9d1;
+  --accent-text: #86c2ff;
+  --accent-muted: #94b9dc;
   --warning-bg: #383027;
   --warning-border: #675334;
   --warning: #edc58a;
   --danger-bg: #3b282d;
   --danger-border: #75434f;
   --danger: #ffa6b3;
-  --strong: #f5f4f7;
-  --text: #e1dfe8;
-  --secondary: #c8c5d0;
-  --muted: #b1aebb;
-  --subtle: #a09cab;
+  --strong: #eff6ff;
+  --text: #dce8f5;
+  --secondary: #becfe1;
+  --muted: #9db1c7;
+  --subtle: #90a6be;
   --overlay: #11111799;
-  --selected: #b8a8ff12;
-  --gate-glow: #29263355;
+  --selected: #3692ff14;
+  --gate-glow: #0c63d420;
   --success-glow: #92cbb522;
   --shadow: 0 2px 8px #00000018, 0 18px 54px #00000018;
   --shadow-soft: 0 2px 5px #00000012;
@@ -190,24 +190,43 @@ textarea::placeholder {
 .text-button:hover {
   color: var(--accent-text);
 }
+/* Supplied Orcabot mark; one silhouette across both appearances. */
 .brand-mark {
-  font-size: 35px;
-  color: #ffffff;
-  font-weight: 500;
-  line-height: 1;
-  background: radial-gradient(circle at 28% 24%, #d7bdff, #9180d1 54%, #797fba);
-  border: 1px solid #b6a2db55;
-  border-radius: 50%;
-  width: 62px;
-  height: 62px;
-  display: grid;
+  width: 76px;
+  height: 76px;
+  display: inline-grid;
   place-items: center;
+  flex-shrink: 0;
+}
+.brand-mark img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  grid-area: 1/1;
 }
 .brand-mark.small {
-  width: 29px;
-  height: 29px;
-  border-radius: 50%;
-  font-size: 24px;
+  width: 36px;
+  height: 36px;
+}
+.brand-light {
+  display: none;
+}
+.brand-dark {
+  display: block;
+}
+:root[data-theme="light"] .brand-light {
+  display: block;
+}
+:root[data-theme="light"] .brand-dark {
+  display: none;
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) .brand-light {
+    display: block;
+  }
+  :root:not([data-theme="dark"]) .brand-dark {
+    display: none;
+  }
 }
 .workbench {
   display: flex;
@@ -1244,38 +1263,38 @@ a.artifact-location {
 }
 
 :root[data-theme="light"] {
-  --background: #f1f0f6;
-  --sidebar: #f6f5f9;
+  --background: #f2f6fb;
+  --sidebar: #f8fafd;
   --panel: #ffffff;
   --surface: #ffffff;
-  --surface-raised: #f7f6fa;
-  --hover: #eeecf5;
+  --surface-raised: #f5f8fc;
+  --hover: #e9f0f8;
   --input: #ffffff;
-  --code-bg: #f5f4f8;
-  --border: #e0dee9;
-  --border-strong: #9c93c8;
-  --purple-bg: #eeebff;
-  --purple-text: #51419b;
-  --accent-soft: #eeebff;
-  --accent: #17171c;
+  --code-bg: #f0f5fa;
+  --border: #dce5ef;
+  --border-strong: #4a89d7;
+  --purple-bg: #e9f2ff;
+  --purple-text: #075bb8;
+  --accent-soft: #e9f2ff;
+  --accent: #075dcc;
   --on-accent: #ffffff;
-  --accent-hover: #303039;
-  --accent-text: #6554ad;
-  --accent-muted: #77708f;
+  --accent-hover: #034eae;
+  --accent-text: #075fc7;
+  --accent-muted: #526e8e;
   --warning-bg: #fff6e8;
   --warning-border: #ebd1a3;
   --warning: #8d5b17;
   --danger-bg: #fff0f2;
   --danger-border: #eec1ca;
   --danger: #b82843;
-  --strong: #15151b;
-  --text: #30303a;
-  --secondary: #585563;
-  --muted: #706c7d;
-  --subtle: #777282;
+  --strong: #112540;
+  --text: #243b53;
+  --secondary: #4b6178;
+  --muted: #5a7086;
+  --subtle: #62778d;
   --overlay: #24203240;
-  --selected: #7463c909;
-  --gate-glow: #e8e5f044;
+  --selected: #006dff09;
+  --gate-glow: #dcecff66;
   --success-glow: #5c9b7e22;
   --shadow: 0 1px 4px #2721380c, 0 12px 36px #27213808;
   --shadow-soft: 0 1px 3px #2721380c;
@@ -1283,38 +1302,38 @@ a.artifact-location {
 }
 @media (prefers-color-scheme: light) {
   :root:not([data-theme="dark"]) {
-    --background: #f1f0f6;
-    --sidebar: #f6f5f9;
+    --background: #f2f6fb;
+    --sidebar: #f8fafd;
     --panel: #ffffff;
     --surface: #ffffff;
-    --surface-raised: #f7f6fa;
-    --hover: #eeecf5;
+    --surface-raised: #f5f8fc;
+    --hover: #e9f0f8;
     --input: #ffffff;
-    --code-bg: #f5f4f8;
-    --border: #e0dee9;
-    --border-strong: #9c93c8;
-    --purple-bg: #eeebff;
-    --purple-text: #51419b;
-    --accent-soft: #eeebff;
-    --accent: #17171c;
+    --code-bg: #f0f5fa;
+    --border: #dce5ef;
+    --border-strong: #4a89d7;
+    --purple-bg: #e9f2ff;
+    --purple-text: #075bb8;
+    --accent-soft: #e9f2ff;
+    --accent: #075dcc;
     --on-accent: #ffffff;
-    --accent-hover: #303039;
-    --accent-text: #6554ad;
-    --accent-muted: #77708f;
+    --accent-hover: #034eae;
+    --accent-text: #075fc7;
+    --accent-muted: #526e8e;
     --warning-bg: #fff6e8;
     --warning-border: #ebd1a3;
     --warning: #8d5b17;
     --danger-bg: #fff0f2;
     --danger-border: #eec1ca;
     --danger: #b82843;
-    --strong: #15151b;
-    --text: #30303a;
-    --secondary: #585563;
-    --muted: #706c7d;
-    --subtle: #777282;
+    --strong: #112540;
+    --text: #243b53;
+    --secondary: #4b6178;
+    --muted: #5a7086;
+    --subtle: #62778d;
     --overlay: #24203240;
-    --selected: #7463c909;
-    --gate-glow: #e8e5f044;
+    --selected: #006dff09;
+    --gate-glow: #dcecff66;
     --success-glow: #5c9b7e22;
     --shadow: 0 1px 4px #2721380c, 0 12px 36px #27213808;
     --shadow-soft: 0 1px 3px #2721380c;
@@ -1727,4 +1746,176 @@ a.artifact-location {
 .work-attention-row span {
   color: var(--accent-text);
   flex-shrink: 0;
+}
+
+/* Dialogs use a stable frame with a scrolling body, quiet motion and clear actions. */
+.modal-backdrop {
+  padding: 32px;
+  background: #07142670;
+  backdrop-filter: blur(8px);
+  animation: overlay-in 160ms ease-out;
+}
+.setup-panel {
+  width: min(600px, 100%);
+  max-height: min(840px, calc(100dvh - 64px));
+  padding: 30px;
+  border-radius: 18px;
+  box-shadow:
+    0 24px 90px #06142638,
+    0 0 0 1px #ffffff08;
+  scrollbar-width: thin;
+  overscroll-behavior: contain;
+  animation: dialog-in 200ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.setup-panel h2 {
+  font-size: 24px;
+  line-height: 1.25;
+  letter-spacing: -0.65px;
+  margin-top: 8px;
+}
+.setup-panel > .flex:first-child {
+  padding-bottom: 22px;
+  border-bottom: 1px solid var(--border);
+  align-items: flex-start;
+  gap: 20px;
+}
+.setup-panel .eyebrow {
+  letter-spacing: 1.3px;
+  font-size: 10px;
+}
+.setup-panel .icon-button {
+  min-width: 36px;
+  min-height: 36px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface-raised);
+}
+.setup-tabs {
+  margin: 22px 0;
+  border: 1px solid var(--border);
+  border-radius: 11px;
+  padding: 4px;
+  gap: 4px;
+}
+.setup-tabs button {
+  flex: 1;
+  justify-content: center;
+  min-height: 40px;
+  border-radius: 8px;
+}
+.setup-tabs button.selected {
+  background: var(--panel);
+  color: var(--accent-text);
+  box-shadow: 0 1px 4px #06142610;
+}
+.setup-panel label {
+  font-size: 12px;
+  margin-bottom: 20px;
+}
+.setup-panel label input,
+.setup-panel label select,
+.setup-panel label textarea {
+  min-height: 44px;
+  padding: 11px 12px;
+  border-radius: 9px;
+  margin-top: 8px;
+  background: var(--input);
+}
+.setup-panel label small {
+  font-size: 12px;
+  line-height: 1.6;
+}
+.setup-panel .advanced {
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  margin: 8px 0 22px;
+  background: var(--surface-raised);
+}
+.setup-panel form > .button:last-child {
+  width: 100%;
+  min-height: 44px;
+  margin-top: 8px;
+}
+.button:active {
+  transform: translateY(1px);
+}
+@keyframes dialog-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes overlay-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@media (max-width: 640px) {
+  .modal-backdrop {
+    padding: 12px;
+  }
+  .setup-panel {
+    padding: 22px;
+    max-height: calc(100dvh - 24px);
+    border-radius: 16px;
+  }
+  .setup-panel .field-grid {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .setup-panel,
+  .modal-backdrop {
+    animation: none;
+  }
+  .button:active {
+    transform: none;
+  }
+}
+
+.automation-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+  gap: 18px;
+}
+.automation-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-top: 20px;
+}
+.automation-path {
+  overflow-wrap: anywhere;
+  font-size: 12px;
+  margin-top: 10px;
+}
+.project-threads {
+  margin-top: 20px;
+  display: grid;
+  gap: 14px;
+}
+.project-threads > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+.project-threads > div > button:first-child {
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+
+.setup-panel form > .button:last-child {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

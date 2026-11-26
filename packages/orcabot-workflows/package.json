@@ -15,5 +15,10 @@
   },
   "dependencies": {
     "zod": "^4.0.0"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/orcabot-ai/orcabot.git"
   }
 }

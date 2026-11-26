@@ -1,5 +1,66 @@
 // English messages are stable lookup keys; execution data is never translated.
 export const chinese = {
+  "Paused by you": "已手动暂停",
+  "Execution needs investigation": "需要调查执行状态",
+  "Paused after three failed runs": "连续失败三次后暂停",
+  "Thread is archived": "线程已归档",
+  "Run budget or end time reached": "已到次数上限或结束时间",
+  "This thread changed. Refresh it before saving again.":
+    "线程已发生变化，请刷新后再保存。",
+  "This routine changed. Refresh it before trying again.":
+    "例行任务已发生变化，请刷新后重试。",
+  "The routine limit has been reached. Pause an enabled routine before creating another.":
+    "已达到例行任务上限，请先暂停已启用的任务。",
+  "This agent belongs to another execution workspace.":
+    "此 Agent 属于其他执行工作空间。",
+  "This thread is archived. Restore it before starting new work.":
+    "线程已归档，请先恢复再开始新工作。",
+  "Investigate the unknown execution before running again.":
+    "请先调查结果未知的执行，再重新运行。",
+  "This thread already has active work. Wait for it to finish.":
+    "线程中已有工作正在运行，请等待完成。",
+  "This routine has reached its run budget or end time.":
+    "例行任务已达到运行次数或结束时间。",
+  "Other threads": "其他线程",
+  Project: "项目",
+  "No project": "未分配项目",
+  Projects: "项目",
+  Routines: "例行任务",
+  "New project": "新建项目",
+  "New routine": "新建例行任务",
+  "A workspace for every thread.": "每条工作线程都有明确的工作空间。",
+  "Standing instructions. Results in the original thread.":
+    "持续执行指令，结果回到原工作线程。",
+  "New thread": "新建线程",
+  "Manage thread": "管理线程",
+  Archived: "已归档",
+  On: "已启用",
+  Paused: "已暂停",
+  "Every {minutes} minutes": "每 {minutes} 分钟",
+  "{count} of {max} runs": "已运行 {count} 次，上限 {max} 次",
+  "Next run": "下次运行",
+  Pause: "暂停",
+  Resume: "恢复",
+  "Run now": "立即运行",
+  "Open thread": "打开线程",
+  "Keep related work together.": "把相关工作放在一起。",
+  "Make recurring work explicit.": "让重复工作有明确的约定。",
+  "Create a project from an agent workspace, then start a thread.":
+    "选择 Agent 的工作空间创建项目，再开始工作线程。",
+  "Choose a thread, an instruction and a bounded schedule.":
+    "选择工作线程、执行指令和有限的运行计划。",
+  Thread: "工作线程",
+  "Choose a thread": "选择工作线程",
+  "Choose an agent": "选择 Agent",
+  "What to do": "执行指令",
+  "Interval (minutes)": "间隔（分钟）",
+  "Run budget": "运行次数上限",
+  "Missed windows are skipped. Three consecutive failures pause the routine. Pausing does not cancel running work.":
+    "错过的时段不补跑；连续失败三次会暂停。暂停不会取消正在运行的工作。",
+  "Archive thread": "归档线程",
+  "Restore thread": "恢复线程",
+  "Save changes": "保存更改",
+
   "Awaiting business acceptance": "等待业务验收",
   "Execution questions and failures": "执行交互与异常",
   "No execution alerts": "暂无执行异常",

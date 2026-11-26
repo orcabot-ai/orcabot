@@ -15,5 +15,10 @@
   },
   "dependencies": {
     "orcabot-contracts": "workspace:*"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/orcabot-ai/orcabot.git"
   }
 }

@@ -10,7 +10,7 @@ import {
   type WorkDetail,
 } from "../packages/orcabot-contracts/src/index.js";
 import { service, completed, agent, waitFor, token } from "./helpers.js";
-import { createServer } from "../apps/server/src/server.js";
+import { createServer } from "../apps/worker/src/server.js";
 
 async function setup(database = ":memory:", factory = completed) {
   const s = await service(factory, database);
@@ -461,7 +461,7 @@ test("restart preserves unknown admitted work and never creates a replacement on
     assert.equal(s.store.db.prepare("SELECT COUNT(*) n FROM runs").get()!.n, 1);
     assert.equal(
       s.store.db.prepare("PRAGMA user_version").get()!.user_version,
-      3,
+      4,
     );
   } finally {
     await s.close();
@@ -531,7 +531,7 @@ test("schema v2 execution history survives adding the business tables", async ()
     assert.equal((await s.create()).status, 201);
     assert.equal(
       s.store.db.prepare("PRAGMA user_version").get()!.user_version,
-      3,
+      4,
     );
   } finally {
     await s.close();

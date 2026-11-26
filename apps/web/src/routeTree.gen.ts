@@ -10,6 +10,8 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ProjectsRouteImport } from './routes/projects'
+import { Route as RoutinesRouteImport } from './routes/routines'
 import { Route as WorkRouteImport } from './routes/work'
 import { Route as ConversationsConversationIdRouteImport } from './routes/conversations.$conversationId'
 import { Route as WorkIndexRouteImport } from './routes/work.index'
@@ -18,6 +20,16 @@ import { Route as WorkWorkIdRouteImport } from './routes/work.$workId'
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProjectsRoute = ProjectsRouteImport.update({
+  id: '/projects',
+  path: '/projects',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RoutinesRoute = RoutinesRouteImport.update({
+  id: '/routines',
+  path: '/routines',
   getParentRoute: () => rootRouteImport,
 } as any)
 const WorkRoute = WorkRouteImport.update({
@@ -44,6 +56,8 @@ const WorkWorkIdRoute = WorkWorkIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/projects': typeof ProjectsRoute
+  '/routines': typeof RoutinesRoute
   '/work': typeof WorkRouteWithChildren
   '/conversations/$conversationId': typeof ConversationsConversationIdRoute
   '/work/$workId': typeof WorkWorkIdRoute
@@ -51,6 +65,8 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/projects': typeof ProjectsRoute
+  '/routines': typeof RoutinesRoute
   '/conversations/$conversationId': typeof ConversationsConversationIdRoute
   '/work/$workId': typeof WorkWorkIdRoute
   '/work': typeof WorkIndexRoute
@@ -58,6 +74,8 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/projects': typeof ProjectsRoute
+  '/routines': typeof RoutinesRoute
   '/work': typeof WorkRouteWithChildren
   '/conversations/$conversationId': typeof ConversationsConversationIdRoute
   '/work/$workId': typeof WorkWorkIdRoute
@@ -67,15 +85,25 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/projects'
+    | '/routines'
     | '/work'
     | '/conversations/$conversationId'
     | '/work/$workId'
     | '/work/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/conversations/$conversationId' | '/work/$workId' | '/work'
+  to:
+    | '/'
+    | '/projects'
+    | '/routines'
+    | '/conversations/$conversationId'
+    | '/work/$workId'
+    | '/work'
   id:
     | '__root__'
     | '/'
+    | '/projects'
+    | '/routines'
     | '/work'
     | '/conversations/$conversationId'
     | '/work/$workId'
@@ -84,6 +112,8 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ProjectsRoute: typeof ProjectsRoute
+  RoutinesRoute: typeof RoutinesRoute
   WorkRoute: typeof WorkRouteWithChildren
   ConversationsConversationIdRoute: typeof ConversationsConversationIdRoute
 }
@@ -95,6 +125,20 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/projects': {
+      id: '/projects'
+      path: '/projects'
+      fullPath: '/projects'
+      preLoaderRoute: typeof ProjectsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/routines': {
+      id: '/routines'
+      path: '/routines'
+      fullPath: '/routines'
+      preLoaderRoute: typeof RoutinesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/work': {
@@ -142,6 +186,8 @@ const WorkRouteWithChildren = WorkRoute._addFileChildren(WorkRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ProjectsRoute: ProjectsRoute,
+  RoutinesRoute: RoutinesRoute,
   WorkRoute: WorkRouteWithChildren,
   ConversationsConversationIdRoute: ConversationsConversationIdRoute,
 }

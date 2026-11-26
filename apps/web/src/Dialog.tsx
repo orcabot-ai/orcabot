@@ -16,13 +16,19 @@ export function Dialog({
   close.current = onClose;
   useEffect(() => {
     const previous = document.activeElement as HTMLElement | null;
+    const overflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
     const focusable = () =>
       Array.from(
         panel.current?.querySelectorAll<HTMLElement>(
           'button:not(:disabled), input:not(:disabled), select:not(:disabled), textarea:not(:disabled), a[href], [tabindex="0"]',
         ) ?? [],
       ).filter((element) => element.getClientRects().length > 0);
-    focusable()[0]?.focus();
+    (
+      panel.current?.querySelector<HTMLElement>("input, select, textarea") ??
+      focusable()[0] ??
+      panel.current
+    )?.focus();
     const keyboard = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         event.preventDefault();
@@ -43,6 +49,7 @@ export function Dialog({
     document.addEventListener("keydown", keyboard);
     return () => {
       document.removeEventListener("keydown", keyboard);
+      document.body.style.overflow = overflow;
       previous?.focus();
     };
   }, []);
@@ -59,6 +66,7 @@ export function Dialog({
         role="dialog"
         aria-modal="true"
         aria-label={title}
+        tabIndex={-1}
       >
         {children}
       </section>

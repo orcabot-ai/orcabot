@@ -27,7 +27,7 @@ test("M0 databases migrate without discarding history or inventing recovery iden
     try {
       assert.equal(
         migrated.db.prepare("PRAGMA user_version").get()!.user_version,
-        3,
+        4,
       );
       assert.equal(
         migrated.events("old")[0].event.payload.text,
@@ -162,16 +162,23 @@ test("artifact references and reviews persist; new endpoints enforce auth and va
 test("Start SPA deep links serve a credential-free shell with exact inline script hashes", async () => {
   const { writeFileSync } = await import("node:fs");
   const { createHash } = await import("node:crypto");
-  const { createServer } = await import("../apps/server/src/server.js");
+  const { createServer } = await import("../apps/worker/src/server.js");
+  const { createWebServer } =
+    await import("../packages/orcabot-web-server/src/index.js");
   const directory = mkdtempSync(join(tmpdir(), "orcabot-shell-"));
   const script = "window.orcabotShell = true;";
   const shell = `<!doctype html><html lang="en"><body><script>${script}</script><script src="/assets/app.js"></script></body></html>`;
   writeFileSync(join(directory, "_shell.html"), shell);
-  const server = await createServer({
+  const worker = await createServer({
     token: "test-only-shell-key-at-least-32-characters",
     database: ":memory:",
-    webRoot: directory,
   });
+  const server = {
+    app: await createWebServer({
+      workerUrl: await worker.app.listen({ host: "127.0.0.1", port: 0 }),
+      webRoot: directory,
+    }),
+  };
   try {
     const response = await server.app.inject({
       method: "GET",
@@ -206,6 +213,7 @@ test("Start SPA deep links serve a credential-free shell with exact inline scrip
     assert.equal(authenticated.json().error, "NOT_FOUND");
   } finally {
     await server.app.close();
+    await worker.app.close();
     rmSync(directory, { recursive: true, force: true });
   }
 });

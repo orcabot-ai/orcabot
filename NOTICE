@@ -1,0 +1,10 @@
+Orcabot
+Copyright (c) 2026 Orcabot contributors
+Original project code and supplied project assets: MIT.
+
+Includes portions adapted from Mininglamp-OSS/octo-runtime, commit
+67a44ebc4a421e53aa0f22994157b2b6cd6c036c.
+Copyright 2026 Mininglamp Technology. Apache License, Version 2.0.
+See packages/orcabot-cross-service/LICENSE and UPSTREAM.md,
+apps/cli/LICENSE and UPSTREAM.md, and THIRD_PARTY_NOTICES.md.
+Third-party components retain their respective license terms.

@@ -1,5 +1,5 @@
 import { setTimeout } from "node:timers/promises";
-import { createServer } from "../apps/server/src/server.js";
+import { createServer } from "../apps/worker/src/server.js";
 import type { RuntimeFactory } from "../packages/orcabot-runtime/src/index.js";
 import type {
   Invocation,
@@ -57,6 +57,7 @@ export async function service(
 ) {
   const s = await createServer({
     token,
+    automaticRoutines: false,
     database,
     runtimeEndpoint,
     runtimeFactory: factory,
