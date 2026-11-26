@@ -6,13 +6,14 @@
     {
       "id": "unlock",
       "before": "before/01-unlock.jpg",
-      "geminiThread": null,
+      "geminiThread": "https://gemini.google.com/app/09cf8496cd38905e",
       "generatedImage": null,
-      "status": "pending",
+      "status": "reviewed-awaiting-image",
       "changes": [],
       "after": null,
       "verification": [],
-      "commit": null
+      "commit": null,
+      "critique": "references/details-review.md"
     },
     {
       "id": "new-thread",
@@ -139,7 +140,7 @@
       "before": "before/08-agent-dialog.jpg",
       "geminiThread": "https://gemini.google.com/app/09cf8496cd38905e",
       "generatedImage": "references/setup-dialogs-gemini.jpg",
-      "status": "implemented",
+      "status": "verified",
       "changes": [
         "480px compact dialog with progressive configuration and Cancel/primary footer",
         "Base UI dialog and styled select primitives",
@@ -152,14 +153,15 @@
         "Actual light/dark setup screenshots and 390px Agent dialog",
         "Independent standards and spec reviews approved; mobile picker44px defect fixed"
       ],
-      "commit": null
+      "commit": "3c351379771be09166c91daba4285d13a1a2f3e1",
+      "followUpReview": "references/details-review.md"
     },
     {
       "id": "target-local",
       "before": "before/09-local-target-dialog.jpg",
       "geminiThread": "https://gemini.google.com/app/09cf8496cd38905e",
       "generatedImage": "references/setup-dialogs-gemini.jpg",
-      "status": "implemented",
+      "status": "verified",
       "changes": [
         "480px compact dialog with progressive configuration and Cancel/primary footer",
         "Base UI dialog and styled select primitives",
@@ -172,14 +174,15 @@
         "Actual light/dark setup screenshots and 390px Agent dialog",
         "Independent standards and spec reviews approved; mobile picker44px defect fixed"
       ],
-      "commit": null
+      "commit": "3c351379771be09166c91daba4285d13a1a2f3e1",
+      "followUpReview": "references/details-review.md"
     },
     {
       "id": "target-remote",
       "before": "before/10-remote-target-dialog.jpg",
       "geminiThread": "https://gemini.google.com/app/09cf8496cd38905e",
       "generatedImage": "references/setup-dialogs-gemini.jpg",
-      "status": "implemented",
+      "status": "verified",
       "changes": [
         "480px compact dialog with progressive configuration and Cancel/primary footer",
         "Base UI dialog and styled select primitives",
@@ -192,51 +195,56 @@
         "Actual light/dark setup screenshots and 390px Agent dialog",
         "Independent standards and spec reviews approved; mobile picker44px defect fixed"
       ],
-      "commit": null
+      "commit": "3c351379771be09166c91daba4285d13a1a2f3e1",
+      "followUpReview": "references/details-review.md"
     },
     {
       "id": "attention",
       "before": "before/19-attention.jpg",
-      "geminiThread": null,
+      "geminiThread": "https://gemini.google.com/app/09cf8496cd38905e",
       "generatedImage": null,
-      "status": "pending",
+      "status": "reviewed-awaiting-image",
       "changes": [],
       "after": null,
       "verification": [],
-      "commit": null
+      "commit": null,
+      "critique": "references/details-review.md"
     },
     {
       "id": "artifacts",
       "before": "before/20-artifacts.jpg",
-      "geminiThread": null,
+      "geminiThread": "https://gemini.google.com/app/09cf8496cd38905e",
       "generatedImage": null,
-      "status": "pending",
+      "status": "reviewed-awaiting-image",
       "changes": [],
       "after": null,
       "verification": [],
-      "commit": null
+      "commit": null,
+      "critique": "references/details-review.md"
     },
     {
       "id": "execution-approval",
       "before": "before/17-execution-approval.jpg",
-      "geminiThread": null,
+      "geminiThread": "https://gemini.google.com/app/09cf8496cd38905e",
       "generatedImage": null,
-      "status": "pending",
+      "status": "reviewed-awaiting-image",
       "changes": [],
       "after": null,
       "verification": [],
-      "commit": null
+      "commit": null,
+      "critique": "references/details-review.md"
     },
     {
       "id": "mobile-navigation",
       "before": "before/21-mobile-navigation.jpg",
-      "geminiThread": null,
+      "geminiThread": "https://gemini.google.com/app/09cf8496cd38905e",
       "generatedImage": null,
-      "status": "pending",
+      "status": "reviewed-awaiting-image",
       "changes": [],
       "after": null,
       "verification": [],
-      "commit": null
+      "commit": null,
+      "critique": "references/details-review.md"
     },
     {
       "id": "landing",

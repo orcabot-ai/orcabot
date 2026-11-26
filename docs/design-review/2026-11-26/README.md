@@ -40,9 +40,12 @@ attempt received request-scoped permissions and completed. Through the UI:
 Tetris was the scenario for this product journey; this is not an exhaustive game
 quality assessment. Fixture tests and the real provider execution are distinct.
 
+The shared-control commit is `3c35137`; GitHub CI passed on both Node 24 and 26.
+Gemini subsequently reviewed the [remaining five surfaces and setup results](references/details-review.md).
+
 ## Remaining work
 
-Gemini has reviewed ten additional pages in text. The new personal home/landing
+Gemini has reviewed the other fifteen existing core surfaces in text. The new personal home/landing
 request and subsequent image generation hit the account's image quota. Those
 pages remain awaiting generated images; they are not marked complete. The
 [personal assistant direction](../../en/personal-agent-experience.md) records
