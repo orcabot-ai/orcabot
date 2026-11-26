@@ -1,7 +1,7 @@
 {
   "name": "orcabot",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.0.0",
   "type": "module",
   "packageManager": "pnpm@11.25.0",
   "engines": {
@@ -23,7 +23,10 @@
     "web": "node apps/cli/dist/index.js web run",
     "licenses:report": "node scripts/license-report.mjs",
     "e2e": "node scripts/e2e.mjs",
-    "ui:review": "node scripts/ui-review.mjs"
+    "ui:review": "node scripts/ui-review.mjs",
+    "pack:release": "node scripts/pack-release.mjs",
+    "verify:release": "node scripts/verify-release.mjs",
+    "prepack": "node scripts/require-release-pack.mjs"
   },
   "devDependencies": {
     "@types/node": "^26.0.0",

@@ -45,7 +45,7 @@ test("Commander help exposes independent roles without touching the data directo
     const root = await cli([]);
     for (const title of ["Examples:", "Available Commands:", "Flags:"])
       assert.ok(root.out.includes(title));
-    assert.match(root.out, /Orcabot CLI \(0\.1\.0\)\ncommit:.*\nbuild:/);
+    assert.match(root.out, /Orcabot CLI \(0\.0\.0\)\ncommit:.*\nbuild:/);
     assert.match((await cli(["web", "run", "--help"])).out, /Global Flags:/);
     assert.deepEqual(await readdir(dir), []);
   } finally {

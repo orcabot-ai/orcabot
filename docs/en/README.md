@@ -20,3 +20,5 @@
 - [Projects, threads and routines / 项目、线程和例行任务](threads-and-routines.md)
 
 - [Personal assistant experience](personal-agent-experience.md)
+
+- [Versioning and releases](releases.md)

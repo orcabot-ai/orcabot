@@ -1,0 +1,83 @@
+name: Release Publish
+on:
+  push:
+    tags: ["v*.*.*"]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing annotated stable version tag (vX.Y.Z)
+        required: true
+        type: string
+      mode:
+        description: Verify only or publish/recover the same immutable release
+        type: choice
+        default: dry-run
+        options: [dry-run, recover]
+permissions: {}
+concurrency:
+  group: release-${{ github.event_name == 'push' && github.ref_name || inputs.tag }}
+  cancel-in-progress: false
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      sha: ${{ steps.tag.outputs.sha }}
+      version: ${{ steps.tag.outputs.version }}
+      build_time: ${{ steps.tag.outputs.build_time }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - name: Validate annotated main-branch release and immutable timestamp
+        id: tag
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.event_name == 'push' && github.ref_name || inputs.tag }}
+        run: node scripts/validate-release.mjs
+  verify:
+    needs: validate
+    uses: ./.github/workflows/ci.yml
+    with:
+      ref: ${{ needs.validate.outputs.sha }}
+      release_version: ${{ needs.validate.outputs.version }}
+      build_time: ${{ needs.validate.outputs.build_time }}
+    permissions:
+      contents: read
+  publish:
+    needs: [validate, verify]
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+      actions: read
+      id-token: write
+    concurrency:
+      group: orcabot-release-publication
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.validate.outputs.sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          registry-url: https://registry.npmjs.org
+      - uses: actions/download-artifact@v4
+        with:
+          name: orcabot-release
+          path: dist/release
+      - name: Publish or verify matching archive, then GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          TAG: ${{ github.event_name == 'push' && github.ref_name || inputs.tag }}
+          REPOSITORY_VISIBILITY: ${{ github.event.repository.visibility }}
+          DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.mode == 'dry-run' }}
+        run: node scripts/publish-release.mjs

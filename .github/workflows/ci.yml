@@ -1,16 +1,45 @@
 name: CI
-on: [push, pull_request]
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+  workflow_call:
+    inputs:
+      ref:
+        type: string
+        required: true
+      release_version:
+        type: string
+        default: "0.0.0"
+      build_time:
+        type: string
+        default: ""
 permissions:
   contents: read
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.event.pull_request.number || inputs.ref || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 jobs:
   check:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     strategy:
+      fail-fast: false
       matrix:
         node: [24, 26]
+    env:
+      ORCABOT_BUILD_TIME: ${{ inputs.build_time || '' }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref || github.sha }}
+          persist-credentials: false
+      - name: Stamp immutable build time
+        run: |
+          if [ -z "$ORCABOT_BUILD_TIME" ]; then
+            node -e 'const {execFileSync}=require("node:child_process"); const {appendFileSync}=require("node:fs"); appendFileSync(process.env.GITHUB_ENV,"ORCABOT_BUILD_TIME="+new Date(execFileSync("git",["show","-s","--format=%cI","HEAD"],{encoding:"utf8"}).trim()).toISOString()+"\n")'
+          fi
       - uses: pnpm/action-setup@v4
         with:
           version: 11.25.0
@@ -23,5 +52,35 @@ jobs:
       - run: pnpm format:check
       - run: pnpm e2e
         env:
-          # Ubuntu runner sandbox restrictions; browser loads only our local fixture.
           ORCABOT_E2E_NO_SANDBOX: "1"
+          ORCABOT_E2E_CAPTURE_DIR: ${{ runner.temp }}/orcabot-e2e-evidence
+      - name: Require clean source
+        run: git diff --exit-code
+      - name: Assemble standalone archive
+        env:
+          VERSION: ${{ inputs.release_version || '0.0.0' }}
+        run: pnpm pack:release --version "$VERSION"
+      - name: Verify offline installation and services
+        env:
+          EXPECTED_COMMIT: ${{ inputs.ref || github.sha }}
+        run: node scripts/verify-release.mjs dist/release/*.tgz "$EXPECTED_COMMIT" --require-clean
+      - name: Verify repeat-build archive bytes
+        if: matrix.node == 24
+        run: node scripts/verify-reproducible-release.mjs
+      - uses: actions/upload-artifact@v4
+        if: matrix.node == 24
+        with:
+          name: orcabot-release
+          path: dist/release/*
+          if-no-files-found: error
+  gate:
+    name: CI Gate
+    if: always()
+    needs: check
+    runs-on: ubuntu-latest
+    permissions: {}
+    steps:
+      - name: Require every matrix job
+        env:
+          RESULT: ${{ needs.check.result }}
+        run: test "$RESULT" = success

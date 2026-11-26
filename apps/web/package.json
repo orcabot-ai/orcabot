@@ -1,11 +1,11 @@
 {
   "name": "@orcabot/web",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite --host 127.0.0.1",
-    "build": "tsc --noEmit && vite build",
+    "build": "tsc --noEmit && vite build && node ../../scripts/normalize-release-shell.mjs",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
