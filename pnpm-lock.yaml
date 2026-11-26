@@ -27,8 +27,8 @@ importers:
   apps/cli:
     dependencies:
       '@mininglamp-oss/octo-runtime-client':
-        specifier: 1.1.15
-        version: 1.1.15
+        specifier: 1.1.16
+        version: 1.1.16
       commander:
         specifier: ^15.0.0
         version: 15.1.0
@@ -100,8 +100,8 @@ importers:
   apps/worker:
     dependencies:
       '@mininglamp-oss/octo-runtime-client':
-        specifier: 1.1.15
-        version: 1.1.15
+        specifier: 1.1.16
+        version: 1.1.16
       fastify:
         specifier: ^5.0.0
         version: 5.12.8
@@ -142,8 +142,8 @@ importers:
   packages/orcabot-runtime:
     dependencies:
       '@mininglamp-oss/octo-runtime-client':
-        specifier: 1.1.15
-        version: 1.1.15
+        specifier: 1.1.16
+        version: 1.1.16
       orcabot-contracts:
         specifier: workspace:*
         version: link:../orcabot-contracts
@@ -468,8 +468,8 @@ packages:
     resolution: {integrity: sha512-9I2Zn6+NJLfaGoz9jN3lpwDgAYvfGeNYdbAIjJOqzs4Tpc+VU3Jqq4IofSUBKajiDS8k9fZIg18/z13mpk1bsA==}
     engines: {node: '>=8'}
 
-  '@mininglamp-oss/octo-runtime-client@1.1.15':
-    resolution: {integrity: sha512-lk8lNrud3AFXR0DzUWPw12jAN/tN/2jzlxKVRmojfVKLDSoe8LXpHqDIOXLz49z/QOOd4FPbKimtTTU1/q9U3A==}
+  '@mininglamp-oss/octo-runtime-client@1.1.16':
+    resolution: {integrity: sha512-Ah60IFrr5f17SFTUkVJls3pdO2KDYAN+P/zuIPrBbQbCuuidhTWYcqlCiOWNXnvdjwpDhSyiAjchNdXGqkLrSQ==}
     engines: {node: ^24.0.0 || ^26.0.0}
     bundledDependencies:
       - '@mininglamp-oss/octo-runtime-protocol'
@@ -2209,7 +2209,7 @@ snapshots:
 
   '@lukeed/ms@2.0.2': {}
 
-  '@mininglamp-oss/octo-runtime-client@1.1.15': {}
+  '@mininglamp-oss/octo-runtime-client@1.1.16': {}
 
   '@napi-rs/wasm-runtime@1.2.6(@emnapi/core@2.0.0-beta.2)(@emnapi/runtime@2.0.0-beta.2)':
     dependencies:

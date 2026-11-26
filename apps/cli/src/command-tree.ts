@@ -238,7 +238,7 @@ export function parseCliCommand(raw: string[]): ParsedCommand {
     runtime.addCommand(c);
     capture(c);
     if (name === "setup")
-      option(c, "--release <version>", "Exact npm release (default: 1.1.15)");
+      option(c, "--release <version>", "Exact npm release (default: 1.1.16)");
     if (name === "install")
       option(c, "--autostart <boolean>", "Automatic startup (default: true)");
     if (name === "logs") {

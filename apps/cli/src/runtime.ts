@@ -15,7 +15,7 @@ import { createInterface } from "node:readline";
 import type { ParsedCommand } from "./command-tree.js";
 
 const runtimePackage = "@mininglamp-oss/octo-runtime";
-export const defaultRuntimeRelease = "1.1.15";
+export const defaultRuntimeRelease = "1.1.16";
 type RuntimeLocation = {
   command: string;
   args: string[];

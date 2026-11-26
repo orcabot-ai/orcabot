@@ -12,7 +12,7 @@
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
-    "@mininglamp-oss/octo-runtime-client": "1.1.15",
+    "@mininglamp-oss/octo-runtime-client": "1.1.16",
     "commander": "^15.0.0",
     "orcabot-client": "workspace:*",
     "orcabot-worker": "workspace:*",

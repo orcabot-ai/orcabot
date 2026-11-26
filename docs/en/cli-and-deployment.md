@@ -31,7 +31,7 @@ stores no worker key, never opens SQLite and does not install execution packages
 
 Local worker startup discovers a managed execution installation or an existing
 installation on PATH. When absent, it installs the pinned package
-`@mininglamp-oss/octo-runtime@1.1.15` into `~/.orcabot/runtime`, using npm with exact
+`@mininglamp-oss/octo-runtime@1.1.16` into `~/.orcabot/runtime`, using npm with exact
 arguments and no shell. It then invokes that package's own `start` command and
 checks `execution_ready` through the public SDK before opening the worker database.
 The endpoint is obtained through the package's public `host` export, rather than

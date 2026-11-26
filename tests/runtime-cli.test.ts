@@ -30,7 +30,7 @@ async function fixture() {
       join(root, "package.json"),
       JSON.stringify({
         name: "@mininglamp-oss/octo-runtime",
-        version: "1.1.15",
+        version: "1.1.16",
         type: "module",
         bin: { "octo-runtime": "cli.mjs" },
         exports: { "./host": { import: "./host.mjs" } },
@@ -261,15 +261,15 @@ test(
       }
       const manifest = {
         name: "@mininglamp-oss/octo-runtime",
-        version: "1.1.15",
+        version: "1.1.16",
         dist: { tarball: `http://${req.headers.host}/fixture.tgz` },
       };
       res.writeHead(200, { "content-type": "application/json" });
       res.end(
         JSON.stringify({
           name: manifest.name,
-          "dist-tags": { latest: "1.1.15" },
-          versions: { "1.1.15": manifest },
+          "dist-tags": { latest: "1.1.16" },
+          versions: { "1.1.16": manifest },
         }),
       );
     });

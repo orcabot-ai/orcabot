@@ -18,7 +18,7 @@ worker 默认监听 `127.0.0.1:4310`，Web 默认 `127.0.0.1:4320`。在页面�
 
 ## 自动执行依赖
 
-默认 local 模式发现已安装环境，否则安装固定的 OctoRuntime 1.1.15，再调用其原生启动入口，通过公开 SDK 检查 execution_ready 后打开 SQLite。不会自动升级到 latest。退出 worker 不会停止共享执行服务；供应商登录仍需单独完成。
+默认 local 模式发现已安装环境，否则安装固定的 OctoRuntime 1.1.16，再调用其原生启动入口，通过公开 SDK 检查 execution_ready 后打开 SQLite。不会自动升级到 latest。退出 worker 不会停止共享执行服务；供应商登录仍需单独完成。
 
 ```sh
 orcabot worker run --execution remote

@@ -50,7 +50,7 @@ Regenerate this file with `pnpm licenses:report`. License and NOTICE texts remai
 | @jridgewell/sourcemap-codec                       | 1.6.0          | MIT             | [Source](https://www.npmjs.com/package/@jridgewell/sourcemap-codec)                       |
 | @jridgewell/trace-mapping                         | 0.3.31         | MIT             | [Source](https://www.npmjs.com/package/@jridgewell/trace-mapping)                         |
 | @lukeed/ms                                        | 2.0.2          | MIT             | [Source](https://www.npmjs.com/package/@lukeed/ms)                                        |
-| @mininglamp-oss/octo-runtime-client               | 1.1.15         | Apache-2.0      | [Source](https://www.npmjs.com/package/@mininglamp-oss/octo-runtime-client)               |
+| @mininglamp-oss/octo-runtime-client               | 1.1.16         | Apache-2.0      | [Source](https://www.npmjs.com/package/@mininglamp-oss/octo-runtime-client)               |
 | @oozcitak/dom                                     | 2.0.2          | MIT             | [Source](https://www.npmjs.com/package/@oozcitak/dom)                                     |
 | @oozcitak/infra                                   | 2.0.2          | MIT             | [Source](https://www.npmjs.com/package/@oozcitak/infra)                                   |
 | @oozcitak/url                                     | 3.0.0          | MIT             | [Source](https://www.npmjs.com/package/@oozcitak/url)                                     |

@@ -12,7 +12,7 @@
     "orcabot-store": "workspace:*",
     "orcabot-runtime": "workspace:*",
     "fastify": "^5.0.0",
-    "@mininglamp-oss/octo-runtime-client": "1.1.15",
+    "@mininglamp-oss/octo-runtime-client": "1.1.16",
     "zod": "^4.0.0"
   },
   "exports": {
