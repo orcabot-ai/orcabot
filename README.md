@@ -1,34 +1,87 @@
-<p align="center"><picture><source media="(prefers-color-scheme: dark)" srcset="apps/web/public/brand/orca-dark.png" /><img src="apps/web/public/brand/orca-light.png" width="150" alt="Orcabot" /></picture></p>
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="apps/web/public/brand/orca-dark.png" />
+    <img src="apps/web/public/brand/orca-light.png" width="112" alt="Orcabot logo" />
+  </picture>
+</p>
 
-# Orcabot
+<h1 align="center">Orcabot</h1>
+<p align="center"><strong>Turn AI conversations into reviewed work.</strong></p>
+<p align="center">A self-hosted AI workbench for tasks, threads, and routines.<br />Keep the goal, run work on the right machine, and review what comes back.</p>
 
-**A task-centered assistant workbench across machines and clouds.**
+<p align="center">
+  <a href="#try-orcabot">Try Orcabot</a> ·
+  <a href="docs/en/README.md">Read the docs</a> ·
+  <a href="https://github.com/orcabot-ai/orcabot/issues">Share feedback</a> ·
+  <a href="README.zh-CN.md">简体中文</a>
+</p>
+<p align="center">
+  <a href="https://github.com/orcabot-ai/orcabot/actions/workflows/ci.yml"><img src="https://github.com/orcabot-ai/orcabot/actions/workflows/ci.yml/badge.svg" alt="Build and E2E status" /></a>
+  · Early preview · Self-hosted · <a href="LICENSE">MIT</a>
+</p>
 
-English · [简体中文](README.zh-CN.md) · [Documentation](docs/en/README.md)
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/screenshots/readme-work-dark.png" />
+  <img src="docs/screenshots/readme-work-light.png" alt="Orcabot task review with a goal, acceptance criteria, execution status, and submitted evidence" width="1440" />
+</picture>
 
-Orcabot brings conversations, execution and reviewed deliverables into one workspace.
-Describe the goal, keep the decisions in a thread, run work on the right machine,
-and review the result against explicit acceptance criteria.
+_Actual Orcabot UI with example data from an isolated fixture. No paid model calls._
 
-## What works today
+## Less checking in. More work you can review.
 
-- Persistent conversations, streamed execution events, interactions and cancellation.
-- Local and remote execution through OctoRuntime, with automatic local prerequisite setup.
-- Task boards, versioned workflows, exclusive claims, evidence and human accept/reject decisions.
-- Project-scoped persistent threads with rename/archive and workspace boundaries.
-- Bounded standing routines that return results to their original thread.
-- Independent worker and web client; CLI and SDK for headless business commands.
-- English by default, Simplified Chinese, light/dark/system themes and a responsive layout.
-- SQLite persistence and observation recovery using the original execution identity.
+For builders and operators running AI work across local and remote machines,
+Orcabot keeps the conversation connected to the task and its result. Return to a
+thread, see what happened, and decide what needs your attention next.
 
-Perception connectors, autonomous coordination, A2UI and Electron/DMG distribution are
-planned directions, not features shipped by this repository today. See [product direction](docs/en/product-direction.md).
+| What you want              | How Orcabot helps                                                                                                                             |
+| -------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| Pick up where you left off | Persistent project threads keep conversations and execution history together. Rename, organize, or archive without losing past runs.          |
+| Know what is ready         | Task boards put goals, acceptance criteria, submitted evidence, and review decisions in one place.                                            |
+| Repeat useful work         | Routines run an instruction on a fixed interval and return results to the same thread, with an execution budget and automatic failure pauses. |
+| Work across machines       | Connect local or remote execution targets. Start the worker where you need it and use a browser to access it.                                 |
+| Use your own tools         | CLI and SDK commands support headless workflows alongside the web UI.                                                                         |
 
-## Quick start
+English and Simplified Chinese. Light, dark, and system themes. A responsive web UI
+built with React, Tailwind CSS, and TanStack.
 
-Requires **Node.js 24 or 26**, **pnpm 11.25.0**, and provider credentials for your chosen
-execution harness. First local startup needs network access, npm and a supported
-current-user service manager.
+## From a goal to a reviewed result
+
+1. **Set the goal.** Create a work item with clear acceptance criteria and select
+   an Agent configured for the execution machine.
+2. **Run the work.** Follow the conversation, streamed progress, and requests for
+   input. Keep the original execution history when you return.
+3. **Review the evidence.** Submit a deliverable, check it against the criteria,
+   then approve it or request correction.
+
+Execution completion and business acceptance are separate. A successful run still
+needs evidence and a review decision before the work item is accepted.
+
+## Put repeat work on a routine
+
+Bind a standing instruction to an existing thread, choose an interval and a run
+budget, then read the results in that thread. Pause, resume, or run it now from the
+UI or CLI. Missed windows are skipped; three consecutive confirmed failures pause
+the routine. Unknown outcomes pause immediately for investigation.
+
+<details>
+<summary>See the routine editor</summary>
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/screenshots/routine-dark.png" />
+  <img src="docs/screenshots/routine-light.png" alt="Routine editor with a thread, instruction, interval, and run budget" width="1200" loading="lazy" />
+</picture>
+
+[Projects, threads, and routine behavior](docs/en/threads-and-routines.md)
+
+</details>
+
+## Try Orcabot
+
+The preview runs from source. Requires **Node.js 24 or 26**, **pnpm 11.25.0**, and
+provider credentials for your chosen execution harness. First local startup needs
+network access, npm, and a supported current-user service manager.
+
+**1. Build and start the worker.**
 
 ```sh
 git clone https://github.com/orcabot-ai/orcabot.git
@@ -38,86 +91,87 @@ pnpm build
 pnpm start worker run
 ```
 
-In another terminal:
+**2. Open the web client in another terminal.**
 
 ```sh
 pnpm start web run
 ```
 
-Open **http://127.0.0.1:4320** and enter the service key printed by the worker.
-The API binds to port **4310**. Keep the key and worker stdout private. Set
-`ORCABOT_TOKEN` to preserve the key between restarts. The worker automatically
-prepares its local execution prerequisite; provider login is still required.
+**3. Open [localhost:4320](http://127.0.0.1:4320)** and enter the service key printed
+by the worker. Configure an execution target and Agent, prepare its working
+directory on the execution machine, then create your first conversation or work item.
 
-For a controller using only remote targets:
+Orcabot automatically prepares local execution through OctoRuntime. Provider login
+is still required; model-provider charges depend on your account. Keep the service
+key and worker stdout private. Set `ORCABOT_TOKEN` to preserve the key across
+restarts. The API listens on `127.0.0.1:4310` by default.
+
+<details>
+<summary>Connect a remote worker or run headless commands</summary>
 
 ```sh
+# Controller with remote execution targets only:
 pnpm start worker run --execution remote
+
+# Browser host connected to a worker on another machine:
 pnpm start web run --worker-url https://worker.example.com
-```
 
-Configure an execution target and Agent, then start a conversation or create a work
-item at `/work`. Prepare the Agent's working directory on its execution machine.
-A completed execution still needs explicit evidence and review for business acceptance.
-
-## Command line
-
-```sh
+# Explore the CLI and inspect work:
 pnpm start --help
 pnpm start version
-pnpm start doctor
 pnpm board list --json
-pnpm board create --input work.json --json
+pnpm start routine list --json
 ```
 
-An installed/linked CLI uses `orcabot` in place of `pnpm start`. Configuration is
-through flags and environment variables; `.env.example` is a reference, not an
-automatically loaded file. See [CLI and deployment](docs/en/cli-and-deployment.md).
+An installed/linked CLI uses `orcabot` in place of `pnpm start`. Set `ORCABOT_URL`
+and `ORCABOT_TOKEN` for authenticated headless commands. `.env.example` is a
+reference; it is not automatically loaded.
 
-## Development
+[CLI, configuration, and deployment](docs/en/cli-and-deployment.md)
+
+</details>
+
+## What is ready, and what comes next
+
+**Available:** persistent conversations and project threads; streamed execution,
+input requests, and cancellation; task delivery and human review; bounded interval
+routines; local/remote execution; browser UI, CLI, and SDK; SQLite persistence and
+recovery tied to the original execution identity.
+
+**Planned:** perception connectors, autonomous coordination, broader workflow
+customization, Git worktrees, cron/timezone schedules, A2UI, and Electron/DMG.
+These are roadmap items, not available features. See the
+[product direction](docs/en/product-direction.md) and
+[current implementation boundaries](docs/en/threads-and-routines.md).
+
+This early preview uses one shared operator key/session. Independent users, scoped
+Agent credentials, and independent reviewer guarantees are not implemented. Use a
+trusted network or HTTPS ingress for remote access. SQLite contains private
+conversations and configuration secrets. See [security](SECURITY.md) and
+[validation and limitations](docs/en/validation.md).
+
+## Build with us
+
+Try a real task and tell us where the flow breaks. [Report a bug or suggest a feature](https://github.com/orcabot-ai/orcabot/issues).
+For code contributions, start with [CONTRIBUTING](CONTRIBUTING.md).
 
 ```sh
 pnpm dev
-pnpm typecheck
-pnpm test
-pnpm build
+pnpm check
 pnpm format:check
+pnpm e2e
+# After dependency changes:
 pnpm licenses:report
 ```
 
-For Vite development set `ORCABOT_PUBLIC_URL=http://127.0.0.1:5173`; use
-`ORCABOT_EXECUTION=remote` to develop without preparing local execution. API port:
-4310, Vite port: 5173. Production web hosting uses the independent `web run` command.
-
-```text
-apps/cli                     Commander CLI and prerequisite preparation
-apps/worker                  Authenticated API, SQLite and execution control
-apps/web                     React, Tailwind and TanStack workbench
-packages/orcabot-web-server   Static client host and same-origin API proxy
-packages/orcabot-*            Contracts, persistence, workflows, SDK and adapters
-```
-
-## Project status and trust boundary
-
-Orcabot is an early-stage OSS project. One service key/session represents one
-trusted operator; independent users, scoped Agent credentials and independent
-reviewer guarantees are not implemented. Use trusted networks or HTTPS ingress for
-remote access. SQLite holds private conversations and configuration secrets.
-Unknown execution outcomes are held for investigation, never silently re-submitted.
-
-[Projects and routines](docs/en/threads-and-routines.md) · [Architecture](docs/en/architecture.md) · [P1 contract](docs/en/p1-delivery.md) ·
-[Validation and limitations](docs/en/validation.md) · [Brand](docs/en/brand.md)
-
-## Contributing and security
-
-Read [CONTRIBUTING](CONTRIBUTING.md), use the issue templates for bugs/feature
-requests, and follow [SECURITY](SECURITY.md) for private vulnerability reports.
-Repository-local octo-spec rules and agent integrations are intentionally ignored;
-public contracts live in `docs/`.
+Vite development uses port 5173 and needs
+`ORCABOT_PUBLIC_URL=http://127.0.0.1:5173`; `ORCABOT_EXECUTION=remote` skips local
+execution preparation. See [architecture](docs/en/architecture.md) for the pnpm
+workspace layout and [deployment](docs/en/cli-and-deployment.md) for production.
 
 ## License
 
-Original Orcabot code, documentation and supplied project assets are [MIT](LICENSE).
+Original Orcabot code, documentation, and supplied project assets are [MIT](LICENSE).
 Imported OctoRuntime portions retain Apache-2.0. Dependencies retain their own
 licenses; see [THIRD_PARTY_NOTICES](THIRD_PARTY_NOTICES.md), the reproducible
-[dependency inventory](licenses/dependencies.json) and [licensing guide](docs/en/licensing.md).
+[dependency inventory](licenses/dependencies.json), and [licensing guide](docs/en/licensing.md).
