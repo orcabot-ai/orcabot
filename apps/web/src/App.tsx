@@ -1,3 +1,4 @@
+import { Select } from "./Select.js";
 import { Dialog } from "./Dialog.js";
 import { Automation } from "./Automation.js";
 import { BrandMark } from "./BrandMark.js";
@@ -643,11 +644,11 @@ export function App() {
                 </button>
                 <div className="agent-picker">
                   <Bot size={13} />
-                  <select
+                  <Select
                     aria-label={t("Agent")}
                     disabled={!!selected}
                     value={selected?.agentId ?? agentId}
-                    onChange={(e) => setAgentId(e.target.value)}
+                    onValueChange={(next) => setAgentId(next)}
                   >
                     {!state.agents.length && (
                       <option value="">{t("Select an agent")}</option>
@@ -657,8 +658,7 @@ export function App() {
                         {a.name}
                       </option>
                     ))}
-                  </select>
-                  <ChevronDown size={12} />
+                  </Select>
                 </div>
                 {agent && (
                   <span className="model-label">

@@ -22,7 +22,8 @@
     "worker": "node apps/cli/dist/index.js worker run",
     "web": "node apps/cli/dist/index.js web run",
     "licenses:report": "node scripts/license-report.mjs",
-    "e2e": "node scripts/e2e.mjs"
+    "e2e": "node scripts/e2e.mjs",
+    "ui:review": "node scripts/ui-review.mjs"
   },
   "devDependencies": {
     "@types/node": "^26.0.0",

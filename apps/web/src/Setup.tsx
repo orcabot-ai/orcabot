@@ -1,8 +1,9 @@
+import { Select } from "./Select.js";
 import { useI18n } from "./i18n.js";
 import { useState } from "react";
 import { useForm } from "@tanstack/react-form";
 import { useMutation } from "@tanstack/react-query";
-import { X, ArrowRight, Server, Bot } from "lucide-react";
+import { X, Server, Bot } from "lucide-react";
 import type { State } from "orcabot-contracts";
 import { api, friendly } from "./api.js";
 import { Dialog } from "./Dialog.js";
@@ -20,7 +21,27 @@ export function Setup({
       state.targets.length ? "agent" : "target",
     ),
     [error, setError] = useState(""),
-    [kind, setKind] = useState("local");
+    [kind, setKind] = useState("local"),
+    [showKey, setShowKey] = useState(false);
+  const localEndpoint =
+    state.targets.find((target) => target.kind === "local")?.endpoint ?? "";
+  const title =
+    tab === "agent"
+      ? "Create agent"
+      : kind === "local"
+        ? "Local connection"
+        : "Remote connection";
+  const description =
+    tab === "agent"
+      ? "Give your assistant a place to work."
+      : kind === "local"
+        ? "Use this computer's configured connection."
+        : "Connect to a worker on another machine.";
+  function changeTab(next: "agent" | "target") {
+    setTab(next);
+    setShowKey(false);
+    setError("");
+  }
   const save = useMutation({
     mutationFn: async (values: {
       name: string;
@@ -57,7 +78,7 @@ export function Setup({
   const form = useForm({
     defaultValues: {
       name: "",
-      endpoint: "",
+      endpoint: localEndpoint,
       url: "",
       token: "",
       targetId: state.targets[0]?.id ?? "",
@@ -72,6 +93,7 @@ export function Setup({
       try {
         await save.mutateAsync(value);
         form.reset();
+        setShowKey(false);
         if (tab === "target") setTab("agent");
         else onClose();
       } catch (err) {
@@ -85,11 +107,11 @@ export function Setup({
   });
   const saving = save.isPending;
   return (
-    <Dialog title={t("Connect your agents")} onClose={onClose}>
-      <div className="flex items-center justify-between">
+    <Dialog title={t(title)} onClose={onClose} className="connection-setup">
+      <div className="dialog-heading">
         <div>
-          <div className="eyebrow">{t("WORKSPACE SETTINGS")}</div>
-          <h2 id="setup-title">{t("Connect your agents")}</h2>
+          <h2 id="setup-title">{t(title)}</h2>
+          <p>{t(description)}</p>
         </div>
         <button
           className="icon-button"
@@ -99,24 +121,31 @@ export function Setup({
           <X size={20} />
         </button>
       </div>
-      <div className="setup-tabs">
+      <div
+        className="setup-tabs"
+        role="group"
+        aria-label={t("Connection setup")}
+      >
         <button
           className={tab === "agent" ? "selected" : ""}
-          onClick={() => setTab("agent")}
+          aria-pressed={tab === "agent"}
+          onClick={() => changeTab("agent")}
         >
           <Bot size={15} />
           {t("Agents")}
         </button>
         <button
           className={tab === "target" ? "selected" : ""}
-          onClick={() => setTab("target")}
+          aria-pressed={tab === "target"}
+          onClick={() => changeTab("target")}
         >
           <Server size={15} />
           {t("Execution targets")}
         </button>
       </div>
       <form
-        key={`${tab}-${kind}-${state.targets.length}`}
+        className="setup-form"
+        key={`${tab}-${state.targets.length}`}
         onSubmit={(e) => {
           e.preventDefault();
           void form.handleSubmit();
@@ -124,11 +153,6 @@ export function Setup({
       >
         {tab === "target" ? (
           <>
-            <p className="muted mb-5">
-              {t(
-                "Connect a local Kernel or an Orcabot service running on another machine.",
-              )}
-            </p>
             <label>
               {t("Name")}
               <form.Field name="name">
@@ -148,35 +172,53 @@ export function Setup({
             </label>
             <label>
               {t("Connection")}
-              <select value={kind} onChange={(e) => setKind(e.target.value)}>
-                <option value="local">{t("Local Kernel IPC")}</option>
-                <option value="remote">{t("Remote Orcabot bridge")}</option>
-              </select>
+              <Select
+                value={kind}
+                onValueChange={(next) => {
+                  setKind(next);
+                  setShowKey(false);
+                  setError("");
+                }}
+              >
+                <option value="local">{t("This computer")}</option>
+                <option value="remote">{t("Remote worker")}</option>
+              </Select>
             </label>
             {kind === "local" ? (
-              <label>
-                {t("Kernel endpoint")}
-                <form.Field name="endpoint">
-                  {(field) => (
-                    <input
-                      name="endpoint"
-                      required
-                      placeholder="/absolute/path/to/kernel.sock"
+              <details
+                className="advanced endpoint-disclosure"
+                open={!localEndpoint}
+              >
+                <summary>{t("Advanced local endpoint")}</summary>
+                <label>
+                  {t("Kernel endpoint")}
+                  <form.Field name="endpoint">
+                    {(field) => (
+                      <input
+                        name="endpoint"
+                        required
+                        onInvalid={(event) => {
+                          const details =
+                            event.currentTarget.closest("details");
+                          if (details) details.open = true;
+                        }}
+                        placeholder="/absolute/path/to/kernel.sock"
 
-                      value={field.state.value}
-                      onBlur={field.handleBlur}
-                      onChange={(event) =>
-                        field.handleChange(event.target.value)
-                      }
-                    />
-                  )}
-                </form.Field>
-                <small>
-                  {t(
-                    "Use the IPC endpoint supplied by your running OctoRuntime service.",
-                  )}
-                </small>
-              </label>
+                        value={field.state.value}
+                        onBlur={field.handleBlur}
+                        onChange={(event) =>
+                          field.handleChange(event.target.value)
+                        }
+                      />
+                    )}
+                  </form.Field>
+                  <small>
+                    {t(
+                      "Use the IPC endpoint supplied by your running OctoRuntime service.",
+                    )}
+                  </small>
+                </label>
+              </details>
             ) : (
               <>
                 <label>
@@ -202,19 +244,31 @@ export function Setup({
                   {t("Service key")}
                   <form.Field name="token">
                     {(field) => (
-                      <input
-                        name="token"
-                        type="password"
-                        autoComplete="off"
-                        required
-                        minLength={32}
+                      <div className="secret-input">
+                        <input
+                          name="token"
+                          type={showKey ? "text" : "password"}
+                          autoComplete="off"
+                          required
+                          minLength={32}
 
-                        value={field.state.value}
-                        onBlur={field.handleBlur}
-                        onChange={(event) =>
-                          field.handleChange(event.target.value)
-                        }
-                      />
+                          value={field.state.value}
+                          onBlur={field.handleBlur}
+                          onChange={(event) =>
+                            field.handleChange(event.target.value)
+                          }
+                        />
+                        <button
+                          type="button"
+                          aria-label={t(
+                            showKey ? "Hide service key" : "Show service key",
+                          )}
+                          aria-pressed={showKey}
+                          onClick={() => setShowKey(!showKey)}
+                        >
+                          {t(showKey ? "Hide" : "Show")}
+                        </button>
+                      </div>
                     )}
                   </form.Field>
                   <small>
@@ -228,11 +282,6 @@ export function Setup({
           </>
         ) : (
           <>
-            <p className="muted mb-5">
-              {t(
-                "An Agent is a reusable execution configuration. Each run keeps its own snapshot.",
-              )}
-            </p>
             <label>
               {t("Name")}
               <form.Field name="name">
@@ -241,7 +290,7 @@ export function Setup({
                     name="name"
                     required
                     maxLength={160}
-                    placeholder={t("My engineering agent")}
+                    placeholder={t("My assistant")}
 
                     value={field.state.value}
                     onBlur={field.handleBlur}
@@ -255,15 +304,13 @@ export function Setup({
                 {t("Execution target")}
                 <form.Field name="targetId">
                   {(field) => (
-                    <select
+                    <Select
                       name="targetId"
                       required
 
                       value={field.state.value}
                       onBlur={field.handleBlur}
-                      onChange={(event) =>
-                        field.handleChange(event.target.value)
-                      }
+                      onValueChange={(next) => field.handleChange(next)}
                     >
                       <option value="" disabled>
                         {t("Select a target")}
@@ -273,7 +320,7 @@ export function Setup({
                           {t.name}
                         </option>
                       ))}
-                    </select>
+                    </Select>
                   )}
                 </form.Field>
               </label>
@@ -339,13 +386,11 @@ export function Setup({
                 {t("Reasoning effort")}
                 <form.Field name="effort">
                   {(field) => (
-                    <select
+                    <Select
                       name="effort"
                       value={field.state.value}
                       onBlur={field.handleBlur}
-                      onChange={(event) =>
-                        field.handleChange(event.target.value)
-                      }
+                      onValueChange={(next) => field.handleChange(next)}
                     >
                       <option value="">{t("Provider default")}</option>
                       {["low", "medium", "high", "xhigh"].map((e) => (
@@ -353,16 +398,13 @@ export function Setup({
                           {t(e)}
                         </option>
                       ))}
-                    </select>
+                    </Select>
                   )}
                 </form.Field>
               </label>
             </div>
             <details className="advanced">
-              <summary>
-                {t("MCP servers")}
-                <span>{t("Optional")}</span>
-              </summary>
+              <summary>{t("MCP advanced")}</summary>
               <label className="mt-3">
                 {t("Server map (JSON)")}
                 <form.Field name="mcp">
@@ -394,22 +436,26 @@ export function Setup({
             {t(error)}
           </div>
         )}
-        <button
-          className="button primary w-full justify-center mt-4"
-          disabled={saving || (tab === "agent" && !state.targets.length)}
-        >
-          {saving
-            ? t("Saving…")
-            : tab === "target"
-              ? t("Connect target")
-              : t("Create agent")}
-          <ArrowRight size={15} />
-        </button>
+        <div className="dialog-footer">
+          <button type="button" className="button" onClick={onClose}>
+            {t("Cancel")}
+          </button>
+          <button
+            className="button primary"
+            disabled={saving || (tab === "agent" && !state.targets.length)}
+          >
+            {saving
+              ? t("Saving…")
+              : tab === "target"
+                ? t("Connect target")
+                : t("Create agent")}
+          </button>
+        </div>
         {tab === "agent" && !state.targets.length && (
           <button
             type="button"
             className="text-button mt-3"
-            onClick={() => setTab("target")}
+            onClick={() => changeTab("target")}
           >
             {t("Add an execution target first")}
           </button>

@@ -1,0 +1,259 @@
+{
+  "baseline": "0aa6bb581967646711f56604e653c9b31540798f",
+  "workflow": "actual UI screenshot \u2192 Gemini critique and generated image \u2192 implementation \u2192 verification \u2192 English commit",
+  "reviewer": "Gemini web",
+  "pages": [
+    {
+      "id": "unlock",
+      "before": "before/01-unlock.jpg",
+      "geminiThread": null,
+      "generatedImage": null,
+      "status": "pending",
+      "changes": [],
+      "after": null,
+      "verification": [],
+      "commit": null
+    },
+    {
+      "id": "new-thread",
+      "before": "before/02-new-thread.jpg",
+      "geminiThread": "https://gemini.google.com/app/09cf8496cd38905e",
+      "generatedImage": null,
+      "status": "reviewed-awaiting-image",
+      "changes": [],
+      "after": null,
+      "verification": [],
+      "commit": null,
+      "critique": "references/workspace-review.md"
+    },
+    {
+      "id": "conversation",
+      "before": "before/03-conversation.jpg",
+      "geminiThread": "https://gemini.google.com/app/09cf8496cd38905e",
+      "generatedImage": null,
+      "status": "reviewed-awaiting-image",
+      "changes": [],
+      "after": null,
+      "verification": [],
+      "commit": null,
+      "critique": "references/workspace-review.md"
+    },
+    {
+      "id": "work-list",
+      "before": "before/04-work-list-empty.jpg",
+      "geminiThread": "https://gemini.google.com/app/09cf8496cd38905e",
+      "generatedImage": null,
+      "status": "reviewed-awaiting-image",
+      "changes": [],
+      "after": null,
+      "verification": [],
+      "commit": null,
+      "critique": "references/workspace-review.md"
+    },
+    {
+      "id": "work-create",
+      "before": "before/11-create-work.jpg",
+      "geminiThread": "https://gemini.google.com/app/09cf8496cd38905e",
+      "generatedImage": null,
+      "status": "reviewed-awaiting-image",
+      "changes": [],
+      "after": null,
+      "verification": [],
+      "commit": null,
+      "critique": "references/workspace-review.md"
+    },
+    {
+      "id": "work-detail",
+      "before": "before/12-work-detail.jpg",
+      "geminiThread": "https://gemini.google.com/app/09cf8496cd38905e",
+      "generatedImage": null,
+      "status": "reviewed-awaiting-image",
+      "changes": [],
+      "after": null,
+      "verification": [],
+      "commit": null,
+      "critique": "references/workspace-review.md"
+    },
+    {
+      "id": "projects",
+      "before": "before/13-projects.jpg",
+      "geminiThread": "https://gemini.google.com/app/09cf8496cd38905e",
+      "generatedImage": null,
+      "status": "reviewed-awaiting-image",
+      "changes": [],
+      "after": null,
+      "verification": [],
+      "commit": null,
+      "critique": "references/workspace-review.md"
+    },
+    {
+      "id": "project-create",
+      "before": "before/14-project-create.jpg",
+      "geminiThread": "https://gemini.google.com/app/09cf8496cd38905e",
+      "generatedImage": null,
+      "status": "reviewed-awaiting-image",
+      "changes": [],
+      "after": null,
+      "verification": [],
+      "commit": null,
+      "critique": "references/workspace-review.md"
+    },
+    {
+      "id": "thread-edit",
+      "before": "before/15-thread-edit.jpg",
+      "geminiThread": "https://gemini.google.com/app/09cf8496cd38905e",
+      "generatedImage": null,
+      "status": "reviewed-awaiting-image",
+      "changes": [],
+      "after": null,
+      "verification": [],
+      "commit": null,
+      "critique": "references/workspace-review.md"
+    },
+    {
+      "id": "routines",
+      "before": "before/16-routines.jpg",
+      "geminiThread": "https://gemini.google.com/app/09cf8496cd38905e",
+      "generatedImage": null,
+      "status": "reviewed-awaiting-image",
+      "changes": [],
+      "after": null,
+      "verification": [],
+      "commit": null,
+      "critique": "references/workspace-review.md"
+    },
+    {
+      "id": "routine-create",
+      "before": "before/18-routine-create.jpg",
+      "geminiThread": "https://gemini.google.com/app/09cf8496cd38905e",
+      "generatedImage": null,
+      "status": "reviewed-awaiting-image",
+      "changes": [],
+      "after": null,
+      "verification": [],
+      "commit": null,
+      "critique": "references/workspace-review.md"
+    },
+    {
+      "id": "agent-create",
+      "before": "before/08-agent-dialog.jpg",
+      "geminiThread": "https://gemini.google.com/app/09cf8496cd38905e",
+      "generatedImage": "references/setup-dialogs-gemini.jpg",
+      "status": "implemented",
+      "changes": [
+        "480px compact dialog with progressive configuration and Cancel/primary footer",
+        "Base UI dialog and styled select primitives",
+        "Self-hosted Manrope typography; supplied Orca identity preserved"
+      ],
+      "after": "after/08-agent-dialog.jpg",
+      "verification": [
+        "pnpm check: 170 tests, 148 passed, 22 platform skips",
+        "pnpm e2e: 16 checks, no fixture provider calls",
+        "Actual light/dark setup screenshots and 390px Agent dialog",
+        "Independent standards and spec reviews approved; mobile picker44px defect fixed"
+      ],
+      "commit": null
+    },
+    {
+      "id": "target-local",
+      "before": "before/09-local-target-dialog.jpg",
+      "geminiThread": "https://gemini.google.com/app/09cf8496cd38905e",
+      "generatedImage": "references/setup-dialogs-gemini.jpg",
+      "status": "implemented",
+      "changes": [
+        "480px compact dialog with progressive configuration and Cancel/primary footer",
+        "Base UI dialog and styled select primitives",
+        "Self-hosted Manrope typography; supplied Orca identity preserved"
+      ],
+      "after": "after/09-local-target-dialog.jpg",
+      "verification": [
+        "pnpm check: 170 tests, 148 passed, 22 platform skips",
+        "pnpm e2e: 16 checks, no fixture provider calls",
+        "Actual light/dark setup screenshots and 390px Agent dialog",
+        "Independent standards and spec reviews approved; mobile picker44px defect fixed"
+      ],
+      "commit": null
+    },
+    {
+      "id": "target-remote",
+      "before": "before/10-remote-target-dialog.jpg",
+      "geminiThread": "https://gemini.google.com/app/09cf8496cd38905e",
+      "generatedImage": "references/setup-dialogs-gemini.jpg",
+      "status": "implemented",
+      "changes": [
+        "480px compact dialog with progressive configuration and Cancel/primary footer",
+        "Base UI dialog and styled select primitives",
+        "Self-hosted Manrope typography; supplied Orca identity preserved"
+      ],
+      "after": "after/10-remote-target-dialog.jpg",
+      "verification": [
+        "pnpm check: 170 tests, 148 passed, 22 platform skips",
+        "pnpm e2e: 16 checks, no fixture provider calls",
+        "Actual light/dark setup screenshots and 390px Agent dialog",
+        "Independent standards and spec reviews approved; mobile picker44px defect fixed"
+      ],
+      "commit": null
+    },
+    {
+      "id": "attention",
+      "before": "before/19-attention.jpg",
+      "geminiThread": null,
+      "generatedImage": null,
+      "status": "pending",
+      "changes": [],
+      "after": null,
+      "verification": [],
+      "commit": null
+    },
+    {
+      "id": "artifacts",
+      "before": "before/20-artifacts.jpg",
+      "geminiThread": null,
+      "generatedImage": null,
+      "status": "pending",
+      "changes": [],
+      "after": null,
+      "verification": [],
+      "commit": null
+    },
+    {
+      "id": "execution-approval",
+      "before": "before/17-execution-approval.jpg",
+      "geminiThread": null,
+      "generatedImage": null,
+      "status": "pending",
+      "changes": [],
+      "after": null,
+      "verification": [],
+      "commit": null
+    },
+    {
+      "id": "mobile-navigation",
+      "before": "before/21-mobile-navigation.jpg",
+      "geminiThread": null,
+      "generatedImage": null,
+      "status": "pending",
+      "changes": [],
+      "after": null,
+      "verification": [],
+      "commit": null
+    },
+    {
+      "id": "landing",
+      "before": null,
+      "geminiThread": "https://gemini.google.com/app/09cf8496cd38905e",
+      "generatedImage": null,
+      "status": "awaiting-image",
+      "changes": [],
+      "after": null,
+      "verification": [],
+      "commit": null
+    }
+  ],
+  "imageGenerationBlock": {
+    "reason": "Gemini account image generation quota reached; no new image generated for home/landing or ten-page workspace review.",
+    "observedDate": "2026-11-26",
+    "status": "awaiting-quota-reset"
+  },
+  "captureNote": "Later before/ images include the in-progress shared primitive migration; see README.md."
+}

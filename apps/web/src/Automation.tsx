@@ -1,3 +1,4 @@
+import { Select } from "./Select.js";
 import { useState, useRef } from "react";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { useForm } from "@tanstack/react-form";
@@ -406,10 +407,10 @@ function CreateAutomation({
             {(f) => (
               <label>
                 {t("Agent")}
-                <select
+                <Select
                   required
                   value={f.state.value}
-                  onChange={(e) => f.handleChange(e.target.value)}
+                  onValueChange={(next) => f.handleChange(next)}
                 >
                   <option value="">{t("Choose an agent")}</option>
                   {state.agents.map((a) => (
@@ -417,7 +418,7 @@ function CreateAutomation({
                       {a.name} · {a.workdir}
                     </option>
                   ))}
-                </select>
+                </Select>
               </label>
             )}
           </form.Field>
@@ -427,10 +428,10 @@ function CreateAutomation({
               {(f) => (
                 <label>
                   {t("Thread")}
-                  <select
+                  <Select
                     required
                     value={f.state.value}
-                    onChange={(e) => f.handleChange(e.target.value)}
+                    onValueChange={(next) => f.handleChange(next)}
                   >
                     <option value="">{t("Choose a thread")}</option>
                     {state.conversations
@@ -440,7 +441,7 @@ function CreateAutomation({
                           {c.title}
                         </option>
                       ))}
-                  </select>
+                  </Select>
                 </label>
               )}
             </form.Field>
@@ -565,9 +566,9 @@ function ThreadEditor({
         </label>
         <label>
           {t("Project")}
-          <select
+          <Select
             value={projectId}
-            onChange={(e) => setProjectId(e.target.value)}
+            onValueChange={(next) => setProjectId(next)}
           >
             <option value="">{t("No project")}</option>
             {projects.map((p) => (
@@ -575,7 +576,7 @@ function ThreadEditor({
                 {p.name}
               </option>
             ))}
-          </select>
+          </Select>
         </label>
         <div className="automation-actions">
           <button

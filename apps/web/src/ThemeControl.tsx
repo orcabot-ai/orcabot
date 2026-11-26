@@ -1,3 +1,4 @@
+import { Select } from "./Select.js";
 import { useI18n } from "./i18n.js";
 import { useEffect, useState } from "react";
 import { Sun, Moon, Monitor } from "lucide-react";
@@ -41,11 +42,11 @@ export function ThemeControl() {
   return (
     <label className="theme-control">
       <Icon size={14} aria-hidden="true" />
-      <select
+      <Select
         aria-label={t("Color theme")}
         value={theme}
-        onChange={(event) => {
-          const next = event.target.value as Theme;
+        onValueChange={(value) => {
+          const next = value as Theme;
           setTheme(next);
           try {
             localStorage.setItem(storageKey, next);
@@ -57,7 +58,7 @@ export function ThemeControl() {
         <option value="system">{t("System")}</option>
         <option value="light">{t("Light")}</option>
         <option value="dark">{t("Dark")}</option>
-      </select>
+      </Select>
     </label>
   );
 }

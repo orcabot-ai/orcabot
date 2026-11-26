@@ -18,3 +18,5 @@
 - [Brand / 品牌与动效](brand.md)
 
 - [Projects, threads and routines / 项目、线程和例行任务](threads-and-routines.md)
+
+- [个人助手体验](personal-agent-experience.md)

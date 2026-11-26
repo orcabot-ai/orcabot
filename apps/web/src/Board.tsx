@@ -1,3 +1,4 @@
+import { Select } from "./Select.js";
 import { useEffect, useRef, useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "@tanstack/react-form";
@@ -282,16 +283,16 @@ function CreateWork({
           {(f) => (
             <label>
               {t("Agent")}
-              <select
+              <Select
                 value={f.state.value}
-                onChange={(e) => f.handleChange(e.target.value)}
+                onValueChange={(next) => f.handleChange(next)}
               >
                 {state.agents.map((a) => (
                   <option key={a.id} value={a.id}>
                     {a.name}
                   </option>
                 ))}
-              </select>
+              </Select>
             </label>
           )}
         </form.Field>
@@ -299,10 +300,10 @@ function CreateWork({
           {(f) => (
             <label>
               {t("Channel")}
-              <select
+              <Select
                 required
                 value={f.state.value}
-                onChange={(e) => f.handleChange(e.target.value)}
+                onValueChange={(next) => f.handleChange(next)}
               >
                 {board.channels
                   .filter((c) => !c.archived)
@@ -311,7 +312,7 @@ function CreateWork({
                       {c.path}
                     </option>
                   ))}
-              </select>
+              </Select>
             </label>
           )}
         </form.Field>
@@ -320,9 +321,9 @@ function CreateWork({
         {(f) => (
           <label>
             {t("Workflow")}
-            <select
+            <Select
               value={f.state.value}
-              onChange={(e) => f.handleChange(e.target.value)}
+              onValueChange={(next) => f.handleChange(next)}
             >
               {board.definitions.map((d) => (
                 <option
@@ -332,7 +333,7 @@ function CreateWork({
                   {d.workflow.id} · v{d.workflow.version}
                 </option>
               ))}
-            </select>
+            </Select>
           </label>
         )}
       </form.Field>
@@ -814,15 +815,15 @@ function ReviewForm({ detail }: { detail: WorkDetail }) {
       </p>
       <label>
         {t("Decision")}
-        <select
+        <Select
           value={decision}
-          onChange={(e) =>
-            setDecision(e.target.value === "reject" ? "reject" : "approve")
+          onValueChange={(next) =>
+            setDecision(next === "reject" ? "reject" : "approve")
           }
         >
           <option value="approve">{t("Approve result")}</option>
           <option value="reject">{t("Request changes")}</option>
-        </select>
+        </Select>
       </label>
       <form.Field name="note">
         {(f) => (

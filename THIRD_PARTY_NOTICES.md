@@ -27,9 +27,12 @@ Regenerate this file with `pnpm licenses:report`. License and NOTICE texts remai
 | @babel/helper-validator-option                    | 7.29.7         | MIT             | [Source](https://www.npmjs.com/package/@babel/helper-validator-option)                    |
 | @babel/helpers                                    | 7.29.15        | MIT             | [Source](https://www.npmjs.com/package/@babel/helpers)                                    |
 | @babel/parser                                     | 7.29.15        | MIT             | [Source](https://www.npmjs.com/package/@babel/parser)                                     |
+| @babel/runtime                                    | 8.1.3          | MIT             | [Source](https://www.npmjs.com/package/@babel/runtime)                                    |
 | @babel/template                                   | 7.29.7         | MIT             | [Source](https://www.npmjs.com/package/@babel/template)                                   |
 | @babel/traverse                                   | 7.29.15        | MIT             | [Source](https://www.npmjs.com/package/@babel/traverse)                                   |
 | @babel/types                                      | 7.29.15        | MIT             | [Source](https://www.npmjs.com/package/@babel/types)                                      |
+| @base-ui/react                                    | 1.9.0          | MIT             | [Source](https://www.npmjs.com/package/@base-ui/react)                                    |
+| @base-ui/utils                                    | 0.5.0          | MIT             | [Source](https://www.npmjs.com/package/@base-ui/utils)                                    |
 | @esbuild/darwin-arm64                             | 0.28.2         | MIT             | [Source](https://www.npmjs.com/package/@esbuild/darwin-arm64)                             |
 | @fastify/accept-negotiator                        | 2.1.2          | MIT             | [Source](https://www.npmjs.com/package/@fastify/accept-negotiator)                        |
 | @fastify/ajv-compiler                             | 4.0.8          | MIT             | [Source](https://www.npmjs.com/package/@fastify/ajv-compiler)                             |
@@ -43,6 +46,11 @@ Regenerate this file with `pnpm licenses:report`. License and NOTICE texts remai
 | @fastify/reply-from                               | 12.9.1         | MIT             | [Source](https://www.npmjs.com/package/@fastify/reply-from)                               |
 | @fastify/send                                     | 4.2.1          | MIT             | [Source](https://www.npmjs.com/package/@fastify/send)                                     |
 | @fastify/static                                   | 10.1.12        | MIT             | [Source](https://www.npmjs.com/package/@fastify/static)                                   |
+| @floating-ui/core                                 | 1.8.0          | MIT             | [Source](https://www.npmjs.com/package/@floating-ui/core)                                 |
+| @floating-ui/dom                                  | 1.8.0          | MIT             | [Source](https://www.npmjs.com/package/@floating-ui/dom)                                  |
+| @floating-ui/react-dom                            | 2.1.9          | MIT             | [Source](https://www.npmjs.com/package/@floating-ui/react-dom)                            |
+| @floating-ui/utils                                | 0.2.12         | MIT             | [Source](https://www.npmjs.com/package/@floating-ui/utils)                                |
+| @fontsource-variable/manrope                      | 5.3.0          | OFL-1.1         | [Source](https://www.npmjs.com/package/@fontsource-variable/manrope)                      |
 | @isaacs/nonrecursive-glob-match                   | 1.1.0          | BlueOak-1.0.0   | [Source](https://www.npmjs.com/package/@isaacs/nonrecursive-glob-match)                   |
 | @jridgewell/gen-mapping                           | 0.3.13         | MIT             | [Source](https://www.npmjs.com/package/@jridgewell/gen-mapping)                           |
 | @jridgewell/remapping                             | 2.3.5          | MIT             | [Source](https://www.npmjs.com/package/@jridgewell/remapping)                             |
@@ -263,6 +271,7 @@ Regenerate this file with `pnpm licenses:report`. License and NOTICE texts remai
 | remark-rehype                                     | 11.1.2         | MIT             | [Source](https://www.npmjs.com/package/remark-rehype)                                     |
 | require-directory                                 | 2.1.1          | MIT             | [Source](https://www.npmjs.com/package/require-directory)                                 |
 | require-from-string                               | 2.0.2          | MIT             | [Source](https://www.npmjs.com/package/require-from-string)                               |
+| reselect                                          | 5.3.0          | MIT             | [Source](https://www.npmjs.com/package/reselect)                                          |
 | ret                                               | 0.5.1          | MIT             | [Source](https://www.npmjs.com/package/ret)                                               |
 | reusify                                           | 1.1.0          | MIT             | [Source](https://www.npmjs.com/package/reusify)                                           |
 | rfdc                                              | 1.4.1          | MIT             | [Source](https://www.npmjs.com/package/rfdc)                                              |
@@ -333,7 +342,7 @@ Regenerate this file with `pnpm licenses:report`. License and NOTICE texts remai
 
 ## Distribution notes
 
-Preserve attribution and license texts when redistributing. Apache imports are not relicensed as MIT. MPL-2.0 packages (lightningcss and its installed native binary) require their own notices and corresponding-source handling when distributed/modified; source: https://github.com/parcel-bundler/lightningcss. The build-time caniuse-lite data is CC-BY-4.0; attribution/source: https://github.com/browserslist/caniuse-lite. Other installed license families are MIT, ISC, BSD-3-Clause, BlueOak-1.0.0, Python-2.0, Unlicense and 0BSD.
+Preserve attribution and license texts when redistributing. Apache imports are not relicensed as MIT. MPL-2.0 packages (lightningcss and its installed native binary) require their own notices and corresponding-source handling when distributed/modified; source: https://github.com/parcel-bundler/lightningcss. The build-time caniuse-lite data is CC-BY-4.0; attribution/source: https://github.com/browserslist/caniuse-lite. Other installed license families are MIT, ISC, BSD-3-Clause, BlueOak-1.0.0, Python-2.0, Unlicense, 0BSD and OFL-1.1. The self-hosted Manrope font license is shipped in apps/web/public/fonts/Manrope-OFL.txt and copied into the browser distribution.
 
 The automatically installed OctoRuntime software, harness executables and model services are separate installations and retain their own license/service terms. They are not covered by this workspace-only inventory.
 

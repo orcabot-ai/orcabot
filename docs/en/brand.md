@@ -22,8 +22,9 @@ fill. Status indicators keep their own warning, success and error colors.
 - Controls use a shared 6px radius, panels 8px and dialogs 12px. Text hierarchy,
   alignment and separators carry the layout. Shadows are limited to overlays.
 
-Dialogs have bounded scrolling, visible labels and one primary action. Desktop
-fields are at least 36px; mobile fields and navigation targets are at least 44px.
+Dialogs and selectors use Base UI primitives, following the composition and density of [coss ui](https://coss.com/ui/docs). Nested menus handle their own Escape before the parent dialog. Fields keep visible labels; setup dialogs use a 480px frame, 32px desktop fields, progressive advanced settings, Cancel and one primary action. Other desktop fields are at least 36px; mobile fields and navigation targets are at least 44px.
+
+Manrope Variable is self-hosted for Latin text, with local system fallbacks for Chinese. It introduces softer letterforms without a network font request. Its OFL-1.1 text ships at `/fonts/Manrope-OFL.txt`. The owner-supplied Orca mark remains unchanged.
 The mobile sidebar reuses the dialog focus trap, makes the background inert,
 closes on route selection or Escape, and returns keyboard focus after dismissal.
 Brief opacity/transform entrances respect reduced motion. Long configuration

@@ -13,3 +13,5 @@
 品牌原图和浅深色透明衍生图保存在 `apps/web/public/brand`。MIT 资产许可不表示派生项目获得官方背书。
 
 有一项已安装依赖 abstract-logging 2.0.1 声明 MIT 并提供作者许可链接，但发布包没有独立许可证文件。清单保留其来源并明确记录此缺项，不伪造上游版权声明。发布二进制前应继续核对。
+
+自托管的 Manrope Variable 字体使用 OFL-1.1。上游协议保留于 `apps/web/public/fonts/Manrope-OFL.txt`，随 Web 构建一起分发。Base UI 基础组件保留其 MIT 依赖协议。

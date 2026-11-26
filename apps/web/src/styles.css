@@ -1,7 +1,9 @@
 @import "tailwindcss";
+@import "@fontsource-variable/manrope";
 @theme {
   --font-sans:
-    -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", sans-serif;
+    "Manrope Variable", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    "PingFang SC", "Microsoft YaHei", sans-serif;
 }
 :root {
   --background: #151618;
@@ -129,7 +131,7 @@ body {
   margin: 0;
 }
 button,
-select,
+.select-trigger,
 summary {
   cursor: pointer;
 }
@@ -139,7 +141,7 @@ button:disabled {
 }
 button,
 input,
-select,
+.select-trigger,
 textarea {
   font: inherit;
 }
@@ -155,12 +157,12 @@ summary:focus-visible {
   outline-offset: 3px;
 }
 input,
-select,
+.select-trigger,
 textarea {
   outline: none;
 }
 input:focus,
-select:focus,
+.select-trigger:focus,
 textarea:focus {
   border-color: var(--border-strong) !important;
 }
@@ -187,7 +189,6 @@ label {
   margin-bottom: 18px;
 }
 label input,
-label select,
 label textarea {
   display: block;
   width: 100%;
@@ -619,7 +620,7 @@ textarea::placeholder {
   border-radius: 6px;
   min-width: 0;
 }
-.agent-picker select {
+.agent-picker .select-trigger {
   appearance: none;
   background: none;
   color: inherit;
@@ -938,7 +939,6 @@ textarea::placeholder {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--overlay);
   padding: 24px;
   animation: overlay-in 120ms ease-out;
 }
@@ -1215,7 +1215,7 @@ a.artifact-location {
   margin: 0;
   color: var(--muted);
 }
-.theme-control select {
+.theme-control .select-trigger {
   margin: 0;
   width: auto;
   max-width: 90px;
@@ -1252,7 +1252,7 @@ a.artifact-location {
   margin: 0;
   color: var(--muted);
 }
-.language-control select {
+.language-control .select-trigger {
   width: auto;
   margin: 0;
   min-height: 30px;
@@ -1713,8 +1713,8 @@ a.artifact-location {
   border-radius: var(--radius-control);
   background: var(--surface-raised);
 }
-.theme-control:hover select,
-.language-control:hover select {
+.theme-control:hover .select-trigger,
+.language-control:hover .select-trigger {
   background: var(--hover);
 }
 .skip-link {
@@ -1844,8 +1844,8 @@ a.artifact-location {
   .language-control svg {
     display: none;
   }
-  .theme-control select,
-  .language-control select {
+  .theme-control .select-trigger,
+  .language-control .select-trigger {
     min-height: 44px;
     padding: 4px;
     max-width: 72px;
@@ -1882,7 +1882,7 @@ a.artifact-location {
     gap: 0;
   }
   .setup-panel label input,
-  .setup-panel label select,
+  .setup-panel label .select-trigger,
   .setup-panel label textarea {
     min-height: 44px;
     font-size: 16px;
@@ -1931,7 +1931,7 @@ a.artifact-location {
   .agent-picker {
     padding: 5px;
   }
-  .agent-picker select {
+  .agent-picker .select-trigger {
     max-width: 125px;
     font-size: 12px;
     min-height: 30px;
@@ -1972,5 +1972,272 @@ a.artifact-location {
     animation: none !important;
     scroll-behavior: auto !important;
     transition: none !important;
+  }
+}
+
+/* Gemini's generated setup dialog board: compact body and a separate action footer. */
+.connection-setup {
+  width: min(480px, 100%);
+  padding: 0;
+  border-radius: 6px;
+  box-shadow: 0 8px 32px #0003;
+}
+.connection-setup .dialog-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 16px 12px;
+}
+.connection-setup .dialog-heading h2 {
+  margin: 0;
+  font-size: 18px;
+  letter-spacing: -0.3px;
+}
+.connection-setup .dialog-heading p {
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
+.connection-setup .setup-tabs {
+  margin: 0 16px 16px;
+  padding: 3px;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  background: var(--surface);
+}
+.connection-setup .setup-tabs button {
+  flex: 1;
+  min-height: 28px;
+  padding: 4px 8px;
+  border-radius: 3px;
+}
+.connection-setup .setup-tabs button.selected {
+  background: var(--surface-raised);
+}
+.connection-setup .setup-form {
+  padding: 0 16px;
+}
+.connection-setup label {
+  margin-bottom: 12px;
+  font-size: 12px;
+}
+.connection-setup label input,
+.connection-setup label .select-trigger,
+.connection-setup label textarea {
+  margin-top: 6px;
+  min-height: 32px;
+  padding: 6px 9px;
+  border-radius: 4px;
+}
+.connection-setup label small {
+  margin-top: 6px;
+  font-size: 11px;
+  line-height: 1.5;
+}
+.connection-setup .field-grid {
+  gap: 12px;
+}
+.connection-setup .advanced {
+  padding: 0;
+  margin: 12px 0 16px;
+  background: transparent;
+  border-radius: 4px;
+}
+.connection-setup .advanced > summary {
+  padding: 9px 10px;
+  font-size: 12px;
+  color: var(--secondary);
+}
+.connection-setup .advanced > label {
+  margin: 0;
+  padding: 4px 12px 12px;
+}
+.secret-input {
+  display: flex;
+  align-items: stretch;
+  margin-top: 6px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.connection-setup .secret-input input {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+}
+.secret-input:focus-within {
+  outline: 1px solid var(--border-strong);
+}
+.secret-input button {
+  padding: 0 10px;
+  border-left: 1px solid var(--border);
+  color: var(--secondary);
+  font-size: 11px;
+  flex-shrink: 0;
+}
+.connection-setup .dialog-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 16px -16px 0;
+  padding: 12px 16px;
+  border-top: 1px solid var(--border);
+}
+.connection-setup .dialog-footer > .button:first-child {
+  background: transparent;
+  border-color: transparent;
+  color: var(--secondary);
+}
+@media (max-width: 600px) {
+  .connection-setup label input,
+  .connection-setup label .select-trigger,
+  .connection-setup label textarea,
+  .connection-setup .setup-tabs button {
+    min-height: 44px;
+  }
+  .connection-setup label input,
+  .connection-setup label .select-trigger,
+  .connection-setup label textarea {
+    font-size: 16px;
+  }
+  .connection-setup .secret-input input {
+    margin: 0;
+  }
+  .connection-setup .advanced > summary {
+    min-height: 44px;
+  }
+}
+
+/* Shared coss-inspired controls; Base UI handles dismissal, focus, and nested popups. */
+.modal-scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: var(--overlay);
+  animation: overlay-in 120ms ease-out;
+}
+.select-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  min-width: 0;
+  min-height: 36px;
+  padding: 7px 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-control);
+  background: var(--input);
+  color: var(--strong);
+  font: inherit;
+  text-align: left;
+  transition:
+    border-color 120ms,
+    background 120ms;
+}
+.select-trigger:hover:not(:disabled) {
+  border-color: var(--secondary);
+}
+.select-trigger:focus-visible,
+.select-trigger[data-popup-open] {
+  outline: 2px solid var(--border-strong);
+  outline-offset: 2px;
+}
+.select-trigger:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+.select-value {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.select-icon {
+  display: flex;
+  flex-shrink: 0;
+  color: var(--muted);
+}
+.select-positioner {
+  z-index: 150;
+  max-width: calc(100vw - 24px);
+}
+.select-popup {
+  min-width: var(--anchor-width);
+  max-width: min(480px, calc(100vw - 24px));
+  max-height: min(320px, var(--available-height));
+  overflow-y: auto;
+  padding: 4px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: 0 4px 16px #0002;
+  transform-origin: var(--transform-origin);
+  animation: overlay-in 100ms ease-out;
+}
+.select-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 32px;
+  padding: 6px 9px;
+  border-radius: 4px;
+  font-size: 13px;
+  color: var(--text);
+  cursor: default;
+  overflow-wrap: anywhere;
+}
+.select-item[data-highlighted] {
+  background: var(--accent-soft);
+  color: var(--strong);
+  outline: none;
+}
+.select-item[data-disabled] {
+  opacity: 0.45;
+}
+.select-check {
+  display: flex;
+  flex-shrink: 0;
+  color: var(--accent-text);
+}
+.theme-control .select-trigger,
+.language-control .select-trigger,
+.agent-picker .select-trigger {
+  min-height: 30px;
+  border-color: transparent;
+  background: transparent;
+  margin: 0;
+  padding: 4px 5px;
+}
+.theme-control,
+.language-control {
+  margin: 0;
+}
+.connection-setup label .select-trigger {
+  margin-top: 6px;
+  min-height: 32px;
+  padding: 6px 9px;
+  font-size: 13px;
+}
+@media (max-width: 600px) {
+  .select-trigger,
+  .select-item,
+  .connection-setup label .select-trigger {
+    min-height: 44px;
+  }
+  .select-trigger,
+  .connection-setup label .select-trigger {
+    font-size: 16px;
+  }
+  .theme-control .select-trigger,
+  .language-control .select-trigger,
+  .agent-picker .select-trigger {
+    min-height: 44px;
   }
 }

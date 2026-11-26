@@ -1,3 +1,4 @@
+import { Select } from "./Select.js";
 import {
   createContext,
   useCallback,
@@ -52,12 +53,10 @@ export function LanguageControl() {
   return (
     <label className="language-control">
       <Languages size={14} aria-hidden="true" />
-      <select
+      <Select
         aria-label={t("Language")}
         value={locale}
-        onChange={(event) =>
-          setLocale(event.target.value === "zh" ? "zh" : "en")
-        }
+        onValueChange={(next) => setLocale(next === "zh" ? "zh" : "en")}
       >
         <option value="en" lang="en">
           EN
@@ -65,7 +64,7 @@ export function LanguageControl() {
         <option value="zh" lang="zh-CN">
           中文
         </option>
-      </select>
+      </Select>
     </label>
   );
 }

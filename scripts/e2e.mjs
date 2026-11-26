@@ -144,13 +144,50 @@ try {
     assert.ok(result, "Missing/disabled button: " + text);
     await pause(100);
   };
-  const field = async (label, value) => {
-    assert.ok(
-      await ev(
-        `(()=>{const l=[...document.querySelectorAll('[role=dialog] label')].find(l=>l.textContent.trim().startsWith(${JSON.stringify(label)}));const e=l?.querySelector('input,textarea,select');if(!e)return false;const proto=e.tagName==='SELECT'?HTMLSelectElement.prototype:e.tagName==='TEXTAREA'?HTMLTextAreaElement.prototype:HTMLInputElement.prototype;Object.getOwnPropertyDescriptor(proto,'value').set.call(e,${JSON.stringify(value)});e.dispatchEvent(new Event('input',{bubbles:true}));e.dispatchEvent(new Event('change',{bubbles:true}));return true})()`,
-      ),
-      "Missing field " + label,
+  const hit = async (selector) => {
+    const point = await ev(
+      `(()=>{const b=[...document.querySelectorAll(${JSON.stringify(selector)})].find(e=>e.checkVisibility());if(!b||b.disabled)return null;b.scrollIntoView({block:'nearest'});const r=b.getBoundingClientRect();return {x:r.x+r.width/2,y:r.y+r.height/2}})()`,
     );
+    assert.ok(point, "Missing control " + selector);
+    await S("Input.dispatchMouseEvent", { type: "mouseMoved", ...point });
+    await S("Input.dispatchMouseEvent", {
+      type: "mousePressed",
+      ...point,
+      button: "left",
+      clickCount: 1,
+    });
+    await S("Input.dispatchMouseEvent", {
+      type: "mouseReleased",
+      ...point,
+      button: "left",
+      clickCount: 1,
+    });
+  };
+  const selectValue = async (trigger, value) => {
+    await hit(trigger);
+    const option = `[role=option][data-value=${JSON.stringify(value)}]`;
+    await wait(
+      `[...document.querySelectorAll(${JSON.stringify(option)})].some(e=>e.checkVisibility())`,
+    );
+    await hit(option);
+    await wait(
+      `document.querySelector(${JSON.stringify(trigger)}).getAttribute('aria-expanded')==='false'`,
+    );
+    await wait(
+      '![...document.querySelectorAll("[role=listbox]")].some(e=>e.checkVisibility())',
+    );
+  };
+  const field = async (label, value) => {
+    const result = await ev(
+      `(()=>{const l=[...document.querySelectorAll('[role=dialog] label')].find(l=>l.textContent.trim().startsWith(${JSON.stringify(label)}));if(l?.querySelector('[role=combobox]')){l.querySelector('[role=combobox]').setAttribute('data-e2e-select','current');return 'select'}const e=l?.querySelector('input:not([type=hidden]),textarea');if(!e)return false;const proto=e.tagName==='TEXTAREA'?HTMLTextAreaElement.prototype:HTMLInputElement.prototype;Object.getOwnPropertyDescriptor(proto,'value').set.call(e,${JSON.stringify(value)});e.dispatchEvent(new Event('input',{bubbles:true}));e.dispatchEvent(new Event('change',{bubbles:true}));return true})()`,
+    );
+    assert.ok(result, "Missing field " + label);
+    if (result === "select") {
+      await selectValue('[data-e2e-select="current"]', value);
+      await ev(
+        `document.querySelector('[data-e2e-select="current"]').removeAttribute('data-e2e-select')`,
+      );
+    }
   };
   const request = async (path, body) => {
     const r = await fetch(config.workerUrl + "/api" + path, {
@@ -283,10 +320,14 @@ try {
       code: "Tab",
       windowsVirtualKeyCode: 9,
     });
-    assert.ok(
-      await ev(
-        'document.querySelector("[role=dialog]").contains(document.activeElement)',
-      ),
+    await S("Input.dispatchKeyEvent", {
+      type: "keyUp",
+      key: "Tab",
+      code: "Tab",
+      windowsVirtualKeyCode: 9,
+    });
+    await wait(
+      'document.querySelector("[role=dialog]").contains(document.activeElement)',
     );
   }
   reports.push("dialog keyboard focus containment");
@@ -327,9 +368,8 @@ try {
     await ev('document.activeElement?.textContent.includes("New routine")'),
   );
   reports.push("mobile bounds, images, Escape and focus restoration");
-  await ev(
-    `sessionStorage.setItem('orcabot.locale','zh');localStorage.setItem('orcabot.theme','dark')`,
-  );
+  await selectValue(".language-control [role=combobox]", "zh");
+  await selectValue(".theme-control [role=combobox]", "dark");
   await go("/routines");
   await wait('document.body.textContent.includes("例行任务")');
   assert.equal(await ev("document.documentElement.dataset.theme"), "dark");
@@ -442,14 +482,16 @@ try {
   reports.push(
     "task review and context rail in both themes at 1440, 1024, 768, 390 and 320px",
   );
-  const key = (key, code, extra = {}) =>
-    S("Input.dispatchKeyEvent", {
+  const key = async (key, code, extra = {}) => {
+    await S("Input.dispatchKeyEvent", {
       type: "keyDown",
       key,
       code,
       windowsVirtualKeyCode: key === "Tab" ? 9 : 27,
       ...extra,
     });
+    await S("Input.dispatchKeyEvent", { type: "keyUp", key, code, ...extra });
+  };
   await ev(
     `document.querySelector('button[aria-label="Show sidebar"]').focus();document.querySelector('button[aria-label="Show sidebar"]').click()`,
   );
@@ -459,10 +501,8 @@ try {
     '[...document.querySelectorAll(".sidebar-drawer button")].at(-1).focus()',
   );
   await key("Tab", "Tab");
-  assert.ok(
-    await ev(
-      'document.querySelector(".sidebar-drawer").contains(document.activeElement)',
-    ),
+  await wait(
+    'document.querySelector(".sidebar-drawer").contains(document.activeElement)',
   );
   await key("Escape", "Escape");
   await wait('!document.querySelector(".sidebar-drawer")');
@@ -515,12 +555,8 @@ try {
     mcp: {},
   });
   await go("/");
-  await wait(
-    `!!document.querySelector('.agent-picker option[value="${longAgent.id}"]')`,
-  );
-  await ev(
-    `(()=>{const s=document.querySelector('.agent-picker select');Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype,'value').set.call(s,${JSON.stringify(longAgent.id)});s.dispatchEvent(new Event('change',{bubbles:true}))})()`,
-  );
+  await wait('!!document.querySelector(".agent-picker [role=combobox]")');
+  await selectValue(".agent-picker [role=combobox]", longAgent.id);
   await wait(
     `document.querySelector('.workspace-context').textContent.includes(${JSON.stringify(longAgent.name)})`,
   );
@@ -538,8 +574,84 @@ try {
       `Long configuration overflow at ${width}`,
     );
   }
+  assert.ok(
+    await ev(
+      'document.querySelector(".agent-picker [role=combobox]").getBoundingClientRect().height>=44',
+    ),
+    "Mobile agent picker must have a 44px touch target",
+  );
   reports.push(
     "long Agent, target and directory metadata wrap inside the mobile content scroller",
+  );
+  // Verify the shared primitives through real pointer and keyboard input.
+  await S("Emulation.setDeviceMetricsOverride", {
+    width: 1440,
+    height: 1000,
+    deviceScaleFactor: 1,
+    mobile: false,
+  });
+  await go("/");
+  await wait('!!document.querySelector(".welcome")');
+  await hit('button[aria-label="Open settings"]');
+  await wait('!!document.querySelector(".connection-setup")');
+  await field("Name", "E2E personal assistant");
+  await field("Working directory", "/fixture/assistant");
+  await field("Reasoning effort", "high");
+  const effortTrigger =
+    '.connection-setup label:has(input[name="effort"]) [role=combobox]';
+  await hit(effortTrigger);
+  await wait(
+    `document.querySelector(${JSON.stringify(effortTrigger)}).getAttribute('aria-expanded')==='true'`,
+  );
+  await key("Escape", "Escape");
+  await wait(
+    `document.querySelector(${JSON.stringify(effortTrigger)}).getAttribute('aria-expanded')==='false'`,
+  );
+  assert.ok(
+    await ev('!!document.querySelector(".connection-setup")'),
+    "Escape on a nested select must keep the parent dialog open",
+  );
+  await click("Create agent");
+  await wait('!document.querySelector(".connection-setup")');
+  const savedAssistant = (await request("/state")).agents.find(
+    (a) => a.name === "E2E personal assistant",
+  );
+  assert.equal(savedAssistant.workdir, "/fixture/assistant");
+  assert.equal(savedAssistant.adapter, "codex");
+  assert.equal(savedAssistant.effort, "high");
+  reports.push(
+    "agent creation persists the selected custom-dropdown value; nested Escape keeps the dialog open",
+  );
+  const targetsBefore = (await request("/state")).targets.length;
+  await hit('button[aria-label="Open settings"]');
+  await wait('!!document.querySelector(".connection-setup")');
+  await click("Execution targets");
+  assert.equal(
+    await ev('document.querySelector(".endpoint-disclosure").open'),
+    false,
+  );
+  await field("Connection", "remote");
+  await field("Service key", "fixture-key-used-only-in-browser-checks");
+  assert.equal(
+    await ev('document.querySelector("input[name=token]").type'),
+    "password",
+  );
+  await click("Show");
+  assert.equal(
+    await ev('document.querySelector("input[name=token]").type'),
+    "text",
+  );
+  await field("Connection", "local");
+  await field("Connection", "remote");
+  assert.equal(
+    await ev('document.querySelector("input[name=token]").type'),
+    "password",
+  );
+  await click("Cancel");
+  await wait('!document.querySelector(".connection-setup")');
+  assert.equal((await request("/state")).targets.length, targetsBefore);
+  reports.push(
+    "managed local details are collapsed; remote key visibility resets and Cancel creates no connection",
   );
   assert.deepEqual(exceptions, []);
   console.log(

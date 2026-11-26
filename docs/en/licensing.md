@@ -34,3 +34,5 @@ Primary terms: [MIT](https://opensource.org/license/mit),
 One installed package, abstract-logging 2.0.1, declares MIT and an author license
 URL but publishes no standalone license text. Its manifest/source link and this
 gap remain recorded rather than inventing a replacement copyright notice.
+
+The self-hosted Manrope Variable font is OFL-1.1. Its upstream license text is shipped in `apps/web/public/fonts/Manrope-OFL.txt` and copied into the web distribution. Base UI primitives retain their MIT dependency license.

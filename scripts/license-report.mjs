@@ -64,7 +64,7 @@ const lines = [
   "",
   "## Distribution notes",
   "",
-  "Preserve attribution and license texts when redistributing. Apache imports are not relicensed as MIT. MPL-2.0 packages (lightningcss and its installed native binary) require their own notices and corresponding-source handling when distributed/modified; source: https://github.com/parcel-bundler/lightningcss. The build-time caniuse-lite data is CC-BY-4.0; attribution/source: https://github.com/browserslist/caniuse-lite. Other installed license families are MIT, ISC, BSD-3-Clause, BlueOak-1.0.0, Python-2.0, Unlicense and 0BSD.",
+  "Preserve attribution and license texts when redistributing. Apache imports are not relicensed as MIT. MPL-2.0 packages (lightningcss and its installed native binary) require their own notices and corresponding-source handling when distributed/modified; source: https://github.com/parcel-bundler/lightningcss. The build-time caniuse-lite data is CC-BY-4.0; attribution/source: https://github.com/browserslist/caniuse-lite. Other installed license families are MIT, ISC, BSD-3-Clause, BlueOak-1.0.0, Python-2.0, Unlicense, 0BSD and OFL-1.1. The self-hosted Manrope font license is shipped in apps/web/public/fonts/Manrope-OFL.txt and copied into the browser distribution.",
   "",
   "The automatically installed OctoRuntime software, harness executables and model services are separate installations and retain their own license/service terms. They are not covered by this workspace-only inventory.",
   "",

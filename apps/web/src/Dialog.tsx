@@ -1,4 +1,5 @@
-import { useEffect, useRef, type ReactNode } from "react";
+import { useRef, type ReactNode } from "react";
+import { Dialog as Primitive } from "@base-ui/react/dialog";
 
 export function Dialog({
   title,
@@ -11,65 +12,33 @@ export function Dialog({
   children: ReactNode;
   className?: string;
 }) {
-  const panel = useRef<HTMLElement>(null);
-  const close = useRef(onClose);
-  close.current = onClose;
-  useEffect(() => {
-    const previous = document.activeElement as HTMLElement | null;
-    const overflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    const focusable = () =>
-      Array.from(
-        panel.current?.querySelectorAll<HTMLElement>(
-          'button:not(:disabled), input:not(:disabled), select:not(:disabled), textarea:not(:disabled), a[href], [tabindex="0"]',
-        ) ?? [],
-      ).filter((element) => element.getClientRects().length > 0);
-    (
-      panel.current?.querySelector<HTMLElement>("input, select, textarea") ??
-      focusable()[0] ??
-      panel.current
-    )?.focus();
-    const keyboard = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        event.preventDefault();
-        close.current();
-      }
-      if (event.key !== "Tab") return;
-      const elements = focusable(),
-        first = elements[0],
-        last = elements.at(-1);
-      if (event.shiftKey && document.activeElement === first) {
-        event.preventDefault();
-        last?.focus();
-      } else if (!event.shiftKey && document.activeElement === last) {
-        event.preventDefault();
-        first?.focus();
-      }
-    };
-    document.addEventListener("keydown", keyboard);
-    return () => {
-      document.removeEventListener("keydown", keyboard);
-      document.body.style.overflow = overflow;
-      previous?.focus();
-    };
-  }, []);
+  const panel = useRef<HTMLDivElement>(null);
   return (
-    <div
-      className="modal-backdrop"
-      onClick={(event) => {
-        if (event.target === event.currentTarget) onClose();
+    <Primitive.Root
+      open
+      onOpenChange={(open) => {
+        if (!open) onClose();
       }}
     >
-      <section
-        ref={panel}
-        className={`setup-panel ${className}`}
-        role="dialog"
-        aria-modal="true"
-        aria-label={title}
-        tabIndex={-1}
-      >
-        {children}
-      </section>
-    </div>
+      <Primitive.Portal>
+        <Primitive.Backdrop className="modal-scrim" />
+        <Primitive.Viewport className="modal-backdrop">
+          <Primitive.Popup
+            ref={panel}
+            className={`setup-panel ${className}`}
+            aria-label={title}
+            initialFocus={(type) =>
+              type === "touch"
+                ? panel.current
+                : (panel.current?.querySelector<HTMLElement>(
+                    'input:not([type="hidden"]), textarea, [role="combobox"]',
+                  ) ?? true)
+            }
+          >
+            {children}
+          </Primitive.Popup>
+        </Primitive.Viewport>
+      </Primitive.Portal>
+    </Primitive.Root>
   );
 }

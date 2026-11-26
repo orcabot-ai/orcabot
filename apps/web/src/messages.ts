@@ -1,5 +1,20 @@
 // English messages are stable lookup keys; execution data is never translated.
 export const chinese = {
+  "Local connection": "本机连接",
+  "Remote connection": "远端连接",
+  "Give your assistant a place to work.": "给你的助手安排一个工作空间。",
+  "Use this computer's configured connection.":
+    "使用这台电脑已配置的执行连接。",
+  "Connect to a worker on another machine.": "连接另一台机器上的 worker。",
+  "Connection setup": "连接配置",
+  "This computer": "这台电脑",
+  "Remote worker": "远端 worker",
+  "Advanced local endpoint": "高级本机连接地址",
+  "MCP advanced": "MCP 高级配置",
+  "Show service key": "显示服务密钥",
+  "Hide service key": "隐藏服务密钥",
+  Show: "显示",
+  Hide: "隐藏",
   "Workspace navigation": "工作区导航",
   "Skip to content": "跳到内容",
   Threads: "工作线程",
@@ -286,6 +301,7 @@ export const chinese = {
   "An Agent is a reusable execution configuration. Each run keeps its own snapshot.":
     "Agent 是可复用的执行配置。每次执行都会保存独立的配置快照。",
   "My engineering agent": "我的工程 Agent",
+  "My assistant": "我的助手",
   "Execution target": "执行节点",
   "Select a target": "选择执行节点",
   "Harness adapter": "执行框架适配器",
