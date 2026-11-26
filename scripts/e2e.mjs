@@ -58,6 +58,7 @@ try {
       `--user-data-dir=${join(temp, "chrome")}`,
       "--remote-debugging-port=0",
       "--no-first-run",
+      "--disable-dev-shm-usage",
       "--no-default-browser-check",
       // Only the disposable CI fixture opts out; local runs keep the sandbox.
       ...(process.env.ORCABOT_E2E_NO_SANDBOX === "1" ? ["--no-sandbox"] : []),
@@ -72,15 +73,21 @@ try {
     chromeDiagnostics = String(error);
   });
   let port;
-  for (let i = 0; i < 100; i++) {
+  // Shared hosted runners can need more than ten seconds to start Chromium.
+  const chromeDeadline = Date.now() + 30000;
+  while (Date.now() < chromeDeadline) {
     if (chrome.exitCode !== null || chrome.signalCode !== null) break;
     try {
-      port = Number(
+      const candidate = Number(
         (await readFile(join(temp, "chrome/DevToolsActivePort"), "utf8")).split(
           "\n",
         )[0],
       );
-      break;
+      if (Number.isInteger(candidate) && candidate > 0 && candidate <= 65535) {
+        port = candidate;
+        break;
+      }
+      await pause(100);
     } catch {
       await pause(100);
     }
