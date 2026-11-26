@@ -22,3 +22,6 @@ jobs:
       - run: pnpm check
       - run: pnpm format:check
       - run: pnpm e2e
+        env:
+          # Ubuntu runner sandbox restrictions; browser loads only our local fixture.
+          ORCABOT_E2E_NO_SANDBOX: "1"

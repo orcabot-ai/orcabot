@@ -102,7 +102,9 @@ UTC epoch milliseconds, while the UI formats dates in the client's locale.
 
 `pnpm check` covers persistence, project containment, idempotency, capacity rollback,
 failure fatigue, missed windows, restart unknown-state quarantine and auth guards.
-`pnpm e2e` requires Chrome/Chromium (`CHROME_PATH` optional); it starts an isolated
+`pnpm e2e` requires Chrome/Chromium (`CHROME_PATH` optional). Local runs keep the
+browser sandbox; the disposable Ubuntu CI job explicitly sets
+`ORCABOT_E2E_NO_SANDBOX=1` for its restricted runner. It starts an isolated
 SQLite/provider fixture and browser, tests project/thread/routine UI over real HTTP,
 checks result return and dialogs, then removes its processes/data. It never invokes
 a paid model or uses the operator's live database. Screenshots use fixture data.

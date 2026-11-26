@@ -54,11 +54,21 @@ try {
       "--remote-debugging-port=0",
       "--no-first-run",
       "--no-default-browser-check",
+      // Only the disposable CI fixture opts out; local runs keep the sandbox.
+      ...(process.env.ORCABOT_E2E_NO_SANDBOX === "1" ? ["--no-sandbox"] : []),
     ],
-    { stdio: "ignore" },
+    { stdio: ["ignore", "ignore", "pipe"] },
   );
+  let chromeDiagnostics = "";
+  chrome.stderr.on("data", (b) => {
+    chromeDiagnostics = (chromeDiagnostics + b).slice(-4000);
+  });
+  chrome.on("error", (error) => {
+    chromeDiagnostics = String(error);
+  });
   let port;
   for (let i = 0; i < 100; i++) {
+    if (chrome.exitCode !== null || chrome.signalCode !== null) break;
     try {
       port = Number(
         (await readFile(join(temp, "chrome/DevToolsActivePort"), "utf8")).split(
@@ -70,7 +80,7 @@ try {
       await pause(100);
     }
   }
-  if (!port) throw Error("Chrome startup failed");
+  if (!port) throw Error("Chrome startup failed: " + chromeDiagnostics);
   const v = await (await fetch(`http://127.0.0.1:${port}/json/version`)).json();
   ws = new WebSocket(v.webSocketDebuggerUrl);
   await new Promise((r) => ws.addEventListener("open", r, { once: true }));

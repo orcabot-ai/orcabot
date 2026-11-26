@@ -34,6 +34,6 @@ CLI 为 `orcabot project list/create` 和 `orcabot routine list/show/create/paus
 
 数据库 v4 增加项目、例行任务、发生记录，保留 v1–v3 的历史和证据。单一可信操作者与单控制端 SQLite 边界不变，不代表独立用户/Agent 权限或 HA。
 
-`pnpm check` 验证事务、权限、路径、预算、幂等、失败与重启；`pnpm e2e` 使用隔离的 SQLite、固定执行夹具和 Chrome/Chromium（可设置 CHROME_PATH），真实经过 HTTP 与 UI，不调用付费模型，截图不含生产数据。
+`pnpm check` 验证事务、权限、路径、预算、幂等、失败与重启；`pnpm e2e` 使用隔离的 SQLite、固定执行夹具和 Chrome/Chromium（可设置 CHROME_PATH），真实经过 HTTP 与 UI，不调用付费模型，截图不含生产数据。本地默认保留浏览器沙箱；临时 Ubuntu CI 环境因 runner 限制，显式设置 `ORCABOT_E2E_NO_SANDBOX=1`。
 
 Git/worktree、跨 provider 回滚、子 Agent 树、cron/时区规则、事件连接器、仅通知的工具权限、check-in、独立身份、自动业务验收以及完整目标系统仍为后续工作。
