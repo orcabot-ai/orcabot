@@ -179,7 +179,7 @@ try {
   };
   const field = async (label, value) => {
     const result = await ev(
-      `(()=>{const l=[...document.querySelectorAll('[role=dialog] label')].find(l=>l.textContent.trim().startsWith(${JSON.stringify(label)}));if(l?.querySelector('[role=combobox]')){l.querySelector('[role=combobox]').setAttribute('data-e2e-select','current');return 'select'}const e=l?.querySelector('input:not([type=hidden]),textarea');if(!e)return false;const proto=e.tagName==='TEXTAREA'?HTMLTextAreaElement.prototype:HTMLInputElement.prototype;Object.getOwnPropertyDescriptor(proto,'value').set.call(e,${JSON.stringify(value)});e.dispatchEvent(new Event('input',{bubbles:true}));e.dispatchEvent(new Event('change',{bubbles:true}));return true})()`,
+      `(()=>{const l=[...document.querySelectorAll('[role=dialog] label, .interaction label')].find(l=>l.textContent.trim().startsWith(${JSON.stringify(label)}));if(l?.querySelector('[role=combobox]')){l.querySelector('[role=combobox]').setAttribute('data-e2e-select','current');return 'select'}const e=l?.querySelector('input:not([type=hidden]),textarea');if(!e)return false;const proto=e.tagName==='TEXTAREA'?HTMLTextAreaElement.prototype:HTMLInputElement.prototype;Object.getOwnPropertyDescriptor(proto,'value').set.call(e,${JSON.stringify(value)});e.dispatchEvent(new Event('input',{bubbles:true}));e.dispatchEvent(new Event('change',{bubbles:true}));return true})()`,
     );
     assert.ok(result, "Missing field " + label);
     if (result === "select") {
@@ -329,6 +329,27 @@ try {
   await click("Open thread");
   await wait(
     'document.body.textContent.includes("Verified fixture deliverable")',
+  );
+  assert.equal(
+    await ev('document.querySelector(".reasoning-group").open'),
+    false,
+  );
+  assert.match(
+    await ev('document.querySelector(".agent-message .markdown").textContent'),
+    /Verified fixture deliverable/,
+  );
+  assert.equal(
+    await ev(
+      'Array.from(document.querySelectorAll(".agent-message a")).some(a=>a.getAttribute("href")==="/fixture/report.md")',
+    ),
+    false,
+  );
+  assert.match(
+    await ev('document.querySelector(".output-location").textContent'),
+    /\/fixture\/report.md/,
+  );
+  reports.push(
+    "Conversation prioritizes the final result, discloses process notes and keeps local file references from navigating to an invalid app route",
   );
   reports.push("result delivered into original thread");
   await go("/routines");
@@ -950,6 +971,153 @@ try {
   assert.equal(await ev("location.pathname"), "/work/" + work.id);
   reports.push(
     "Landing unlock rejects an invalid key and preserves the original protected task URL after retry",
+  );
+  // Permissions go through the original fixture execution, never a global grant.
+  for (const outcome of ["accepted", "declined", "answered", "cancelled"]) {
+    const c = await request("/conversations", {
+      agentId: fixtureAgent.id,
+      title: `Fixture decision ${outcome}`,
+    });
+    const r = await request(`/conversations/${c.id}/runs`, {
+      prompt:
+        "Fixture decision:" + (outcome === "answered" ? "question" : outcome),
+    });
+    await go("/conversations/" + c.id);
+    await wait('!!document.querySelector(".interaction")');
+    if (outcome !== "answered") {
+      assert.match(
+        await ev('document.querySelector(".interaction").textContent'),
+        /This request only/,
+      );
+      assert.equal(
+        await ev('document.querySelector(".permission-details").open'),
+        false,
+      );
+      await hit(".permission-details summary");
+      await wait('document.querySelector(".permission-details").open');
+      assert.match(
+        await ev(
+          'document.querySelector(".permission-details pre").textContent',
+        ),
+        /END OF REQUEST/,
+      );
+      assert.equal((await request("/runs/" + r.id)).run.status, "waiting");
+      await hit(".permission-details summary");
+      if (outcome === "accepted") {
+        await pause(180);
+        const permissionShot = await S("Page.captureScreenshot", {
+          format: "png",
+        });
+        await writeFile(
+          join(
+            root,
+            "docs/design-review/2026-11-26/after/17-execution-permission.png",
+          ),
+          Buffer.from(permissionShot.data, "base64"),
+        );
+      }
+      await click(
+        outcome === "accepted"
+          ? "Allow this request"
+          : outcome === "cancelled"
+            ? "Cancel request"
+            : "Deny request",
+      );
+    } else {
+      assert.equal(
+        await ev('document.querySelector(".permission-details").open'),
+        true,
+      );
+      assert.match(
+        await ev(
+          'document.querySelector(".permission-details pre").textContent',
+        ),
+        /Which result/,
+      );
+      await field("Answer", "A concise summary");
+      await click("Send");
+    }
+    await wait(
+      `document.querySelector('.agent-message')?.textContent.includes('Decision received: ${outcome}')`,
+    );
+    const decided = await request("/runs/" + r.id);
+    assert.equal(
+      decided.run.status,
+      outcome === "declined" || outcome === "cancelled"
+        ? "cancelled"
+        : "completed",
+    );
+    assert.deepEqual(decided.pending, []);
+  }
+  reports.push(
+    "Request-scoped permission previews preserve full details and send allow/deny/question answers to the original execution",
+  );
+  await go("/conversations/" + detail.task.conversationId);
+  await wait('!!document.querySelector(".artifact-button")');
+  await click("Artifacts");
+  await wait('!!document.querySelector(".artifact-form")');
+  assert.equal(
+    await ev('document.querySelector(".artifact-metadata").open'),
+    false,
+  );
+  await field("Name", "Fixture report");
+  await field("Location", "file:///fixture/report.md");
+  await field(
+    "Summary",
+    "Recorded location metadata; no file content is uploaded.",
+  );
+  await click("Attach reference");
+  await wait('!!document.querySelector(".artifact-item")');
+  const attached = (await request(`/runs/${detail.task.runId}/artifacts`))
+    .items;
+  assert.equal(attached.length, 1);
+  assert.equal(attached[0].verification, "unverified");
+  assert.equal(attached[0].uri, "file:///fixture/report.md");
+  await send("Browser.grantPermissions", {
+    origin: config.url,
+    permissions: ["clipboardReadWrite", "clipboardSanitizedWrite"],
+  });
+  await hit(".artifact-copy");
+  await wait(
+    'document.querySelector(".artifact-copy").textContent.includes("Location copied")',
+  );
+  assert.equal(
+    await ev("navigator.clipboard.readText()"),
+    "file:///fixture/report.md",
+  );
+  await field("Name", "Invalid metadata reference");
+  await field("Location", "file:///fixture/invalid.md");
+  await hit(".artifact-metadata summary");
+  await field("SHA-256", "invalid-digest");
+  await hit(".artifact-metadata summary");
+  await click("Attach reference");
+  await wait(
+    'document.querySelector(".artifact-metadata").open&&!!document.querySelector(".artifact-panel [role=alert]")',
+  );
+  assert.equal(
+    (await request(`/runs/${detail.task.runId}/artifacts`)).items.length,
+    1,
+  );
+  await ev(
+    "Object.defineProperty(navigator,'clipboard',{configurable:true,value:undefined})",
+  );
+  await hit(".artifact-copy");
+  await wait(
+    'document.querySelector(".artifact-panel [role=alert]").textContent.includes("Could not copy")',
+  );
+  await ev("delete navigator.clipboard");
+  reports.push(
+    "Artifact metadata validation reveals hidden invalid fields and unavailable clipboard shows a manual-copy fallback",
+  );
+  await field("Name", "Unsaved reference");
+  await click("Cancel");
+  await wait('!document.querySelector("[role=dialog]")');
+  assert.equal(
+    (await request(`/runs/${detail.task.runId}/artifacts`)).items.length,
+    1,
+  );
+  reports.push(
+    "Artifact dialog lists unverified references, copies the exact location and cancels an unsaved reference",
   );
   await command("/board/channels/general/archive", { archived: true });
   await go("/work");

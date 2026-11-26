@@ -2,7 +2,7 @@ import { useI18n } from "./i18n.js";
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "@tanstack/react-form";
-import { FileText, Plus, X, ExternalLink } from "lucide-react";
+import { FileText, Plus, X, ExternalLink, Copy, Check } from "lucide-react";
 import type { ArtifactPage } from "orcabot-contracts";
 import { api, friendly } from "./api.js";
 import { Dialog } from "./Dialog.js";
@@ -16,6 +16,7 @@ export function Artifacts({
   const { t, locale } = useI18n();
   const [before, setBefore] = useState<number | null>(null);
   const [error, setError] = useState("");
+  const [copied, setCopied] = useState("");
   const client = useQueryClient();
   const artifacts = useQuery({
     queryKey: ["artifacts", runId, before],
@@ -62,10 +63,10 @@ export function Artifacts({
       title={t("Run artifacts")}
       onClose={onClose}
       className="artifact-panel"
+      initialFocus="panel"
     >
-      <div className="flex items-center justify-between gap-3">
+      <div className="dialog-heading">
         <div>
-          <div className="eyebrow">{t("DELIVERY REFERENCES")}</div>
           <h2>{t("Run artifacts")}</h2>
         </div>
         <button
@@ -111,6 +112,29 @@ export function Artifacts({
             ) : (
               <code className="artifact-location">{item.uri}</code>
             )}
+            <button
+              type="button"
+              className="text-button artifact-copy"
+              onClick={() => {
+                void (async () => {
+                  try {
+                    if (!navigator.clipboard?.writeText)
+                      throw Error("Clipboard unavailable");
+                    await navigator.clipboard.writeText(item.uri);
+                    setCopied(item.id);
+                    setError("");
+                  } catch {
+                    setCopied("");
+                    setError(
+                      "Could not copy the location. Select and copy it manually.",
+                    );
+                  }
+                })();
+              }}
+            >
+              {copied === item.id ? <Check size={13} /> : <Copy size={13} />}{" "}
+              {t(copied === item.id ? "Location copied" : "Copy location")}
+            </button>
             {item.summary && <p className="mt-2 text-sm">{item.summary}</p>}
             <small className="muted">
               {item.mediaType ?? t("Unspecified type")} ·{" "}
@@ -138,6 +162,13 @@ export function Artifacts({
       </div>
       <form
         className="artifact-form"
+        onInvalidCapture={(event) => {
+          const details = (
+            event.target as HTMLElement
+          ).closest<HTMLDetailsElement>("details");
+          if (details) details.open = true;
+          setError("Check the highlighted reference fields.");
+        }}
         onSubmit={(event) => {
           event.preventDefault();
           void form.handleSubmit();
@@ -179,40 +210,43 @@ export function Artifacts({
             )}
           </form.Field>
         </label>
-        <div className="field-grid">
-          <label>
-            {t("Media type")}
-            <form.Field name="mediaType">
-              {(field) => (
-                <input
-                  name="mediaType"
-                  placeholder="text/markdown"
-                  maxLength={128}
+        <details className="advanced artifact-metadata">
+          <summary>{t("Metadata options")}</summary>
+          <div className="field-grid">
+            <label>
+              {t("Media type")}
+              <form.Field name="mediaType">
+                {(field) => (
+                  <input
+                    name="mediaType"
+                    placeholder="text/markdown"
+                    maxLength={128}
 
-                  value={field.state.value}
-                  onBlur={field.handleBlur}
-                  onChange={(event) => field.handleChange(event.target.value)}
-                />
-              )}
-            </form.Field>
-          </label>
-          <label>
-            SHA-256
-            <form.Field name="sha256">
-              {(field) => (
-                <input
-                  name="sha256"
-                  pattern="[0-9a-fA-F]{64}"
-                  placeholder={t("Optional digest")}
+                    value={field.state.value}
+                    onBlur={field.handleBlur}
+                    onChange={(event) => field.handleChange(event.target.value)}
+                  />
+                )}
+              </form.Field>
+            </label>
+            <label>
+              SHA-256
+              <form.Field name="sha256">
+                {(field) => (
+                  <input
+                    name="sha256"
+                    pattern="[0-9a-fA-F]{64}"
+                    placeholder={t("Optional digest")}
 
-                  value={field.state.value}
-                  onBlur={field.handleBlur}
-                  onChange={(event) => field.handleChange(event.target.value)}
-                />
-              )}
-            </form.Field>
-          </label>
-        </div>
+                    value={field.state.value}
+                    onBlur={field.handleBlur}
+                    onChange={(event) => field.handleChange(event.target.value)}
+                  />
+                )}
+              </form.Field>
+            </label>
+          </div>
+        </details>
         <label>
           {t("Summary")}
           <form.Field name="summary">
@@ -230,10 +264,15 @@ export function Artifacts({
             )}
           </form.Field>
         </label>
-        <button className="button primary" disabled={saving}>
-          <Plus size={14} />
-          {saving ? t("Attaching…") : t("Attach reference")}
-        </button>
+        <div className="dialog-footer">
+          <button type="button" className="button" onClick={onClose}>
+            {t("Cancel")}
+          </button>
+          <button className="button primary" disabled={saving}>
+            <Plus size={14} />
+            {saving ? t("Attaching…") : t("Attach reference")}
+          </button>
+        </div>
       </form>
     </Dialog>
   );

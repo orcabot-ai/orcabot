@@ -1,8 +1,9 @@
+import { BrandMark } from "./BrandMark.js";
 import { useI18n } from "./i18n.js";
 import { useEffect, useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "@tanstack/react-form";
-import Markdown from "react-markdown";
+import { OutputMarkdown as Markdown } from "./OutputMarkdown.js";
 import {
   Check,
   ChevronLeft,
@@ -144,6 +145,17 @@ export function RunCard({
     )
       notices.push(event);
   }
+  const messageEntries = [...messages];
+  const hasFinalAnswer = messageEntries.some(([, m]) => m.channel === "final");
+  const resultMessages = messageEntries.filter(
+    ([, m]) =>
+      m.channel !== "analysis" && (!hasFinalAnswer || m.channel === "final"),
+  );
+  const progressMessages = hasFinalAnswer
+    ? messageEntries.filter(
+        ([, m]) => m.channel !== "analysis" && m.channel !== "final",
+      )
+    : [];
   const recover = useMutation({
     mutationFn: () => api(`/runs/${run.id}/recover`, {}),
     onSuccess: async () => {
@@ -186,16 +198,26 @@ export function RunCard({
               )}
             </time>
           </div>
-          <p className="whitespace-pre-wrap break-words">{run.prompt}</p>
+          {run.prompt.length > 420 ? (
+            <details className="request-context">
+              <summary>
+                {run.prompt.slice(0, 160)}…{" "}
+                <span>{t("Read full request")}</span>
+              </summary>
+              <p className="whitespace-pre-wrap break-words">{run.prompt}</p>
+            </details>
+          ) : (
+            <p className="whitespace-pre-wrap break-words">{run.prompt}</p>
+          )}
         </div>
       </div>
       <div className="agent-message">
         <div className="avatar agent">
-          <span>◒</span>
+          <BrandMark small />
         </div>
         <div className="min-w-0 flex-1">
           <div className="message-meta">
-            {t("Agent")}{" "}
+            {t("Assistant")}{" "}
             <span className={`run-status status-${run.status}`}>
               {active(run.status) ? (
                 <LoaderCircle className="spin" size={12} />
@@ -241,6 +263,52 @@ export function RunCard({
               {t("Return to latest")}
             </button>
           )}
+          {run.status === "completed" && (
+            <p className="execution-finished">
+              <Check size={14} />
+              {t(
+                [...messages.values()].some((m) => m.channel !== "analysis")
+                  ? "Execution finished. Review the result below."
+                  : "Execution finished.",
+              )}
+            </p>
+          )}
+          {resultMessages.map(([key, m]) => (
+            <div key={key} className="markdown">
+              <Markdown>{m.text.slice(-64000)}</Markdown>
+              {m.text.length > 64000 && (
+                <small>{t("Long output is clipped in this view.")}</small>
+              )}
+            </div>
+          ))}
+          {progressMessages.length > 0 && (
+            <details className="reasoning-group">
+              <summary>{t("Progress notes")}</summary>
+              {progressMessages.map(([key, m]) => (
+                <div key={key} className="markdown">
+                  <Markdown>{m.text.slice(-64000)}</Markdown>
+                  {m.text.length > 64000 && (
+                    <small>{t("Long output is clipped in this view.")}</small>
+                  )}
+                </div>
+              ))}
+            </details>
+          )}
+          {[...messages].some(([, m]) => m.channel === "analysis") && (
+            <details className="reasoning-group">
+              <summary>{t("Thinking notes")}</summary>
+              {[...messages]
+                .filter(([, m]) => m.channel === "analysis")
+                .map(([key, m]) => (
+                  <div key={key} className="markdown reasoning">
+                    <Markdown>{m.text.slice(-64000)}</Markdown>
+                    {m.text.length > 64000 && (
+                      <small>{t("Long output is clipped in this view.")}</small>
+                    )}
+                  </div>
+                ))}
+            </details>
+          )}
           {[...tools].length > 0 && (
             <details className="tool-group">
               <summary>
@@ -261,29 +329,19 @@ export function RunCard({
               ))}
             </details>
           )}
-          {[...messages].map(([key, m]) => (
-            <div
-              key={key}
-              className={`markdown ${m.channel === "analysis" ? "reasoning" : ""}`}
-            >
-              <Markdown>{m.text.slice(-64000)}</Markdown>
-              {m.text.length > 64000 && (
-                <small>{t("Long output is clipped in this view.")}</small>
-              )}
-            </div>
-          ))}
-          {!messages.size && active(run.status) && (
-            <div className="thinking">
-              <span />
-              <span />
-              <span />{" "}
-              <span className="thinking-label">
-                {run.status === "waiting"
-                  ? t("Waiting for your response")
-                  : t("Working on your request")}
-              </span>
-            </div>
-          )}
+          {![...messages.values()].some((m) => m.channel !== "analysis") &&
+            active(run.status) && (
+              <div className="thinking">
+                <span />
+                <span />
+                <span />{" "}
+                <span className="thinking-label">
+                  {run.status === "waiting"
+                    ? t("Waiting for your response")
+                    : t("Working on your request")}
+                </span>
+              </div>
+            )}
           {pending.map((p) => (
             <Interaction
               key={String(p.interactionId)}
@@ -388,56 +446,156 @@ function Interaction({
       }
     },
   });
+  const record = (value: unknown): Record<string, unknown> =>
+    value !== null && typeof value === "object" && !Array.isArray(value)
+      ? (value as Record<string, unknown>)
+      : {};
+  const request = record(pending.request),
+    operation = record(request.operation),
+    provider = record(request.providerDetails);
+  const approval = pending.kind === "approval";
+  const action =
+    typeof operation.summary === "string"
+      ? operation.summary
+      : typeof request.text === "string"
+        ? request.text
+        : typeof pending.request === "string"
+          ? pending.request
+          : undefined;
+  const command =
+    typeof provider.command === "string" ? provider.command : undefined;
+  const allowed = (outcome: string) =>
+    !Array.isArray(request.allowedOutcomes) ||
+    request.allowedOutcomes.includes(outcome);
+  const scope =
+    typeof request.grantScope === "string" ? request.grantScope : undefined;
   return (
-    <div className="interaction">
-      <div className="font-medium">{t("Your input is needed")}</div>
-      <pre>{JSON.stringify(pending.request, null, 2).slice(0, 8000)}</pre>
+    <div
+      className="interaction"
+      role="region"
+      aria-label={t(approval ? "Permission needed" : "Your input is needed")}
+    >
+      <h3>{t(approval ? "Permission needed" : "Your input is needed")}</h3>
+      {action && <pre className="permission-action">{action}</pre>}
+      {command && command !== action && (
+        <div>
+          <span className="permission-label">{t("Command")}</span>
+          <pre className="permission-action">{command}</pre>
+        </div>
+      )}
+      {approval && (
+        <dl className="permission-context">
+          {typeof provider.cwd === "string" && (
+            <>
+              <dt>{t("Working directory")}</dt>
+              <dd>
+                <code>{provider.cwd}</code>
+              </dd>
+            </>
+          )}
+          <dt>{t("Scope")}</dt>
+          <dd>
+            {t(
+              scope === "request"
+                ? "This request only"
+                : (scope ?? "Not provided"),
+            )}
+          </dd>
+        </dl>
+      )}
+      {Array.isArray(request.requestedPermissions) &&
+        request.requestedPermissions.length > 0 && (
+          <div>
+            <span className="permission-label">
+              {t("Requested permissions")}
+            </span>
+            <pre className="permission-action">
+              {JSON.stringify(request.requestedPermissions, null, 2)}
+            </pre>
+          </div>
+        )}
+      <details className="permission-details" open={!action && !command}>
+        <summary>{t("Technical details")}</summary>
+        <pre>
+          {JSON.stringify(pending.request, null, 2) ??
+            t("No request details were supplied.")}
+        </pre>
+      </details>
+      {approval && (
+        <p className="permission-boundary">
+          {t("Execution permission is separate from task acceptance.")}
+        </p>
+      )}
       <div className="flex gap-2 flex-wrap">
-        <button
-          className="button primary"
-          disabled={!controllable || response.isPending}
-          onClick={() => response.mutate({ outcome: "accepted" })}
-        >
-          {t("Allow")}
-        </button>
-        <button
-          className="button"
-          disabled={!controllable || response.isPending}
-          onClick={() => response.mutate({ outcome: "declined" })}
-        >
-          {t("Decline")}
-        </button>
+        {allowed("declined") && (
+          <button
+            className="button"
+            disabled={!controllable || response.isPending}
+            onClick={() => response.mutate({ outcome: "declined" })}
+          >
+            {t(approval ? "Deny request" : "Decline")}
+          </button>
+        )}
+        {allowed("accepted") && (
+          <button
+            className="button primary"
+            disabled={!controllable || response.isPending}
+            onClick={() => response.mutate({ outcome: "accepted" })}
+          >
+            {t(
+              approval
+                ? scope === "request"
+                  ? "Allow this request"
+                  : "Allow request"
+                : "Allow",
+            )}
+          </button>
+        )}
+        {Array.isArray(request.allowedOutcomes) && allowed("cancelled") && (
+          <button
+            className="button"
+            disabled={!controllable || response.isPending}
+            onClick={() => response.mutate({ outcome: "cancelled" })}
+          >
+            {t("Cancel request")}
+          </button>
+        )}
       </div>
-      <form
-        className="mt-3 flex gap-2"
-        onSubmit={(event) => {
-          event.preventDefault();
-          void form.handleSubmit();
-        }}
-      >
-        <form.Field name="answer">
-          {(field) => (
-            <input
-              aria-label={t("Answer")}
-              placeholder={t("Or write an answer…")}
-              maxLength={16000}
-              value={field.state.value}
-              onBlur={field.handleBlur}
-              onChange={(event) => field.handleChange(event.target.value)}
-            />
-          )}
-        </form.Field>
-        <form.Subscribe selector={(state) => state.values.answer}>
-          {(answer) => (
-            <button
-              className="button"
-              disabled={!answer.trim() || !controllable || response.isPending}
-            >
-              {t("Send")}
-            </button>
-          )}
-        </form.Subscribe>
-      </form>
+      {allowed("answered") && (
+        <form
+          className="mt-3 flex gap-2"
+          onSubmit={(event) => {
+            event.preventDefault();
+            void form.handleSubmit();
+          }}
+        >
+          <form.Field name="answer">
+            {(field) => (
+              <label className="interaction-answer">
+                {t("Answer")}
+                <input
+                  aria-label={t("Answer")}
+                  placeholder={t("Or write an answer…")}
+                  maxLength={16000}
+                  value={field.state.value}
+                  onBlur={field.handleBlur}
+                  onChange={(event) => field.handleChange(event.target.value)}
+                />
+              </label>
+            )}
+          </form.Field>
+          <form.Subscribe selector={(state) => state.values.answer}>
+            {(answer) => (
+              <button
+                className="button"
+                disabled={!answer.trim() || !controllable || response.isPending}
+              >
+                {t("Send")}
+              </button>
+            )}
+          </form.Subscribe>
+        </form>
+      )}
       {response.error && (
         <p className="error-text" role="alert">
           {t(friendly(response.error))}

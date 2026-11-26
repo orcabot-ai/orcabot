@@ -519,4 +519,29 @@ export const chinese = {
   "The decisions and interruptions that need you.":
     "集中处理需要你决定或关注的事情。",
   "Original request": "原始请求",
+  "Copy location": "复制位置",
+  "Location copied": "位置已复制",
+  "Could not copy the location. Select and copy it manually.":
+    "无法复制位置，请选中文字手动复制。",
+  "Metadata options": "元数据选项",
+  "Read full request": "查看完整请求",
+  "Execution finished. Review the result below.":
+    "这次执行已结束，请查看下面的结果。",
+  "Thinking notes": "思考记录",
+  "Permission needed": "需要授权",
+  Command: "命令",
+  Scope: "授权范围",
+  "This request only": "仅限本次请求",
+  "Not provided": "未提供",
+  "Requested permissions": "请求的权限",
+  "No request details were supplied.": "未提供请求详情。",
+  "Execution permission is separate from task acceptance.":
+    "执行授权与任务验收是两件事。",
+  "Deny request": "拒绝请求",
+  "Allow this request": "允许本次请求",
+  "Allow request": "允许请求",
+  "Execution finished.": "这次执行已结束。",
+  "Progress notes": "过程记录",
+  "Check the highlighted reference fields.": "请检查标出的引用信息。",
+  "Cancel request": "取消本次请求",
 } as const;

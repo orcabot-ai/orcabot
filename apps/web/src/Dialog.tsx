@@ -6,11 +6,13 @@ export function Dialog({
   onClose,
   children,
   className = "",
+  initialFocus,
 }: {
   title: string;
   onClose: () => void;
   children: ReactNode;
   className?: string;
+  initialFocus?: "panel";
 }) {
   const panel = useRef<HTMLDivElement>(null);
   return (
@@ -27,8 +29,9 @@ export function Dialog({
             ref={panel}
             className={`setup-panel ${className}`}
             aria-label={title}
+            tabIndex={-1}
             initialFocus={(type) =>
-              type === "touch"
+              type === "touch" || initialFocus === "panel"
                 ? panel.current
                 : (panel.current?.querySelector<HTMLElement>(
                     'input:not([type="hidden"]), textarea, [role="combobox"]',

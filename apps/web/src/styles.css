@@ -2871,3 +2871,175 @@ a.artifact-location {
     gap: 8px;
   }
 }
+
+/* Result-first threads and discoverable delivery references. */
+.request-context summary {
+  font-size: 13px;
+  line-height: 1.7;
+  cursor: pointer;
+  overflow-wrap: anywhere;
+}
+.request-context summary span {
+  display: block;
+  color: var(--muted);
+  font-size: 11px;
+  margin-top: 8px;
+}
+.request-context > p {
+  margin-top: 16px;
+}
+.avatar.agent .brand-mark.small {
+  width: 22px;
+  height: 22px;
+}
+.execution-finished {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--success);
+  margin: 12px 0 20px;
+}
+.reasoning-group {
+  margin: 16px 0;
+  font-size: 12px;
+  color: var(--muted);
+}
+.reasoning-group > .markdown {
+  margin-top: 12px;
+}
+.agent-message .tool-group {
+  margin-top: 20px;
+}
+.setup-panel.artifact-panel {
+  width: min(620px, 100%);
+}
+.artifact-items {
+  margin: 20px 0;
+}
+.artifact-item {
+  padding: 16px 0;
+}
+.artifact-copy {
+  font-size: 12px;
+  margin-top: 8px;
+  min-height: 32px;
+}
+.artifact-metadata > .field-grid {
+  margin-top: 16px;
+}
+.artifact-form h3 {
+  font-size: 14px;
+  font-weight: 550;
+  margin-bottom: 20px;
+}
+.artifact-form .dialog-footer > .button:last-child {
+  justify-self: auto;
+}
+@media (max-width: 640px) {
+  .artifact-copy {
+    min-height: 44px;
+  }
+}
+.interaction {
+  padding: 20px;
+  border: 1px solid var(--border);
+  border-left: 2px solid var(--accent);
+  border-radius: 8px;
+  background: var(--panel);
+}
+.interaction h3 {
+  font-size: 15px;
+  font-weight: 550;
+  margin-bottom: 16px;
+}
+.permission-action,
+.interaction .permission-action {
+  max-height: 180px;
+  overflow: auto;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  padding: 12px;
+  margin: 8px 0 16px;
+  background: var(--surface);
+  color: var(--text);
+  font-size: 12px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+.permission-label {
+  font-size: 12px;
+  color: var(--muted);
+}
+.permission-context {
+  display: grid;
+  grid-template-columns: minmax(80px, auto) minmax(0, 1fr);
+  gap: 8px 16px;
+  margin: 16px 0;
+  font-size: 12px;
+}
+.permission-context dt {
+  color: var(--muted);
+}
+.permission-context dd {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.permission-details {
+  font-size: 12px;
+  color: var(--muted);
+  margin: 16px 0;
+}
+.permission-details pre {
+  max-height: 280px;
+  overflow: auto;
+}
+.permission-boundary {
+  font-size: 11px;
+  color: var(--muted);
+  margin-bottom: 16px;
+}
+@media (max-width: 640px) {
+  .interaction {
+    padding: 16px;
+  }
+  .permission-context {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+  .permission-context dd {
+    margin-bottom: 8px;
+  }
+}
+.interaction-answer {
+  flex: 1;
+  min-width: 0;
+  font-size: 12px;
+  margin: 0;
+}
+.interaction form {
+  align-items: flex-end;
+}
+.composer-context summary {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+.composer-context > span {
+  display: block;
+  margin-top: 8px;
+  overflow-wrap: anywhere;
+}
+.output-location {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 8px;
+  max-width: 100%;
+  vertical-align: bottom;
+}
+.output-location code {
+  font-size: 11px;
+  overflow-wrap: anywhere;
+}

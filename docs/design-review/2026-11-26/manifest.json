@@ -50,14 +50,25 @@
     {
       "id": "conversation",
       "before": "before/03-conversation.jpg",
-      "geminiThread": "https://gemini.google.com/app/09cf8496cd38905e",
-      "generatedImage": null,
-      "status": "reviewed-awaiting-image",
-      "changes": [],
-      "after": null,
-      "verification": [],
+      "geminiThread": "https://gemini.google.com/app/6c400dd47d42e2a3",
+      "generatedImage": "references/conversation-gemini.jpg",
+      "status": "implemented",
+      "changes": [
+        "Result-first conversation with original request and process disclosures",
+        "Permission preview retains scope, allowed outcomes, full request and original execution identity",
+        "Existing delivery references lead the dialog; copy/fallback, advanced validation and Cancel work",
+        "Execution-relative output locations no longer navigate to invalid web app routes"
+      ],
+      "after": "after/03-conversation-light.png",
+      "verification": [
+        "Web typecheck and build passed; independent standards/spec re-reviews approved",
+        "pnpm e2e:30checks passed with no fixture provider calls",
+        "Allow/deny/answer/cancel, full request details, clipboard fallback, metadata validation and original reference identity covered",
+        "Actual conversation/reference captures plus isolated-fixture permission capture retained"
+      ],
       "commit": null,
-      "critique": "references/workspace-review.md"
+      "critique": "references/conversation-critique.md",
+      "followUpReview": "references/conversation-implementation.md"
     },
     {
       "id": "work-list",
@@ -306,7 +317,7 @@
       "before": "before/19-attention.jpg",
       "geminiThread": "https://gemini.google.com/app/09cf8496cd38905e",
       "generatedImage": "references/routines-attention-gemini.jpg",
-      "status": "implemented",
+      "status": "verified",
       "changes": [
         "One summary per execution with focused actions and original request disclosure",
         "Business reviews continue to the guarded task review screen",
@@ -318,40 +329,62 @@
         "pnpm e2e:26checks passed including acknowledgement and retained failure history",
         "Actual first-attempt alert acknowledged through the UI; failed history, accepted business work and both attempts remain"
       ],
-      "commit": null,
+      "commit": "6ab836c",
       "critique": "references/details-review.md",
       "followUpReview": "references/attention-review.md"
     },
     {
       "id": "artifacts",
       "before": "before/20-artifacts.jpg",
-      "geminiThread": "https://gemini.google.com/app/09cf8496cd38905e",
-      "generatedImage": null,
-      "status": "reviewed-awaiting-image",
-      "changes": [],
-      "after": null,
-      "verification": [],
+      "geminiThread": "https://gemini.google.com/app/6c400dd47d42e2a3",
+      "generatedImage": "references/conversation-gemini.jpg",
+      "status": "implemented",
+      "changes": [
+        "Result-first conversation with original request and process disclosures",
+        "Permission preview retains scope, allowed outcomes, full request and original execution identity",
+        "Existing delivery references lead the dialog; copy/fallback, advanced validation and Cancel work",
+        "Execution-relative output locations no longer navigate to invalid web app routes"
+      ],
+      "after": "after/20-artifact-references-light.png",
+      "verification": [
+        "Web typecheck and build passed; independent standards/spec re-reviews approved",
+        "pnpm e2e:30checks passed with no fixture provider calls",
+        "Allow/deny/answer/cancel, full request details, clipboard fallback, metadata validation and original reference identity covered",
+        "Actual conversation/reference captures plus isolated-fixture permission capture retained"
+      ],
       "commit": null,
-      "critique": "references/details-review.md"
+      "critique": "references/conversation-critique.md",
+      "followUpReview": "references/conversation-implementation.md"
     },
     {
       "id": "execution-approval",
       "before": "before/17-execution-approval.jpg",
-      "geminiThread": "https://gemini.google.com/app/09cf8496cd38905e",
-      "generatedImage": null,
-      "status": "reviewed-awaiting-image",
-      "changes": [],
-      "after": null,
-      "verification": [],
+      "geminiThread": "https://gemini.google.com/app/6c400dd47d42e2a3",
+      "generatedImage": "references/permission-gemini.jpg",
+      "status": "implemented",
+      "changes": [
+        "Result-first conversation with original request and process disclosures",
+        "Permission preview retains scope, allowed outcomes, full request and original execution identity",
+        "Existing delivery references lead the dialog; copy/fallback, advanced validation and Cancel work",
+        "Execution-relative output locations no longer navigate to invalid web app routes"
+      ],
+      "after": "after/17-execution-permission.png",
+      "verification": [
+        "Web typecheck and build passed; independent standards/spec re-reviews approved",
+        "pnpm e2e:30checks passed with no fixture provider calls",
+        "Allow/deny/answer/cancel, full request details, clipboard fallback, metadata validation and original reference identity covered",
+        "Actual conversation/reference captures plus isolated-fixture permission capture retained"
+      ],
       "commit": null,
-      "critique": "references/details-review.md"
+      "critique": "references/conversation-critique.md",
+      "followUpReview": "references/conversation-implementation.md"
     },
     {
       "id": "mobile-navigation",
       "before": "before/21-mobile-navigation.jpg",
-      "geminiThread": "https://gemini.google.com/app/09cf8496cd38905e",
-      "generatedImage": null,
-      "status": "reviewed-awaiting-image",
+      "geminiThread": "https://gemini.google.com/app/819c9d7c44d7e256",
+      "generatedImage": "references/mobile-gemini.jpg",
+      "status": "reviewed-with-image",
       "changes": [],
       "after": null,
       "verification": [],

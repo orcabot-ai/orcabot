@@ -407,18 +407,21 @@ export function App() {
         </div>
       </form>
       <div className="composer-footer">
-        <span>
-          {target ? (
-            <>
-              <Server size={11} />
-              {target.name}
-              <span className="footer-dot">·</span>
-              {agent?.adapter}
-            </>
-          ) : (
-            t("No execution target selected")
-          )}
-        </span>
+        <details className="composer-context">
+          <summary>
+            <Server size={11} />
+            {t("Execution details")}
+          </summary>
+          <span>
+            {target ? (
+              <>
+                {target.name} · {agent?.adapter}
+              </>
+            ) : (
+              t("No execution target selected")
+            )}
+          </span>
+        </details>
         <span>
           {t("Enter to send")}{" "}
           <span className="hidden sm:inline">

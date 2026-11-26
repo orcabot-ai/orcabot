@@ -57,7 +57,7 @@ The organization-phase E2E suite passed25checks; the Attention regression brings
 
 ## Remaining work
 
-Attention now follows its actual visual reference, with one summary per execution and a separately recorded acknowledgement; see [queue verification](references/attention-review.md). Conversation, execution approvals, deliverable references and mobile navigation have text critiques; a new generated comparison image is pending. These surfaces are not marked complete. The completion gate requires image-backed changes and verification for every listed core page.
+Attention now follows its actual visual reference, with one summary per execution and a separately recorded acknowledgement; see [queue verification](references/attention-review.md). Conversation, execution permissions and deliverable references now follow actual images, including a corrected request-scoped permission design; see [implementation and verification](references/conversation-implementation.md). The current suite passes30browser checks. A [mobile navigation image](references/mobile-gemini.jpg) has also been downloaded; its final responsive pass is pending. The completion gate requires image-backed changes and verification for every listed core page.
 
 Capture files contain only task-created example data. Raw native captures and
 credentials stay outside the tracked evidence. Some later `before/` captures
