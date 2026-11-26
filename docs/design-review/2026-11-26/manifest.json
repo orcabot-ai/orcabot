@@ -66,7 +66,7 @@
         "Allow/deny/answer/cancel, full request details, clipboard fallback, metadata validation and original reference identity covered",
         "Actual conversation/reference captures plus isolated-fixture permission capture retained"
       ],
-      "commit": "6fabd1b",
+      "commit": "6fabd1bfd5982de523bf2cb381bda56fd80daaaa",
       "critique": "references/conversation-critique.md",
       "followUpReview": "references/conversation-implementation.md"
     },
@@ -157,7 +157,7 @@
         "pnpm e2e: 25 checks passed including all three Cancel flows, original thread identity, routine run/pause/resume and preferences",
         "Independent standards and spec code reviews approved; automation tests 9/9 passed"
       ],
-      "commit": "039173a",
+      "commit": "039173a3ed80da29489fd43112877c442f59459e",
       "critique": "references/workspace-review.md",
       "followUpReview": "references/organization-review.md"
     },
@@ -179,7 +179,7 @@
         "pnpm e2e: 25 checks passed including all three Cancel flows, original thread identity, routine run/pause/resume and preferences",
         "Independent standards and spec code reviews approved; automation tests 9/9 passed"
       ],
-      "commit": "039173a",
+      "commit": "039173a3ed80da29489fd43112877c442f59459e",
       "critique": "references/workspace-review.md",
       "followUpReview": "references/organization-review.md"
     },
@@ -201,7 +201,7 @@
         "pnpm e2e: 25 checks passed including all three Cancel flows, original thread identity, routine run/pause/resume and preferences",
         "Independent standards and spec code reviews approved; automation tests 9/9 passed"
       ],
-      "commit": "039173a",
+      "commit": "039173a3ed80da29489fd43112877c442f59459e",
       "critique": "references/workspace-review.md",
       "followUpReview": "references/organization-review.md"
     },
@@ -223,7 +223,7 @@
         "pnpm e2e: 25 checks passed including all three Cancel flows, original thread identity, routine run/pause/resume and preferences",
         "Independent standards and spec code reviews approved; automation tests 9/9 passed"
       ],
-      "commit": "039173a",
+      "commit": "039173a3ed80da29489fd43112877c442f59459e",
       "critique": "references/workspace-review.md",
       "followUpReview": "references/organization-review.md"
     },
@@ -245,7 +245,7 @@
         "pnpm e2e: 25 checks passed including all three Cancel flows, original thread identity, routine run/pause/resume and preferences",
         "Independent standards and spec code reviews approved; automation tests 9/9 passed"
       ],
-      "commit": "039173a",
+      "commit": "039173a3ed80da29489fd43112877c442f59459e",
       "critique": "references/workspace-review.md",
       "followUpReview": "references/organization-review.md"
     },
@@ -329,7 +329,7 @@
         "pnpm e2e: 26 checks passed including acknowledgement and retained failure history",
         "Actual first-attempt alert acknowledged through the UI; failed history, accepted business work and both attempts remain"
       ],
-      "commit": "6ab836c",
+      "commit": "6ab836c1c032c728289487b2ef3a73c2f4309d90",
       "critique": "references/details-review.md",
       "followUpReview": "references/attention-review.md"
     },
@@ -352,7 +352,7 @@
         "Allow/deny/answer/cancel, full request details, clipboard fallback, metadata validation and original reference identity covered",
         "Actual conversation/reference captures plus isolated-fixture permission capture retained"
       ],
-      "commit": "6fabd1b",
+      "commit": "6fabd1bfd5982de523bf2cb381bda56fd80daaaa",
       "critique": "references/conversation-critique.md",
       "followUpReview": "references/conversation-implementation.md"
     },
@@ -375,7 +375,7 @@
         "Allow/deny/answer/cancel, full request details, clipboard fallback, metadata validation and original reference identity covered",
         "Actual conversation/reference captures plus isolated-fixture permission capture retained"
       ],
-      "commit": "6fabd1b",
+      "commit": "6fabd1bfd5982de523bf2cb381bda56fd80daaaa",
       "critique": "references/conversation-critique.md",
       "followUpReview": "references/conversation-implementation.md"
     },
@@ -384,7 +384,7 @@
       "before": "before/21-mobile-navigation.jpg",
       "geminiThread": "https://gemini.google.com/app/819c9d7c44d7e256",
       "generatedImage": "references/mobile-gemini.jpg",
-      "status": "implemented",
+      "status": "verified",
       "changes": [
         "Wider personal-assistant drawer, clearer close action, 14px navigation and 44px controls",
         "Original Orca and real dated threads; one workspace status and secondary Settings",
@@ -397,7 +397,7 @@
         "Actual 390x844 light/dark and 320x600 short-screen captures",
         "pnpm e2e: 31 checks passed, including 44px controls, 320x600 footer and focus/Escape/route behavior"
       ],
-      "commit": null,
+      "commit": "31956061432841a02d42458fdc55eb3c511d249f",
       "critique": "references/details-review.md",
       "followUpReview": "references/mobile-review.md"
     },
@@ -430,5 +430,6 @@
     "status": "resolved",
     "resolvedDate": "2026-11-26"
   },
-  "captureNote": "Later before/ images include the in-progress shared primitive migration; see README.md."
+  "captureNote": "Later before/ images include the in-progress shared primitive migration; see README.md.",
+  "followUpAudit": "references/impeccable-audit.md"
 }

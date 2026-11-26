@@ -7,6 +7,11 @@ import { createInterface } from "node:readline";
 import assert from "node:assert/strict";
 const root = resolve(import.meta.dirname, ".."),
   temp = await mkdtemp(join(tmpdir(), "orcabot-e2e-"));
+const captureRoot = process.env.ORCABOT_E2E_CAPTURE_DIR || root;
+await mkdir(join(captureRoot, "docs/screenshots"), { recursive: true });
+await mkdir(join(captureRoot, "docs/design-review/2026-11-26/after"), {
+  recursive: true,
+});
 let chrome, fixture, ws;
 const pause = (ms) => new Promise((r) => setTimeout(r, ms));
 const reports = [];
@@ -162,6 +167,17 @@ try {
       button: "left",
       clickCount: 1,
     });
+  };
+  const tap = async (selector) => {
+    const point = await ev(
+      `(()=>{const b=document.querySelector(${JSON.stringify(selector)});if(!b||!b.checkVisibility())return null;b.scrollIntoView({block:'nearest'});const r=b.getBoundingClientRect();return {x:r.x+r.width/2,y:r.y+r.height/2}})()`,
+    );
+    assert.ok(point, "Missing touch control " + selector);
+    await S("Input.dispatchTouchEvent", {
+      type: "touchStart",
+      touchPoints: [{ ...point, radiusX: 4, radiusY: 4, force: 1, id: 1 }],
+    });
+    await S("Input.dispatchTouchEvent", { type: "touchEnd", touchPoints: [] });
   };
   const selectValue = async (trigger, value) => {
     await hit(trigger);
@@ -373,13 +389,13 @@ try {
     );
   }
   reports.push("dialog keyboard focus containment");
-  await mkdir(join(root, "docs/screenshots"), { recursive: true });
+  await mkdir(join(captureRoot, "docs/screenshots"), { recursive: true });
   for (const theme of ["light", "dark"]) {
     await ev(`document.documentElement.dataset.theme='${theme}'`);
     await pause(250);
     const { data } = await S("Page.captureScreenshot", { format: "png" });
     await writeFile(
-      join(root, `docs/screenshots/routine-${theme}.png`),
+      join(captureRoot, `docs/screenshots/routine-${theme}.png`),
       Buffer.from(data, "base64"),
     );
   }
@@ -396,7 +412,7 @@ try {
   );
   const shot = await S("Page.captureScreenshot", { format: "png" });
   await writeFile(
-    join(root, "docs/screenshots/routine-mobile.png"),
+    join(captureRoot, "docs/screenshots/routine-mobile.png"),
     Buffer.from(shot.data, "base64"),
   );
   await S("Input.dispatchKeyEvent", {
@@ -558,7 +574,7 @@ try {
               ? "workbench-tablet.png"
               : "workbench-mobile.png";
         await writeFile(
-          join(root, "docs/screenshots", filename),
+          join(captureRoot, "docs/screenshots", filename),
           Buffer.from(frame.data, "base64"),
         );
       }
@@ -672,6 +688,107 @@ try {
   assert.equal(await ev('document.querySelector(".main").inert'), false);
   reports.push(
     "mobile navigation traps focus, closes on route/Escape, restores focus and shows the right breadcrumb",
+  );
+  // Actual synthesized touch, not a programmatic click, on the short mobile form.
+  await S("Emulation.setDeviceMetricsOverride", {
+    width: 320,
+    height: 600,
+    deviceScaleFactor: 1,
+    mobile: true,
+  });
+  await S("Emulation.setTouchEmulationEnabled", {
+    enabled: true,
+    maxTouchPoints: 1,
+  });
+  const mobileProjectCount = (await request("/projects")).items.length;
+  const touchAgent = await request("/agents", {
+    name: "Touch selection assistant",
+    targetId: fixtureAgent.targetId,
+    adapter: "codex",
+    workdir: "/fixture/touch-selection",
+    mcp: {},
+  });
+  await go("/projects");
+  await wait('document.body.textContent.includes("New project")');
+  await ev(
+    `[...document.querySelectorAll('button')].find(b=>b.textContent.trim()==='New project').setAttribute('data-mobile-create','true')`,
+  );
+  await tap('[data-mobile-create="true"]');
+  await wait('!!document.querySelector(".automation-dialog")');
+  await wait(
+    'document.querySelector(".automation-dialog").getAnimations().every(a=>a.playState!=="running")',
+  );
+  const mobileField = await ev(
+    `(()=>{const input=document.querySelector('.automation-dialog input:not([type=hidden])');const style=getComputedStyle(input);return {font:parseFloat(style.fontSize),height:input.getBoundingClientRect().height,invalid:input.matches(':user-invalid'),width:innerWidth}})()`,
+  );
+  assert.ok(
+    mobileField.font >= 16 && mobileField.height >= 48 && !mobileField.invalid,
+    JSON.stringify(mobileField),
+  );
+  await tap(".automation-dialog input:not([type=hidden])");
+  await S("Input.insertText", { text: "Touch-only project draft" });
+  await tap(".automation-dialog [role=combobox]");
+  await wait('!!document.querySelector("[role=option]")');
+  await wait(
+    'document.querySelector(".select-popup").getAnimations().every(a=>a.playState!=="running")',
+  );
+  await tap(`[role=option][data-value="${touchAgent.id}"]`);
+  await wait(
+    'document.querySelector(".automation-dialog [role=combobox]").getAttribute("aria-expanded")==="false"',
+  );
+  await wait(
+    '![...document.querySelectorAll("[role=listbox]")].some(e=>e.checkVisibility())',
+  );
+  assert.equal(
+    await ev(
+      'document.querySelector(".automation-dialog input:not([type=hidden])").value',
+    ),
+    "Touch-only project draft",
+  );
+  assert.equal(
+    await ev(
+      'document.querySelector(".automation-dialog .select-value").textContent',
+    ),
+    touchAgent.name,
+  );
+  assert.equal(
+    await ev('document.querySelector(".project-directory code").textContent'),
+    touchAgent.workdir,
+  );
+  const mobileFormShot = await S("Page.captureScreenshot", { format: "png" });
+  await writeFile(
+    join(
+      captureRoot,
+      "docs/design-review/2026-11-26/after/23-project-fields-mobile.png",
+    ),
+    Buffer.from(mobileFormShot.data, "base64"),
+  );
+  // A reduced layout viewport exercises reachability without claiming a physical keyboard.
+  await S("Emulation.setDeviceMetricsOverride", {
+    width: 320,
+    height: 360,
+    deviceScaleFactor: 1,
+    mobile: true,
+  });
+  await wait("innerHeight===360");
+  await tap(".automation-dialog input:not([type=hidden])");
+  assert.ok(
+    await ev(
+      'document.querySelector(".automation-dialog").scrollWidth<=document.querySelector(".automation-dialog").clientWidth',
+    ),
+  );
+  await tap(".automation-dialog .dialog-footer button:first-child");
+  await wait('!document.querySelector("[role=dialog]")');
+  assert.equal((await request("/projects")).items.length, mobileProjectCount);
+  await S("Emulation.setTouchEmulationEnabled", { enabled: false });
+  await S("Emulation.setDeviceMetricsOverride", {
+    width: 320,
+    height: 844,
+    deviceScaleFactor: 1,
+    mobile: true,
+  });
+  reports.push(
+    "Short-screen mobile form supports touch input, dropdown selection and Cancel without persistence; 48px fields and 16px text",
   );
   await go("/");
   await wait('!!document.querySelector(".workspace-context")');
@@ -976,12 +1093,15 @@ try {
   await S("Network.clearBrowserCookies");
   await go("/work/" + work.id);
   await wait('!!document.querySelector(".landing-form input[name=token]")');
-  await mkdir(join(root, "docs/design-review/2026-11-26/after"), {
+  await mkdir(join(captureRoot, "docs/design-review/2026-11-26/after"), {
     recursive: true,
   });
   const unlockedFrame = await S("Page.captureScreenshot", { format: "png" });
   await writeFile(
-    join(root, "docs/design-review/2026-11-26/after/01-unlock-mobile.png"),
+    join(
+      captureRoot,
+      "docs/design-review/2026-11-26/after/01-unlock-mobile.png",
+    ),
     Buffer.from(unlockedFrame.data, "base64"),
   );
   const unlock = async (value) => {
@@ -1049,7 +1169,7 @@ try {
         });
         await writeFile(
           join(
-            root,
+            captureRoot,
             "docs/design-review/2026-11-26/after/17-execution-permission.png",
           ),
           Buffer.from(permissionShot.data, "base64"),

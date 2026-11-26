@@ -32,3 +32,8 @@ coverage/
 
 # Local design verification artifacts
 .taste-skill/
+
+# Local design guidance installations
+/.agents/
+/skills-lock.json
+/.impeccable/

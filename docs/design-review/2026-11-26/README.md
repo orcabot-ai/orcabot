@@ -2,7 +2,7 @@
 
 English · [简体中文](README.zh-CN.md)
 
-The cycle covers 19 core pages and dialogs: actual screenshots, Gemini critique and generated images, implementation, after screenshots, independent reviews and English commits. All implementations and checks are complete; the final implementation commit is recorded in the manifest by the closing audit.
+The cycle covers 19 core pages and dialogs: actual screenshots, Gemini critique and generated images, implementation, after screenshots, independent reviews and English commits. All 19 surfaces have implementation commits and verification evidence in the manifest. A subsequent [form and mobile audit](references/impeccable-audit.md) records the owner’s requested rounded-control refinement and its separate checks.
 
 See the [coverage manifest](manifest.json). Generated images are design references, not application data or proof of product capabilities.
 

@@ -8,3 +8,7 @@ node_modules/
 .orcabot/
 
 apps/web/src/routeTree.gen.ts
+
+.agents/
+.impeccable/
+skills-lock.json

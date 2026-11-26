@@ -20,16 +20,16 @@ fill. Status indicators keep their own warning, success and error colors.
   and accepted deliveries. Workspace details disclose the selected Agent, target
   and directory on demand. Completed conversations stay separate from accepted work.
 - `/welcome` is the one-screen brand entry: original Orca with blue particles on
-  the left70%, functional key entry or an authenticated Open action on the right.
+  the left 70%, functional key entry or an authenticated Open action on the right.
   Mobile places entry first. Particles pause manually, on hidden tabs or under
   reduced motion; the supplied mark remains as a static fallback.
-- Controls use a shared 6px radius, panels 8px and dialogs 12px. Text hierarchy,
+- Form fields use a shared 12px radius; dialogs and message composers use 20px. Text hierarchy,
   alignment and separators carry the layout. Shadows are limited to overlays.
 
-Dialogs and selectors use Base UI primitives, following the composition and density of [coss ui](https://coss.com/ui/docs). Nested menus handle their own Escape before the parent dialog. Fields keep visible labels; setup dialogs use a 480px frame, 32px desktop fields, progressive advanced settings, Cancel and one primary action. Other desktop fields are at least 36px; mobile fields and navigation targets are at least 44px.
+Dialogs and selectors use Base UI primitives, following the composition and density of [coss ui](https://coss.com/ui/docs). Nested menus handle their own Escape before the parent dialog. Fields keep visible labels; setup dialogs use a 480px frame, 44px desktop fields, progressive advanced settings, Cancel and one primary action. Form inputs, selectors and actions reach 48px on mobile, with 16px field text to avoid focus zoom. Navigation targets remain at least 44px.
 
 Manrope Variable is self-hosted for Latin text, with local system fallbacks for Chinese. It introduces softer letterforms without a network font request. Its OFL-1.1 text ships at `/fonts/Manrope-OFL.txt`. The owner-supplied Orca mark remains unchanged.
-The wider mobile sidebar uses14px navigation text,44px targets, a clear close action and a safe-area-aware footer. Its horizontal entrance keeps full-height content in bounds. It reuses the dialog focus trap, makes the background inert,
+The wider mobile sidebar uses 14px navigation text, 44px targets, a clear close action and a safe-area-aware footer. Its horizontal entrance keeps full-height content in bounds. It reuses the dialog focus trap, makes the background inert,
 closes on route selection or Escape, and returns keyboard focus after dismissal.
 Brief opacity/transform entrances respect reduced motion. Long configuration
 values wrap inside the content scroller.

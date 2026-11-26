@@ -13,6 +13,10 @@
   --surface-raised: #283746;
   --hover: #304150;
   --input: #1c2935;
+  --field-fill: #1b2733;
+  --field-border: #738493;
+  --field-hover: #a1afbc;
+  --radius-field: 12px;
   --code-bg: #121315;
   --border: #354452;
   --border-strong: #6a9ff3;
@@ -41,7 +45,7 @@
   --shadow-soft: none;
   --radius-control: 6px;
   --radius-panel: 8px;
-  --radius-dialog: 12px;
+  --radius-dialog: 20px;
   color-scheme: dark;
   font-family: var(--font-sans);
   color: var(--text);
@@ -57,6 +61,9 @@
   --surface-raised: #f6f6f7;
   --hover: #ededf0;
   --input: #ffffff;
+  --field-fill: #f7f8fa;
+  --field-border: #82909d;
+  --field-hover: #637482;
   --code-bg: #f6f6f7;
   --border: #dfe5e9;
   --border-strong: #367de4;
@@ -94,6 +101,9 @@
     --surface-raised: #f6f6f7;
     --hover: #ededf0;
     --input: #ffffff;
+    --field-fill: #f7f8fa;
+    --field-border: #82909d;
+    --field-hover: #637482;
     --code-bg: #f6f6f7;
     --border: #dfe5e9;
     --border-strong: #367de4;
@@ -504,7 +514,7 @@ textarea::placeholder {
   flex: 1;
   min-height: 0;
   overflow-y: auto;
-  scrollbar-width: thin;
+  scrollbar-width: auto;
   scrollbar-color: var(--border) transparent;
 }
 .welcome {
@@ -585,8 +595,8 @@ textarea::placeholder {
 .composer {
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: var(--radius-panel);
-  padding: 14px 14px 10px;
+  border-radius: 20px;
+  padding: 16px 16px 12px;
 }
 .composer:focus-within {
   border-color: var(--border-strong);
@@ -950,9 +960,10 @@ textarea::placeholder {
   background: var(--panel);
   border: 1px solid var(--border);
   border-radius: var(--radius-dialog);
+  border-color: transparent;
   box-shadow: var(--shadow);
   padding: 24px;
-  scrollbar-width: thin;
+  scrollbar-width: auto;
   animation: dialog-in 150ms ease-out;
 }
 .setup-panel h2 {
@@ -1979,15 +1990,15 @@ a.artifact-location {
 .connection-setup {
   width: min(480px, 100%);
   padding: 0;
-  border-radius: 6px;
-  box-shadow: 0 8px 32px #0003;
+  border-radius: 20px;
+  box-shadow: var(--shadow);
 }
 .connection-setup .dialog-heading {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
   gap: 12px;
-  padding: 16px 16px 12px;
+  padding: 24px 24px 16px;
 }
 .connection-setup .dialog-heading h2 {
   margin: 0;
@@ -2001,7 +2012,7 @@ a.artifact-location {
   line-height: 1.5;
 }
 .connection-setup .setup-tabs {
-  margin: 0 16px 16px;
+  margin: 0 24px 20px;
   padding: 3px;
   border: 1px solid var(--border);
   border-radius: 5px;
@@ -2017,7 +2028,7 @@ a.artifact-location {
   background: var(--surface-raised);
 }
 .connection-setup .setup-form {
-  padding: 0 16px;
+  padding: 0 24px;
 }
 .connection-setup label {
   margin-bottom: 12px;
@@ -2084,8 +2095,8 @@ a.artifact-location {
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  margin: 16px -16px 0;
-  padding: 12px 16px;
+  margin: 24px -24px 0;
+  padding: 16px 24px;
   border-top: 1px solid var(--border);
 }
 .connection-setup .dialog-footer > .button:first-child {
@@ -2373,7 +2384,7 @@ a.artifact-location {
 }
 .assistant-home .composer {
   background: var(--panel);
-  border-radius: 10px;
+  border-radius: 20px;
 }
 .assistant-home .composer textarea {
   min-height: 72px;
@@ -2652,7 +2663,7 @@ a.artifact-location {
   height: calc(100dvh - 24px);
   max-height: calc(100dvh - 24px);
   padding: 24px;
-  border-radius: 12px;
+  border-radius: var(--radius-dialog);
 }
 .task-create-form > .muted {
   margin-bottom: 20px;
@@ -2747,10 +2758,10 @@ a.artifact-location {
 /* Project and routine dialogs share the personal-work organization system. */
 .setup-panel.automation-dialog {
   width: min(480px, 100%);
-  padding: 20px;
+  padding: 28px;
 }
 .automation-dialog .dialog-heading {
-  margin-bottom: 0;
+  margin-bottom: 8px;
 }
 .automation-dialog input,
 .automation-dialog .select-trigger {
@@ -2944,8 +2955,8 @@ a.artifact-location {
 .interaction {
   padding: 20px;
   border: 1px solid var(--border);
-  border-left: 2px solid var(--accent);
-  border-radius: 8px;
+  border-color: var(--accent-text);
+  border-radius: 16px;
   background: var(--panel);
 }
 .interaction h3 {
@@ -3047,7 +3058,7 @@ a.artifact-location {
 /* Mobile navigation follows Gemini's personal assistant drawer reference. */
 .sidebar-drawer .brand {
   height: 64px;
-  padding: 0 16px;
+  padding: 0 24px;
   font-size: 18px;
 }
 .sidebar-drawer .work-nav,
@@ -3094,5 +3105,185 @@ a.artifact-location {
   to {
     opacity: 1;
     transform: none;
+  }
+}
+
+/* Operate-mode forms: calm surfaces, generous curves, explicit interaction states. */
+.setup-panel label {
+  color: var(--text);
+  font-size: 13px;
+  line-height: 1.5;
+  margin-bottom: 20px;
+}
+.setup-panel
+  label
+  input:not([type="hidden"]):not([type="checkbox"]):not([type="radio"]),
+.setup-panel label textarea,
+.setup-panel label .select-trigger,
+.setup-panel .secret-input {
+  background: var(--field-fill);
+  border: 1px solid var(--field-border);
+  border-radius: var(--radius-field);
+  min-height: 44px;
+  margin-top: 8px;
+  padding: 11px 14px;
+  color: var(--strong);
+  font-size: 14px;
+  line-height: 1.5;
+  transition:
+    border-color 150ms ease-out,
+    background 150ms ease-out;
+}
+.setup-panel label textarea {
+  resize: vertical;
+  min-height: 104px;
+}
+.setup-panel label :is(input, textarea, .select-trigger):hover:not(:disabled),
+.setup-panel .secret-input:hover {
+  border-color: var(--field-hover);
+}
+.setup-panel label :is(input, textarea, .select-trigger):focus,
+.setup-panel label .select-trigger[data-popup-open] {
+  border-color: transparent !important;
+  background: var(--panel);
+  outline: 2px solid var(--accent-text);
+  outline-offset: 1px;
+}
+.setup-panel label :is(input, textarea):user-invalid,
+.setup-panel label [aria-invalid="true"] {
+  border-color: var(--danger) !important;
+}
+.setup-panel label :is(input, textarea):disabled,
+.setup-panel label .select-trigger:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+.setup-panel .dialog-heading {
+  border-bottom: 0;
+  padding-bottom: 16px;
+}
+.setup-panel .dialog-heading h2 {
+  font-size: 21px;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+}
+.setup-panel .advanced {
+  background: transparent;
+  border: 0;
+  padding: 0;
+}
+.setup-panel .advanced > summary {
+  padding: 10px 0;
+  color: var(--secondary);
+  font-size: 13px;
+}
+.setup-panel .advanced[open] > summary {
+  margin-bottom: 8px;
+}
+.setup-panel .dialog-footer {
+  border-top: 0;
+  padding-top: 8px;
+}
+.setup-panel .dialog-footer .button {
+  min-height: 40px;
+  padding: 9px 16px;
+  border-radius: 10px;
+}
+.setup-panel .dialog-footer > .button:first-child:not(.subtle-danger) {
+  background: var(--surface-raised);
+  border-color: transparent;
+}
+.setup-panel .dialog-footer > .button:first-child:hover:not(:disabled) {
+  background: var(--hover);
+}
+.setup-panel .secret-input {
+  padding: 0;
+}
+.setup-panel
+  .secret-input
+  input:not([type="hidden"]):not([type="checkbox"]):not([type="radio"]) {
+  border: 0;
+  margin: 0;
+  border-radius: 0;
+  background: transparent;
+}
+.setup-panel .secret-input:focus-within {
+  outline: 2px solid var(--accent-text);
+  outline-offset: 2px;
+}
+.setup-panel .secret-input input:focus {
+  outline: none;
+}
+.setup-panel .secret-input button {
+  min-width: 48px;
+  border: 0;
+}
+.setup-panel .advanced textarea {
+  font-family: monospace;
+}
+.select-popup {
+  border-radius: 14px;
+  padding: 6px;
+  overscroll-behavior: contain;
+}
+.select-item {
+  border-radius: 8px;
+  padding: 9px 12px;
+}
+input,
+textarea {
+  caret-color: var(--accent-text);
+  accent-color: var(--accent);
+}
+::selection {
+  color: var(--on-accent);
+  background: var(--accent);
+}
+@media (max-width: 640px), (pointer: coarse) {
+  .setup-panel
+    label
+    input:not([type="hidden"]):not([type="checkbox"]):not([type="radio"]),
+  .setup-panel label textarea,
+  .setup-panel label .select-trigger,
+  .setup-panel button,
+  .setup-panel summary,
+  .select-item {
+    min-height: 48px;
+  }
+  .setup-panel
+    label
+    input:not([type="hidden"]):not([type="checkbox"]):not([type="radio"]),
+  .setup-panel label textarea,
+  .setup-panel label .select-trigger {
+    font-size: 16px;
+  }
+  .setup-panel .dialog-footer .button {
+    min-height: 48px;
+  }
+  .setup-panel .icon-button {
+    min-width: 48px;
+  }
+}
+@media (max-width: 640px) {
+  .modal-backdrop {
+    padding: 12px;
+  }
+  .setup-panel:not(.sidebar-drawer) {
+    max-height: calc(100dvh - 24px);
+    scroll-padding-block: 24px;
+    padding-bottom: max(20px, env(safe-area-inset-bottom));
+  }
+  .setup-panel.automation-dialog,
+  .setup-panel.task-create-panel {
+    padding: 24px 20px;
+  }
+  .setup-panel .field-grid {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .setup-panel label :is(input, textarea, .select-trigger) {
+    transition: none;
   }
 }
