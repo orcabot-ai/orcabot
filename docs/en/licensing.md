@@ -7,8 +7,9 @@ cross-service package, imported tests and upstream CLI adaptations retain their
 Apache-2.0 license, attribution and change notices. Root MIT does not relicense
 those portions. See the package-level LICENSE and UPSTREAM files.
 
-Run `pnpm licenses:report` to regenerate the [inventory](../../licenses/dependencies.json),
-[notices](../../THIRD_PARTY_NOTICES.md) and full license-text copies. It covers
+Run `pnpm licenses:report` to regenerate the dependency inventory in
+[THIRD_PARTY_NOTICES](../../THIRD_PARTY_NOTICES.md). License and NOTICE texts stay
+in the upstream packages rather than a generated repository directory. It covers
 installed development/production dependencies on the current platform; regenerate
 on every distribution platform for optional binaries. It does not inventory the
 separately installed Runtime, harness executables or model service terms.
@@ -16,7 +17,7 @@ separately installed Runtime, harness executables or model service terms.
 Review findings include MPL-2.0 lightningcss build tooling/native code and CC-BY-4.0
 caniuse-lite data. Preserve their notices and attribution; redistribution or
 modification of covered MPL files requires the corresponding-source handling
-specified by that license. See each package's source/homepage and copied texts.
+specified by that license. See each package's source and license texts.
 Other recorded expressions include MIT, Apache-2.0, ISC, BSD-3-Clause, BlueOak-1.0.0,
 Python-2.0, Unlicense and 0BSD. A permissive project license does not remove these
 component-specific obligations. Verify the actual contents before distributing

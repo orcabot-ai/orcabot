@@ -1,2 +1,0 @@
-# Preserve third-party license bytes verbatim, including upstream CRLF/trailing spaces.
-licenses/third-party/*.txt -whitespace

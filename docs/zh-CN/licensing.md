@@ -4,7 +4,7 @@
 
 项目自有代码、文档和所有者提供的品牌资产采用 MIT。`orcabot-cross-service`、对应移植测试和 CLI 中的上游改编部分保留 Apache-2.0 与版权/变更记录，不能标为纯 MIT。
 
-`pnpm licenses:report` 生成完整安装依赖的 [清单](../../licenses/dependencies.json)、[声明](../../THIRD_PARTY_NOTICES.md) 和许可证文本副本。包含当前平台的开发与生产依赖；其他平台可选二进制应在打包平台再次生成清单。
+`pnpm licenses:report` 将安装依赖的清单更新到根目录 [第三方声明](../../THIRD_PARTY_NOTICES.md)。许可证和 NOTICE 正文保留在上游包中，不在仓库内另存生成目录。包含当前平台的开发与生产依赖；其他平台可选二进制应在打包平台再次生成清单。
 
 依赖中有 MIT、Apache、ISC、BSD、BlueOak、Python、Unlicense、0BSD，以及 lightningcss 的 MPL-2.0 和 caniuse-lite 数据的 CC-BY-4.0。分发时保留原始声明；分发或修改 MPL 文件时按其协议处理对应源码与通知，CC-BY 数据保留署名和来源。构建工具并不因此变成项目自有代码。
 

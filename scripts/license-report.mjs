@@ -1,7 +1,7 @@
 import { execFileSync } from "node:child_process";
-import { readFile, writeFile, mkdir, readdir } from "node:fs/promises";
-import { createHash } from "node:crypto";
+import { writeFile, readdir } from "node:fs/promises";
 import { join, resolve } from "node:path";
+
 const root = resolve(import.meta.dirname, "..");
 const inventory = JSON.parse(
   execFileSync("pnpm", ["licenses", "list", "--json"], {
@@ -18,58 +18,34 @@ const inherited = {
 };
 const rows = [];
 const missing = [];
-await mkdir(join(root, "licenses/third-party"), { recursive: true });
-for (const [license, packages] of Object.entries(inventory))
+for (const [license, packages] of Object.entries(inventory)) {
   for (const pkg of packages) {
     const parent = inherited[pkg.name]
       ? all.find(
           (p) => p.name === inherited[pkg.name] && p.license === pkg.license,
         )
       : undefined;
-    const dir = parent?.paths[0] ?? pkg.paths[0];
-    const files = (await readdir(dir)).filter((n) =>
-      /^(licen[sc]e|copying|notice)(\.|$|-)/i.test(n),
-    );
-    const copies = [];
-    for (const file of files) {
-      try {
-        const data = await readFile(join(dir, file));
-        const name =
-          createHash("sha256").update(data).digest("hex").slice(0, 16) + ".txt";
-        await writeFile(join(root, "licenses/third-party", name), data);
-        copies.push("licenses/third-party/" + name);
-      } catch {}
+    const files = await readdir(parent?.paths[0] ?? pkg.paths[0]);
+    if (
+      !files.some((name) => /^(licen[sc]e|copying|notice)(\.|$|-)/i.test(name))
+    ) {
+      missing.push(pkg.name);
     }
-    if (!copies.length) missing.push(pkg.name);
     rows.push({
       name: pkg.name,
       versions: pkg.versions,
       license,
-      homepage: pkg.homepage ?? "",
-      licenseFiles: [...new Set(copies)],
-      ...(parent ? { licenseTextSource: parent.name } : {}),
+      source: `https://www.npmjs.com/package/${pkg.name}`,
     });
   }
+}
 rows.sort((a, b) => a.name.localeCompare(b.name));
-await writeFile(
-  join(root, "licenses/dependencies.json"),
-  JSON.stringify(
-    {
-      scope:
-        "Installed pnpm lockfile graph, production and development, current platform; separately installed Runtime/harnesses excluded",
-      packages: rows,
-      missingLicenseFiles: missing,
-    },
-    null,
-    2,
-  ) + "\n",
-);
 const lines = [
   "# Third-party notices",
   "",
   "Orcabot original code is MIT. Third-party components retain their own licenses.",
   "This inventory includes installed production and development dependencies; optional binaries on other platforms must be inventoried on their release platform.",
-  "Regenerate with `pnpm licenses:report`. Full license and NOTICE texts are preserved under `licenses/third-party/`.",
+  "Regenerate this file with `pnpm licenses:report`. License and NOTICE texts remain in the upstream packages; include the required texts with any redistributed bundles.",
   "",
   "## Imported source",
   "",
@@ -79,11 +55,11 @@ const lines = [
   "",
   "## Dependency inventory",
   "",
-  "| Package | Version | SPDX expression | Texts |",
+  "| Package | Version | SPDX expression | Upstream package |",
   "| --- | --- | --- | --- |",
   ...rows.map(
     (p) =>
-      `| ${p.name} | ${p.versions.join(", ")} | ${p.license} | ${p.licenseFiles.map((f, i) => `[${i + 1}](${f})`).join(", ") || "See package manifest/source"} |`,
+      `| ${p.name} | ${p.versions.join(", ")} | ${p.license} | [Source](${p.source}) |`,
   ),
   "",
   "## Distribution notes",
@@ -98,18 +74,11 @@ const lines = [
   "",
 ];
 await writeFile(join(root, "THIRD_PARTY_NOTICES.md"), lines.join("\n"));
-console.log(
-  `Inventoried ${rows.length} dependency records; ${missing.length} missing standalone texts.`,
-);
-// Keep regenerated review artifacts identical to the repository's formatting gate.
 execFileSync(
   "pnpm",
-  [
-    "exec",
-    "prettier",
-    "--write",
-    "licenses/dependencies.json",
-    "THIRD_PARTY_NOTICES.md",
-  ],
+  ["exec", "prettier", "--write", "THIRD_PARTY_NOTICES.md"],
   { cwd: root, stdio: "ignore" },
+);
+console.log(
+  `Updated THIRD_PARTY_NOTICES.md with ${rows.length} dependency records; ${missing.length} missing standalone texts.`,
 );

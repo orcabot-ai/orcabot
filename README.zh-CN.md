@@ -137,4 +137,4 @@ Vite 开发使用 5173 端口，需要设置 `ORCABOT_PUBLIC_URL=http://127.0.0.
 
 ## 协议
 
-Orcabot 自有代码、文档和提供的项目品牌资产采用 [MIT](LICENSE)。移植的 OctoRuntime 部分保留 Apache-2.0；第三方依赖保留各自协议。详见 [第三方声明](THIRD_PARTY_NOTICES.md)、[依赖清单](licenses/dependencies.json) 和 [中文许可说明](docs/zh-CN/licensing.md)。
+Orcabot 自有代码、文档和提供的项目品牌资产采用 [MIT](LICENSE)。移植的 OctoRuntime 部分保留 Apache-2.0；第三方依赖保留各自协议。详见 [第三方声明](THIRD_PARTY_NOTICES.md) 和 [中文许可说明](docs/zh-CN/licensing.md)。

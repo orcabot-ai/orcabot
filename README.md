@@ -173,5 +173,5 @@ workspace layout and [deployment](docs/en/cli-and-deployment.md) for production.
 
 Original Orcabot code, documentation, and supplied project assets are [MIT](LICENSE).
 Imported OctoRuntime portions retain Apache-2.0. Dependencies retain their own
-licenses; see [THIRD_PARTY_NOTICES](THIRD_PARTY_NOTICES.md), the reproducible
-[dependency inventory](licenses/dependencies.json), and [licensing guide](docs/en/licensing.md).
+licenses; see [THIRD_PARTY_NOTICES](THIRD_PARTY_NOTICES.md) and the
+[licensing guide](docs/en/licensing.md).
