@@ -15,7 +15,7 @@ export function Automation({
   state: State;
   mode: "projects" | "routines";
 }) {
-  const { t } = useI18n(),
+  const { t, locale } = useI18n(),
     client = useQueryClient(),
     navigate = useNavigate();
   const [creating, setCreating] = useState(false),
@@ -68,15 +68,15 @@ export function Automation({
     }
   }
   return (
-    <div className="board-page">
+    <div className={`board-page automation-page ${mode}-page`}>
       <div className="board-heading">
         <div>
           <h1>{t(mode === "projects" ? "Projects" : "Routines")}</h1>
           <p className="muted">
             {t(
               mode === "projects"
-                ? "Project workspaces and their threads."
-                : "Scheduled instructions and execution budgets.",
+                ? "Keep related conversations together."
+                : "Give Orca something to do on a schedule.",
             )}
           </p>
         </div>
@@ -258,14 +258,14 @@ export function Automation({
           <p>
             {t(
               mode === "projects"
-                ? "Create a project from an agent workspace, then start a thread."
-                : "Choose a thread, an instruction and a bounded schedule.",
+                ? "Keep a shared goal and its conversations in one place."
+                : "Choose a conversation and tell Orca what to repeat.",
             )}
           </p>
         </div>
       )}
       {mode === "projects" && state.conversations.some((c) => !c.projectId) && (
-        <section className="board-card mt-6">
+        <section className="unassigned-threads mt-6">
           <h2>{t("Other threads")}</h2>
           <div className="project-threads">
             {state.conversations
@@ -280,7 +280,16 @@ export function Automation({
                       })
                     }
                   >
-                    {c.title}
+                    <span>
+                      {c.title}
+                      {c.archived ? " · " + t("Archived") : ""}
+                    </span>
+                    <small>
+                      {new Date(c.createdAt).toLocaleDateString(
+                        locale === "zh" ? "zh-CN" : "en-US",
+                        { month: "short", day: "numeric" },
+                      )}
+                    </small>
                   </button>
                   <button
                     className="text-button"
@@ -336,6 +345,10 @@ function CreateAutomation({
   save: (body: Record<string, unknown>) => Promise<void>;
 }) {
   const { t } = useI18n();
+  const available =
+    mode === "projects"
+      ? state.agents.length > 0
+      : state.conversations.some((c) => !c.archived);
   const form = useForm({
     defaultValues: {
       name: "",
@@ -363,10 +376,10 @@ function CreateAutomation({
     <Dialog
       title={t(mode === "projects" ? "New project" : "New routine")}
       onClose={onClose}
+      className="automation-dialog"
     >
-      <div className="flex items-center justify-between">
+      <div className="dialog-heading">
         <div>
-          <div className="eyebrow">ORCABOT</div>
           <h2>{t(mode === "projects" ? "New project" : "New routine")}</h2>
         </div>
         <button
@@ -403,25 +416,35 @@ function CreateAutomation({
           )}
         </form.Field>
         {mode === "projects" ? (
-          <form.Field name="agentId">
-            {(f) => (
-              <label>
-                {t("Agent")}
-                <Select
-                  required
-                  value={f.state.value}
-                  onValueChange={(next) => f.handleChange(next)}
-                >
-                  <option value="">{t("Choose an agent")}</option>
-                  {state.agents.map((a) => (
-                    <option key={a.id} value={a.id}>
-                      {a.name} · {a.workdir}
-                    </option>
-                  ))}
-                </Select>
-              </label>
-            )}
-          </form.Field>
+          <>
+            <form.Field name="agentId">
+              {(f) => (
+                <label>
+                  {t("Agent")}
+                  <Select
+                    required
+                    value={f.state.value}
+                    onValueChange={(next) => f.handleChange(next)}
+                  >
+                    <option value="">{t("Choose an agent")}</option>
+                    {state.agents.map((a) => (
+                      <option key={a.id} value={a.id}>
+                        {a.name}
+                      </option>
+                    ))}
+                  </Select>
+                </label>
+              )}
+            </form.Field>
+            <form.Subscribe selector={(s) => s.values.agentId}>
+              {(id) => (
+                <details className="advanced project-directory">
+                  <summary>{t("Working directory")}</summary>
+                  <code>{state.agents.find((a) => a.id === id)?.workdir}</code>
+                </details>
+              )}
+            </form.Subscribe>
+          </>
         ) : (
           <>
             <form.Field name="conversationId">
@@ -478,7 +501,7 @@ function CreateAutomation({
               <form.Field name="maxRuns">
                 {(f) => (
                   <label>
-                    {t("Run budget")}
+                    {t("Run limit")}
                     <input
                       type="number"
                       required
@@ -491,20 +514,43 @@ function CreateAutomation({
                 )}
               </form.Field>
             </div>
-            <p className="muted mb-5">
-              {t(
-                "Missed windows are skipped. Three consecutive failures pause the routine. Pausing does not cancel running work.",
-              )}
-            </p>
+            <details className="advanced routine-rules">
+              <summary>{t("Run rules")}</summary>
+              <p className="muted">
+                {t(
+                  "Missed windows are skipped. Three consecutive failures pause the routine. Pausing does not cancel running work.",
+                )}
+              </p>
+            </details>
           </>
         )}
-        <form.Subscribe selector={(s) => s.isSubmitting}>
-          {(busy) => (
-            <button className="button primary" disabled={busy}>
-              {t(busy ? "Saving…" : "Create")}
-            </button>
-          )}
-        </form.Subscribe>
+        {!available && (
+          <p role="alert" className="notice">
+            {t(
+              mode === "projects"
+                ? "Create an agent before assigning work."
+                : "Start a conversation before creating a routine.",
+            )}
+          </p>
+        )}
+        <div className="dialog-footer">
+          <button type="button" className="button" onClick={onClose}>
+            {t("Cancel")}
+          </button>
+          <form.Subscribe selector={(s) => s.isSubmitting}>
+            {(busy) => (
+              <button className="button primary" disabled={busy || !available}>
+                {t(
+                  busy
+                    ? "Saving…"
+                    : mode === "projects"
+                      ? "Create project"
+                      : "Create routine",
+                )}
+              </button>
+            )}
+          </form.Subscribe>
+        </div>
       </form>
     </Dialog>
   );
@@ -528,8 +574,12 @@ function ThreadEditor({
   const [title, setTitle] = useState(thread.title);
   const [projectId, setProjectId] = useState(thread.projectId ?? "");
   return (
-    <Dialog title={t("Manage thread")} onClose={onClose}>
-      <div className="flex items-center justify-between">
+    <Dialog
+      title={t("Manage thread")}
+      onClose={onClose}
+      className="automation-dialog"
+    >
+      <div className="dialog-heading">
         <h2>{t("Manage thread")}</h2>
         <button
           className="icon-button"
@@ -578,9 +628,9 @@ function ThreadEditor({
             ))}
           </Select>
         </label>
-        <div className="automation-actions">
+        <div className="dialog-footer thread-editor-footer">
           <button
-            className="button"
+            className="button subtle-danger"
             type="button"
             disabled={busy}
             onClick={() =>
@@ -591,6 +641,9 @@ function ThreadEditor({
             }
           >
             {t(thread.archived ? "Restore thread" : "Archive thread")}
+          </button>
+          <button type="button" className="button" onClick={onClose}>
+            {t("Cancel")}
           </button>
           <button className="button primary" disabled={busy}>
             {t("Save changes")}

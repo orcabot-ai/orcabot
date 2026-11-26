@@ -2743,3 +2743,67 @@ a.artifact-location {
     min-height: 44px;
   }
 }
+
+/* Project and routine dialogs share the personal-work organization system. */
+.setup-panel.automation-dialog {
+  width: min(480px, 100%);
+  padding: 20px;
+}
+.automation-dialog .dialog-heading {
+  margin-bottom: 0;
+}
+.automation-dialog input,
+.automation-dialog .select-trigger {
+  min-height: 36px;
+}
+.automation-dialog textarea {
+  min-height: 84px;
+}
+.automation-dialog .advanced {
+  margin: 12px 0 16px;
+}
+.project-directory code {
+  display: block;
+  overflow-wrap: anywhere;
+  font-size: 11px;
+  padding-top: 10px;
+}
+.routine-rules p {
+  margin: 10px 0 0;
+  font-size: 12px;
+  line-height: 1.6;
+}
+.unassigned-threads {
+  border-top: 1px solid var(--border);
+  padding-top: 20px;
+}
+.unassigned-threads h2 {
+  font-size: 14px;
+  font-weight: 550;
+}
+.project-threads > div {
+  min-height: 52px;
+}
+.project-threads small {
+  display: block;
+  color: var(--muted);
+  font-size: 11px;
+  margin-top: 4px;
+}
+.subtle-danger {
+  color: var(--danger);
+}
+.thread-editor-footer {
+  flex-wrap: wrap;
+}
+@media (max-width: 640px) {
+  .automation-dialog input,
+  .automation-dialog .select-trigger,
+  .automation-dialog button {
+    min-height: 44px;
+  }
+  .thread-editor-footer .subtle-danger {
+    flex-basis: 100%;
+    margin-right: 0;
+  }
+}

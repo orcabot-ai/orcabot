@@ -49,11 +49,15 @@ The image quota reset. The [actual home/landing comparison image](references/per
 
 `pnpm check` passes172tests:150passed and22platform skips. Home regression coverage includes admission/discovery, partial task pagination and protected-URL unlock retry. Shared controls and workflow checks remain included. The read-only activity API has separate authentication, privacy and bounded-result tests.
 
+## Tasks and work organization
+
+The task list, delivery/activity detail and creation sheet now follow the [actual task image](references/tasks-gemini.jpg); [decisions and boundary fixes](references/task-review.md) are recorded. The [project](references/projects-gemini.jpg) and [routine](references/routines-attention-gemini.jpg) images also back the implemented project/thread/routine surfaces. Their [implementation notes](references/organization-review.md) identify generated capabilities that were deliberately not adopted.
+
+The current E2E suite passes25checks. Project, thread-edit and routine Cancel actions discard drafts; routine execution still returns to the original thread and retains interval/run-limit guards.
+
 ## Remaining work
 
-The [actual task comparison image](references/tasks-gemini.jpg) covers the list, task details and creation surface; these surfaces now follow its list, delivery/timeline and right-side creation layout. See [task implementation decisions](references/task-review.md). The [project comparison image](references/projects-gemini.jpg) has also been downloaded; implementation is pending. Remaining surfaces have text critiques and are not marked complete.
-
-Follow-ups include a result-first conversation, human-readable task activity, a clearer decision queue and compact dialog footers. The completion gate requires actual images and verification for every core page, not only setup and Home. The [personal assistant direction](../../en/personal-agent-experience.md) describes this shared product model.
+Attention has an actual visual reference and is next to implement. Conversation, execution approvals, deliverable references and mobile navigation have text critiques; a new generated comparison image is pending. These surfaces are not marked complete. The completion gate requires image-backed changes and verification for every listed core page.
 
 Capture files contain only task-created example data. Raw native captures and
 credentials stay outside the tracked evidence. Some later `before/` captures

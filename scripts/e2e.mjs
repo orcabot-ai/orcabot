@@ -218,8 +218,13 @@ try {
   await go("/projects");
   await wait('document.body.textContent.includes("New project")');
   await click("New project");
+  await field("Name", "Cancelled project");
+  await click("Cancel");
+  await wait('!document.querySelector("[role=dialog]")');
+  assert.equal((await request("/projects")).items.length, 0);
+  await click("New project");
   await field("Name", "E2E workspace");
-  await click("Create");
+  await click("Create project");
   await wait('!document.querySelector("[role=dialog]")');
   await wait('document.body.textContent.includes("E2E workspace")');
   await click("New thread");
@@ -228,6 +233,14 @@ try {
   reports.push("project creation and durable thread");
   await go("/projects");
   await wait('!!document.querySelector(".project-threads button")');
+  await click("Manage thread");
+  await field("Name", "Discarded rename");
+  await click("Cancel");
+  await wait('!document.querySelector("[role=dialog]")');
+  assert.notEqual(
+    (await request("/conversations/" + threadId)).title,
+    "Discarded rename",
+  );
   await click("Manage thread");
   await field("Name", "E2E delivery");
   await click("Save changes");
@@ -282,12 +295,17 @@ try {
   await go("/routines");
   await wait('document.body.textContent.includes("New routine")');
   await click("New routine");
+  await field("Name", "Cancelled routine");
+  await click("Cancel");
+  await wait('!document.querySelector("[role=dialog]")');
+  assert.equal((await request("/routines")).items.length, 0);
+  await click("New routine");
   await field("Name", "E2E routine");
   await field("Thread", threadId);
   await field("What to do", "Return a verified fixture deliverable");
   await field("Interval (minutes)", "15");
-  await field("Run budget", "2");
-  await click("Create");
+  await field("Run limit", "2");
+  await click("Create routine");
   await wait('!document.querySelector("[role=dialog]")');
   await wait('document.body.textContent.includes("E2E routine")');
   await click("Run now");
@@ -297,6 +315,9 @@ try {
   await click("Resume");
   await wait('document.body.textContent.includes("Pause")');
   reports.push("routine creation, manual run, pause and resume");
+  reports.push(
+    "Project, thread edit and routine Cancel actions discard drafts without writing records",
+  );
   const routines = await request("/routines");
   assert.equal(routines.items.length, 1);
   const routine = routines.items[0];

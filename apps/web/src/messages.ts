@@ -504,4 +504,16 @@ export const chinese = {
   "Show less": "收起",
   "No active channels are available. Create or restore a channel before assigning a task.":
     "没有可用的频道。请先创建或恢复一个频道，再分配任务。",
+  "Keep related conversations together.": "把相关对话放在一起。",
+  "Give Orca something to do on a schedule.": "让 Orca 按时帮你处理事情。",
+  "Keep a shared goal and its conversations in one place.":
+    "把共同目标与相关对话整理在一个项目中。",
+  "Choose a conversation and tell Orca what to repeat.":
+    "选择一段对话，告诉 Orca 哪件事需要重复处理。",
+  "Run limit": "执行次数上限",
+  "Run rules": "执行规则",
+  "Start a conversation before creating a routine.":
+    "请先开始一段对话，再创建例行任务。",
+  "Create project": "创建项目",
+  "Create routine": "创建例行任务",
 } as const;

@@ -64,7 +64,7 @@
       "before": "before/04-work-list-empty.jpg",
       "geminiThread": "https://gemini.google.com/app/09cf8496cd38905e",
       "generatedImage": "references/tasks-gemini.jpg",
-      "status": "implemented",
+      "status": "verified",
       "changes": [
         "Task creation uses a focused Base UI side sheet with Cancel and one primary action",
         "Channel and workflow are progressively disclosed; missing active-channel prerequisites stay visible",
@@ -78,7 +78,7 @@
         "Existing workflow evidence/review behavior and responsive context rail remain covered; screenshots retained",
         "pnpm e2e:24checks passed; missing active-channel prerequisite explicitly covered"
       ],
-      "commit": null,
+      "commit": "877757c9c351d539b4c1dfe5fffceec1237d85ef",
       "critique": "references/workspace-review.md",
       "followUpReview": "references/task-review.md"
     },
@@ -87,7 +87,7 @@
       "before": "before/11-create-work.jpg",
       "geminiThread": "https://gemini.google.com/app/09cf8496cd38905e",
       "generatedImage": "references/tasks-gemini.jpg",
-      "status": "implemented",
+      "status": "verified",
       "changes": [
         "Task creation uses a focused Base UI side sheet with Cancel and one primary action",
         "Channel and workflow are progressively disclosed; missing active-channel prerequisites stay visible",
@@ -101,7 +101,7 @@
         "Existing workflow evidence/review behavior and responsive context rail remain covered; screenshots retained",
         "pnpm e2e:24checks passed; missing active-channel prerequisite explicitly covered"
       ],
-      "commit": null,
+      "commit": "877757c9c351d539b4c1dfe5fffceec1237d85ef",
       "critique": "references/workspace-review.md",
       "followUpReview": "references/task-review.md"
     },
@@ -110,7 +110,7 @@
       "before": "before/12-work-detail.jpg",
       "geminiThread": "https://gemini.google.com/app/09cf8496cd38905e",
       "generatedImage": "references/tasks-gemini.jpg",
-      "status": "implemented",
+      "status": "verified",
       "changes": [
         "Task creation uses a focused Base UI side sheet with Cancel and one primary action",
         "Channel and workflow are progressively disclosed; missing active-channel prerequisites stay visible",
@@ -124,7 +124,7 @@
         "Existing workflow evidence/review behavior and responsive context rail remain covered; screenshots retained",
         "pnpm e2e:24checks passed; missing active-channel prerequisite explicitly covered"
       ],
-      "commit": null,
+      "commit": "877757c9c351d539b4c1dfe5fffceec1237d85ef",
       "critique": "references/workspace-review.md",
       "followUpReview": "references/task-review.md"
     },
@@ -133,60 +133,110 @@
       "before": "before/13-projects.jpg",
       "geminiThread": "https://gemini.google.com/app/09cf8496cd38905e",
       "generatedImage": "references/projects-gemini.jpg",
-      "status": "reviewed-with-image",
-      "changes": [],
-      "after": null,
-      "verification": [],
+      "status": "implemented",
+      "changes": [
+        "Compact dialog system with Cancel and explicit primary action; archive remains separate from saving",
+        "Actual project directory and bounded run rules are inspectable on demand",
+        "Personal-assistant copy, consistent thread rows and real dates",
+        "Missing setup prerequisites are explained before creation"
+      ],
+      "after": "after/13-projects-light.png",
+      "verification": [
+        "Web typecheck and build passed",
+        "pnpm e2e:25checks passed including all three Cancel flows, original thread identity, routine run/pause/resume and preferences",
+        "Independent standards and spec code reviews approved; automation tests9/9passed"
+      ],
       "commit": null,
-      "critique": "references/workspace-review.md"
+      "critique": "references/workspace-review.md",
+      "followUpReview": "references/organization-review.md"
     },
     {
       "id": "project-create",
       "before": "before/14-project-create.jpg",
       "geminiThread": "https://gemini.google.com/app/09cf8496cd38905e",
       "generatedImage": "references/projects-gemini.jpg",
-      "status": "reviewed-with-image",
-      "changes": [],
-      "after": null,
-      "verification": [],
+      "status": "implemented",
+      "changes": [
+        "Compact dialog system with Cancel and explicit primary action; archive remains separate from saving",
+        "Actual project directory and bounded run rules are inspectable on demand",
+        "Personal-assistant copy, consistent thread rows and real dates",
+        "Missing setup prerequisites are explained before creation"
+      ],
+      "after": "after/14-project-create-light.png",
+      "verification": [
+        "Web typecheck and build passed",
+        "pnpm e2e:25checks passed including all three Cancel flows, original thread identity, routine run/pause/resume and preferences",
+        "Independent standards and spec code reviews approved; automation tests9/9passed"
+      ],
       "commit": null,
-      "critique": "references/workspace-review.md"
+      "critique": "references/workspace-review.md",
+      "followUpReview": "references/organization-review.md"
     },
     {
       "id": "thread-edit",
       "before": "before/15-thread-edit.jpg",
       "geminiThread": "https://gemini.google.com/app/09cf8496cd38905e",
       "generatedImage": "references/projects-gemini.jpg",
-      "status": "reviewed-with-image",
-      "changes": [],
-      "after": null,
-      "verification": [],
+      "status": "implemented",
+      "changes": [
+        "Compact dialog system with Cancel and explicit primary action; archive remains separate from saving",
+        "Actual project directory and bounded run rules are inspectable on demand",
+        "Personal-assistant copy, consistent thread rows and real dates",
+        "Missing setup prerequisites are explained before creation"
+      ],
+      "after": "after/15-thread-edit-light.png",
+      "verification": [
+        "Web typecheck and build passed",
+        "pnpm e2e:25checks passed including all three Cancel flows, original thread identity, routine run/pause/resume and preferences",
+        "Independent standards and spec code reviews approved; automation tests9/9passed"
+      ],
       "commit": null,
-      "critique": "references/workspace-review.md"
+      "critique": "references/workspace-review.md",
+      "followUpReview": "references/organization-review.md"
     },
     {
       "id": "routines",
       "before": "before/16-routines.jpg",
       "geminiThread": "https://gemini.google.com/app/09cf8496cd38905e",
-      "generatedImage": null,
-      "status": "reviewed-awaiting-image",
-      "changes": [],
-      "after": null,
-      "verification": [],
+      "generatedImage": "references/routines-attention-gemini.jpg",
+      "status": "implemented",
+      "changes": [
+        "Compact dialog system with Cancel and explicit primary action; archive remains separate from saving",
+        "Actual project directory and bounded run rules are inspectable on demand",
+        "Personal-assistant copy, consistent thread rows and real dates",
+        "Missing setup prerequisites are explained before creation"
+      ],
+      "after": "after/16-routines-light.png",
+      "verification": [
+        "Web typecheck and build passed",
+        "pnpm e2e:25checks passed including all three Cancel flows, original thread identity, routine run/pause/resume and preferences",
+        "Independent standards and spec code reviews approved; automation tests9/9passed"
+      ],
       "commit": null,
-      "critique": "references/workspace-review.md"
+      "critique": "references/workspace-review.md",
+      "followUpReview": "references/organization-review.md"
     },
     {
       "id": "routine-create",
       "before": "before/18-routine-create.jpg",
       "geminiThread": "https://gemini.google.com/app/09cf8496cd38905e",
-      "generatedImage": null,
-      "status": "reviewed-awaiting-image",
-      "changes": [],
-      "after": null,
-      "verification": [],
+      "generatedImage": "references/routines-attention-gemini.jpg",
+      "status": "implemented",
+      "changes": [
+        "Compact dialog system with Cancel and explicit primary action; archive remains separate from saving",
+        "Actual project directory and bounded run rules are inspectable on demand",
+        "Personal-assistant copy, consistent thread rows and real dates",
+        "Missing setup prerequisites are explained before creation"
+      ],
+      "after": "after/18-routine-create-light.png",
+      "verification": [
+        "Web typecheck and build passed",
+        "pnpm e2e:25checks passed including all three Cancel flows, original thread identity, routine run/pause/resume and preferences",
+        "Independent standards and spec code reviews approved; automation tests9/9passed"
+      ],
       "commit": null,
-      "critique": "references/workspace-review.md"
+      "critique": "references/workspace-review.md",
+      "followUpReview": "references/organization-review.md"
     },
     {
       "id": "agent-create",
@@ -255,8 +305,8 @@
       "id": "attention",
       "before": "before/19-attention.jpg",
       "geminiThread": "https://gemini.google.com/app/09cf8496cd38905e",
-      "generatedImage": null,
-      "status": "reviewed-awaiting-image",
+      "generatedImage": "references/routines-attention-gemini.jpg",
+      "status": "reviewed-with-image",
       "changes": [],
       "after": null,
       "verification": [],
