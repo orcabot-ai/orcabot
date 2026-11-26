@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ProjectsRouteImport } from './routes/projects'
 import { Route as RoutinesRouteImport } from './routes/routines'
+import { Route as WelcomeRouteImport } from './routes/welcome'
 import { Route as WorkRouteImport } from './routes/work'
 import { Route as ConversationsConversationIdRouteImport } from './routes/conversations.$conversationId'
 import { Route as WorkIndexRouteImport } from './routes/work.index'
@@ -30,6 +31,11 @@ const ProjectsRoute = ProjectsRouteImport.update({
 const RoutinesRoute = RoutinesRouteImport.update({
   id: '/routines',
   path: '/routines',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WelcomeRoute = WelcomeRouteImport.update({
+  id: '/welcome',
+  path: '/welcome',
   getParentRoute: () => rootRouteImport,
 } as any)
 const WorkRoute = WorkRouteImport.update({
@@ -58,6 +64,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/projects': typeof ProjectsRoute
   '/routines': typeof RoutinesRoute
+  '/welcome': typeof WelcomeRoute
   '/work': typeof WorkRouteWithChildren
   '/conversations/$conversationId': typeof ConversationsConversationIdRoute
   '/work/$workId': typeof WorkWorkIdRoute
@@ -67,6 +74,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/projects': typeof ProjectsRoute
   '/routines': typeof RoutinesRoute
+  '/welcome': typeof WelcomeRoute
   '/conversations/$conversationId': typeof ConversationsConversationIdRoute
   '/work/$workId': typeof WorkWorkIdRoute
   '/work': typeof WorkIndexRoute
@@ -76,6 +84,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/projects': typeof ProjectsRoute
   '/routines': typeof RoutinesRoute
+  '/welcome': typeof WelcomeRoute
   '/work': typeof WorkRouteWithChildren
   '/conversations/$conversationId': typeof ConversationsConversationIdRoute
   '/work/$workId': typeof WorkWorkIdRoute
@@ -87,6 +96,7 @@ export interface FileRouteTypes {
     | '/'
     | '/projects'
     | '/routines'
+    | '/welcome'
     | '/work'
     | '/conversations/$conversationId'
     | '/work/$workId'
@@ -96,6 +106,7 @@ export interface FileRouteTypes {
     | '/'
     | '/projects'
     | '/routines'
+    | '/welcome'
     | '/conversations/$conversationId'
     | '/work/$workId'
     | '/work'
@@ -104,6 +115,7 @@ export interface FileRouteTypes {
     | '/'
     | '/projects'
     | '/routines'
+    | '/welcome'
     | '/work'
     | '/conversations/$conversationId'
     | '/work/$workId'
@@ -114,6 +126,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ProjectsRoute: typeof ProjectsRoute
   RoutinesRoute: typeof RoutinesRoute
+  WelcomeRoute: typeof WelcomeRoute
   WorkRoute: typeof WorkRouteWithChildren
   ConversationsConversationIdRoute: typeof ConversationsConversationIdRoute
 }
@@ -139,6 +152,13 @@ declare module '@tanstack/react-router' {
       path: '/routines'
       fullPath: '/routines'
       preLoaderRoute: typeof RoutinesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/welcome': {
+      id: '/welcome'
+      path: '/welcome'
+      fullPath: '/welcome'
+      preLoaderRoute: typeof WelcomeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/work': {
@@ -188,6 +208,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ProjectsRoute: ProjectsRoute,
   RoutinesRoute: RoutinesRoute,
+  WelcomeRoute: WelcomeRoute,
   WorkRoute: WorkRouteWithChildren,
   ConversationsConversationIdRoute: ConversationsConversationIdRoute,
 }

@@ -177,6 +177,7 @@ export async function createServer(options: ServerOptions) {
       .conversations()
       .map(({ providerSession: _private, ...c }) => c),
   }));
+  app.get("/api/activity", async () => store.homeActivity());
   app.post("/api/targets", async (req, reply) =>
     reply
       .status(201)

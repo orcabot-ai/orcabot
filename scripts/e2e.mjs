@@ -529,6 +529,7 @@ try {
   );
   await go("/");
   await wait('!!document.querySelector(".workspace-context")');
+  await hit(".assistant-context > summary");
   assert.ok(
     await ev(
       'document.querySelector(".workspace-context").textContent.includes("Fixture assistant")',
@@ -560,6 +561,7 @@ try {
   await wait(
     `document.querySelector('.workspace-context').textContent.includes(${JSON.stringify(longAgent.name)})`,
   );
+  await hit(".assistant-context > summary");
   for (const width of [390, 320]) {
     await S("Emulation.setDeviceMetricsOverride", {
       width,
@@ -652,6 +654,194 @@ try {
   assert.equal((await request("/state")).targets.length, targetsBefore);
   reports.push(
     "managed local details are collapsed; remote key visibility resets and Cancel creates no connection",
+  );
+  await go("/");
+  await wait('!!document.querySelector(".assistant-home textarea")');
+  await ev(
+    `(()=>{const e=document.querySelector('.assistant-home textarea');Object.getOwnPropertyDescriptor(HTMLTextAreaElement.prototype,'value').set.call(e,'Summarize my next steps');e.dispatchEvent(new Event('input',{bubbles:true}));e.dispatchEvent(new Event('change',{bubbles:true}))})()`,
+  );
+  await hit('button[aria-label="Send message"]');
+  await wait('location.pathname.startsWith("/conversations/")');
+  await wait(
+    'document.body.textContent.includes("Verified fixture deliverable")',
+  );
+  await click("Home");
+  await wait(
+    'document.querySelector(".assistant-home")?.textContent.includes("Summarize my next steps")',
+  );
+  assert.ok(
+    await ev(
+      `(()=>{const s=[...document.querySelectorAll('.assistant-section')];return s.find(e=>e.querySelector('h2').textContent==='Recent conversations')?.textContent.includes('Summarize my next steps')&&!s.find(e=>e.querySelector('h2').textContent==='Recent deliveries')?.textContent.includes('Summarize my next steps')})()`,
+    ),
+  );
+  reports.push(
+    "home request returns to its original conversation and remains discoverable without becoming an accepted delivery",
+  );
+  const makeTask = async (title) =>
+    await command("/board/work", {
+      title,
+      goal: "Deliver a verified fixture result",
+      criteria: ["Result is recorded"],
+      agentId: fixtureAgent.id,
+      channelId: "general",
+      definitionId: "standard-delivery",
+      definitionVersion: 1,
+    });
+  await makeTask("Older unfinished task");
+  for (let i = 0; i < 20; i++) {
+    const work = await makeTask("Accepted recent task " + i);
+    let d = await request("/board/work/" + work.id);
+    const claim = await command("/board/tasks/" + d.task.id + "/claim", {
+      expectedRevision: d.task.revision,
+    });
+    await command("/board/tasks/" + d.task.id + "/dispatch", {
+      expectedRevision: claim.task.revision,
+      claimToken: claim.claimToken,
+    });
+    for (let j = 0; j < 100; j++) {
+      d = await request("/board/work/" + work.id);
+      if (d.task.status === "completed") break;
+      await pause(20);
+    }
+    assert.equal(d.task.status, "completed");
+    await command("/board/work/" + work.id + "/evidence", {
+      expectedRevision: d.work.revision,
+      taskId: d.task.id,
+      content: "Verified fixture result",
+      checks: [true],
+    });
+    d = await request("/board/work/" + work.id);
+    await command("/board/work/" + work.id + "/review", {
+      expectedRevision: d.work.revision,
+      evidenceId: d.evidence[0].id,
+      decision: "approve",
+      note: "Fixture acceptance",
+    });
+  }
+  await go("/");
+  await wait(
+    'document.querySelector(".assistant-home")?.textContent.includes("No in-progress tasks in this recent view.")',
+  );
+  assert.ok(
+    await ev(
+      'document.querySelector(".assistant-scope").textContent.includes("20 recent tasks")',
+    ),
+  );
+  await click("Open task list");
+  await wait(
+    'location.pathname==="/work"&&!!document.querySelector(".board-page")',
+  );
+  await click("Earlier items");
+  await wait(
+    'document.querySelector(".board-page")?.textContent.includes("Older unfinished task")',
+  );
+  reports.push(
+    "Home qualifies a partial task summary and task-list pagination reaches older unfinished work",
+  );
+  await go("/welcome");
+  await wait('!!document.querySelector(".landing-shell")');
+  assert.ok(
+    await ev(
+      `(()=>{const r=document.querySelector('.landing-shell').getBoundingClientRect();const v=document.querySelector('.orca-scene').getBoundingClientRect();return Math.abs(v.width/r.width-.7)<.01})()`,
+    ),
+    "Desktop landing must retain the requested7:3 split",
+  );
+  const canvasPixels = "document.querySelector('.orca-art canvas').toDataURL()";
+  await wait(
+    "document.querySelector('.orca-art .brand-light')?.naturalWidth>0",
+  );
+  const movingFrame = await ev(canvasPixels);
+  await wait(`${canvasPixels}!==${JSON.stringify(movingFrame)}`);
+  await hit(".scene-motion");
+  assert.equal(
+    await ev(
+      'document.querySelector(".scene-motion").getAttribute("aria-pressed")',
+    ),
+    "true",
+  );
+  await pause(100);
+  const stillFrame = await ev(canvasPixels);
+  await pause(150);
+  assert.equal(
+    await ev(canvasPixels),
+    stillFrame,
+    "Pause must stop particle rendering",
+  );
+  await S("Emulation.setEmulatedMedia", {
+    features: [{ name: "prefers-reduced-motion", value: "reduce" }],
+  });
+  await go("/welcome");
+  await wait(
+    "document.querySelector('.orca-art .brand-light')?.naturalWidth>0",
+  );
+  await pause(100);
+  const reducedFrame = await ev(canvasPixels);
+  await pause(150);
+  assert.equal(
+    await ev(canvasPixels),
+    reducedFrame,
+    "Reduced motion must retain a still visual",
+  );
+  assert.ok(
+    await ev(
+      "Array.from(document.querySelectorAll('.orca-art img')).some(img=>img.naturalWidth>0&&img.getBoundingClientRect().width>0)",
+    ),
+  );
+  await S("Emulation.setEmulatedMedia", { features: [] });
+  reports.push(
+    "Landing particles animate, pause to a stable frame and retain a still brand under reduced motion",
+  );
+  for (const width of [390, 320]) {
+    await S("Emulation.setDeviceMetricsOverride", {
+      width,
+      height: 844,
+      deviceScaleFactor: 1,
+      mobile: true,
+    });
+    await wait(`innerWidth===${width}`);
+    assert.ok(
+      await ev("document.body.scrollWidth<=innerWidth"),
+      "Mobile landing must not overflow",
+    );
+    assert.ok(
+      await ev(
+        'document.querySelector(".landing-form .button").getBoundingClientRect().height>=44',
+      ),
+    );
+  }
+  reports.push(
+    "Orca landing retains7:3 desktop layout, pause control and usable mobile entry",
+  );
+  await S("Network.clearBrowserCookies");
+  await go("/work/" + work.id);
+  await wait('!!document.querySelector(".landing-form input[name=token]")');
+  await mkdir(join(root, "docs/design-review/2026-11-26/after"), {
+    recursive: true,
+  });
+  const unlockedFrame = await S("Page.captureScreenshot", { format: "png" });
+  await writeFile(
+    join(root, "docs/design-review/2026-11-26/after/01-unlock-mobile.png"),
+    Buffer.from(unlockedFrame.data, "base64"),
+  );
+  const unlock = async (value) => {
+    await ev(
+      `(()=>{const e=document.querySelector('.landing-form input[name=token]');Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value').set.call(e,${JSON.stringify(value)});e.dispatchEvent(new Event('input',{bubbles:true}));e.dispatchEvent(new Event('change',{bubbles:true}))})()`,
+    );
+    await click("Open Orcabot");
+  };
+  await unlock("fixture-invalid-service-key-long-enough");
+  await wait('!!document.querySelector(".landing-form [role=alert]")');
+  assert.equal(
+    await ev('document.querySelector(".landing-form input[name=token]").type'),
+    "password",
+  );
+  await unlock(config.token);
+  await wait(
+    '!document.querySelector(".landing-shell")&&!!document.querySelector(".work-layout")',
+  );
+  assert.equal(await ev("location.pathname"), "/work/" + work.id);
+  reports.push(
+    "Landing unlock rejects an invalid key and preserves the original protected task URL after retry",
   );
   assert.deepEqual(exceptions, []);
   console.log(

@@ -22,6 +22,8 @@ import {
   ExecutionCheckpoint,
   type ExecutionObservation,
   type AttentionPage,
+  type HomeActivity,
+  type ActivityItem,
   type ReviewInput,
   type RunReview,
   type ArtifactInput,
@@ -192,6 +194,41 @@ export class Store {
     return {
       runs: rows.slice(0, 20).map((r) => decode<Run>(r)!),
       nextBefore: rows.length > 20 ? Number(rows[19].ordinal) : null,
+    };
+  }
+  homeActivity(): HomeActivity {
+    const read = (active: boolean) => {
+      const rows = this.db
+        .prepare(
+          `
+        SELECT r.id, r.status, c.id AS conversation_id,
+          json_extract(c.data,'$.title') AS title,
+          json_extract(r.data,'$.updatedAt') AS updated_at
+        FROM runs r JOIN conversations c ON c.id=r.conversation_id
+        LEFT JOIN board_tasks task ON task.run_id=r.id
+        WHERE task.id IS NULL AND COALESCE(json_extract(c.data,'$.archived'),0)=0
+          AND r.status ${active ? "IN" : "NOT IN"} ('running','waiting')
+          AND NOT EXISTS (SELECT 1 FROM runs newer WHERE newer.conversation_id=c.id AND newer.ordinal>r.ordinal)
+        ORDER BY r.ordinal DESC LIMIT 21
+      `,
+        )
+        .all();
+      const items: ActivityItem[] = rows.slice(0, 20).map((row) => ({
+        runId: String(row.id),
+        conversationId: String(row.conversation_id),
+        title: String(row.title),
+        status: row.status as Run["status"],
+        updatedAt: Number(row.updated_at),
+      }));
+      return { items, more: rows.length > 20 };
+    };
+    const active = read(true),
+      recent = read(false);
+    return {
+      active: active.items,
+      recent: recent.items,
+      moreActive: active.more,
+      moreRecent: recent.more,
     };
   }
   addRun(

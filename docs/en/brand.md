@@ -3,7 +3,7 @@
 English · [简体中文](../zh-CN/brand.md)
 
 Use the owner's supplied orca silhouette. Preserve the original and transparent
-light/dark variants. The application uses white and graphite reading surfaces;
+light/dark variants. The application uses warm near-white and soft navy reading surfaces;
 blue is reserved for primary actions, links and focus. Selection uses a neutral
 fill. Status indicators keep their own warning, success and error colors.
 
@@ -16,9 +16,13 @@ fill. Status indicators keep their own warning, success and error colors.
 - A task's submitted work, review form and shared thread occupy the main column.
   The goal, acceptance criteria and current execution occupy a separate context
   rail. Smaller screens stack that context above the content.
-- A new conversation shows the selected Agent, execution target and working
-  directory. Configuration links perform real actions; there is no promotional
-  hero or inactive workspace switch.
+- Home starts with the real message composer and groups actual progress, attention
+  and accepted deliveries. Workspace details disclose the selected Agent, target
+  and directory on demand. Completed conversations stay separate from accepted work.
+- `/welcome` is the one-screen brand entry: original Orca with blue particles on
+  the left70%, functional key entry or an authenticated Open action on the right.
+  Mobile places entry first. Particles pause manually, on hidden tabs or under
+  reduced motion; the supplied mark remains as a static fallback.
 - Controls use a shared 6px radius, panels 8px and dialogs 12px. Text hierarchy,
   alignment and separators carry the layout. Shadows are limited to overlays.
 

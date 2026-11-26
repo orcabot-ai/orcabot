@@ -28,7 +28,7 @@ export function I18nProvider({ children }: { children: ReactNode }) {
   useEffect(() => updateLocale(readLocale()), []);
   useEffect(() => {
     document.documentElement.lang = locale === "zh" ? "zh-CN" : "en";
-    document.title = translate("Orcabot — Agent workspace", locale);
+    document.title = translate("Orcabot — Your personal assistant", locale);
   }, [locale]);
   const setLocale = useCallback((next: Locale) => {
     persistLocale(next);

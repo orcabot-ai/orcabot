@@ -1,3 +1,5 @@
+import { Home } from "./Home.js";
+import { Landing } from "./Landing.js";
 import { Select } from "./Select.js";
 import { Dialog } from "./Dialog.js";
 import { Automation } from "./Automation.js";
@@ -30,6 +32,7 @@ import {
   Bot,
   BellDot,
   ClipboardList,
+  House,
 } from "lucide-react";
 import {
   active,
@@ -61,7 +64,7 @@ function exchangeFragment() {
   return fragmentSession;
 }
 export function App() {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
   const client = useQueryClient();
   const navigate = useNavigate();
   const { conversationId, workId } = useParams({ strict: false });
@@ -143,6 +146,7 @@ export function App() {
   const refreshRuns = useCallback(() => {
     void client.invalidateQueries({ queryKey: ["runs"] });
     void client.invalidateQueries({ queryKey: ["attention"] });
+    void client.invalidateQueries({ queryKey: ["activity"] });
   }, [client]);
   const openConversation = useCallback(
     async (id: string) => {
@@ -177,6 +181,7 @@ export function App() {
         await refresh();
       }
       await api<Run>(`/conversations/${current}/runs`, { prompt });
+      await client.invalidateQueries({ queryKey: ["activity"] });
       await client.invalidateQueries({ queryKey: ["runs", current] });
       await refresh();
     },
@@ -221,6 +226,7 @@ export function App() {
         unlockForm.reset();
         await refresh();
         setError("");
+        if (path === "/welcome") await navigate({ to: "/" });
       } catch (err) {
         setError(friendly(err));
       }
@@ -251,19 +257,10 @@ export function App() {
         <p className="muted">{t("Opening your workspace…")}</p>
       </div>
     );
-  if (locked)
+  if (locked || path === "/welcome")
     return (
-      <div className="gate">
-        <div className="gate-preferences">
-          <LanguageControl />
-          <ThemeControl />
-        </div>
-        <section className="unlock-card">
-          <BrandMark />
-          <h1>{t("Welcome to Orcabot")}</h1>
-          <p className="muted mt-3 mb-7">
-            {t("Enter the service key printed by your worker.")}
-          </p>
+      <Landing keyRequired={locked}>
+        {locked ? (
           <form
             onSubmit={(e) => {
               e.preventDefault();
@@ -297,18 +294,140 @@ export function App() {
               </p>
             )}
             <button className="button primary w-full justify-center">
-              {t("Open workspace")}
+              {t("Open Orcabot")}
               <ArrowRight size={16} />
             </button>
           </form>
-          <small className="block mt-6 muted">
-            {t(
-              "Your key grants access to this service and its execution targets.",
-            )}
-          </small>
-        </section>
-      </div>
+        ) : (
+          <button
+            className="button primary w-full justify-center"
+            onClick={() => void navigate({ to: "/" })}
+          >
+            {t("Open Orcabot")}
+            <ArrowRight size={16} />
+          </button>
+        )}
+      </Landing>
     );
+  const composerPanel = (
+    <div className="composer-wrap">
+      {displayError && (
+        <div className="error-banner" role="alert">
+          {t(displayError)}
+          <button onClick={() => setError("")} aria-label={t("Dismiss error")}>
+            ×
+          </button>
+        </div>
+      )}
+      <form
+        ref={form}
+        className="composer"
+        onSubmit={(e) => {
+          e.preventDefault();
+          void composer.handleSubmit();
+        }}
+      >
+        <composer.Field name="prompt">
+          {(field) => (
+            <textarea
+              aria-label={t("Message your agent")}
+              placeholder={
+                agent
+                  ? t("What would you like to get done?")
+                  : t("Create an agent to get started…")
+              }
+              rows={3}
+              maxLength={32000}
+              value={field.state.value}
+              onBlur={field.handleBlur}
+              onChange={(e) => field.handleChange(e.target.value)}
+              onKeyDown={(e) => {
+                if (
+                  e.key === "Enter" &&
+                  !e.shiftKey &&
+                  !e.nativeEvent.isComposing
+                ) {
+                  e.preventDefault();
+                  form.current?.requestSubmit();
+                }
+              }}
+            />
+          )}
+        </composer.Field>
+        <div className="composer-tools">
+          <button
+            type="button"
+            className="icon-button"
+            aria-label={t("Agent settings")}
+            onClick={() => setSetup(true)}
+          >
+            <Plus size={18} />
+          </button>
+          <div className="agent-picker">
+            <Bot size={13} />
+            <Select
+              aria-label={t("Agent")}
+              disabled={!!selected}
+              value={selected?.agentId ?? agentId}
+              onValueChange={(next) => setAgentId(next)}
+            >
+              {!state.agents.length && (
+                <option value="">{t("Select an agent")}</option>
+              )}
+              {state.agents.map((a) => (
+                <option value={a.id} key={a.id}>
+                  {a.name}
+                </option>
+              ))}
+            </Select>
+          </div>
+          {agent && (
+            <span className="model-label">
+              {agent.model ?? t("Provider default")}
+              {agent.effort ? ` · ${t(agent.effort)}` : ""}
+            </span>
+          )}
+          <composer.Subscribe selector={(state) => state.values.prompt}>
+            {(prompt) => (
+              <button
+                className="send-button"
+                aria-label={t("Send message")}
+                disabled={
+                  !prompt.trim() ||
+                  sending ||
+                  busy ||
+                  (!!conversationId &&
+                    (history.isPending || conversation.isError))
+                }
+              >
+                <ArrowUp size={18} />
+              </button>
+            )}
+          </composer.Subscribe>
+        </div>
+      </form>
+      <div className="composer-footer">
+        <span>
+          {target ? (
+            <>
+              <Server size={11} />
+              {target.name}
+              <span className="footer-dot">·</span>
+              {agent?.adapter}
+            </>
+          ) : (
+            t("No execution target selected")
+          )}
+        </span>
+        <span>
+          {t("Enter to send")}{" "}
+          <span className="hidden sm:inline">
+            {t("· Shift + Enter for a new line")}
+          </span>
+        </span>
+      </div>
+    </div>
+  );
   const navigation = (
     <aside
       id="workspace-navigation"
@@ -326,13 +445,17 @@ export function App() {
           <PanelLeftClose size={16} />
         </button>
       </div>
-      <div className="workspace-switch">
-        <span className="workspace-initial">O</span>
-        <div>
-          <strong>{t("My workspace")}</strong>
-          <small>{t("Self-hosted workspace")}</small>
-        </div>
-      </div>
+      <button
+        className={`work-nav ${path === "/" ? "selected" : ""}`}
+        aria-current={path === "/" ? "page" : undefined}
+        onClick={() => {
+          void navigate({ to: "/" });
+          if (narrow) setSidebar(false);
+        }}
+      >
+        <House size={16} />
+        {t("Home")}
+      </button>
       <button
         className="new-conversation"
         onClick={() => {
@@ -356,7 +479,7 @@ export function App() {
         }}
       >
         <ClipboardList size={16} />
-        {t("Work items")}
+        {t("Tasks")}
       </button>
       <button
         className={`work-nav ${automationMode === "projects" ? "selected" : ""}`}
@@ -398,7 +521,20 @@ export function App() {
               }}
             >
               <MessageSquare size={14} />
-              <span>{c.title}</span>
+              <span>
+                {c.title}
+                <small className="thread-time">
+                  {new Date(c.createdAt).toLocaleString(
+                    locale === "zh" ? "zh-CN" : "en-US",
+                    {
+                      month: "short",
+                      day: "numeric",
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    },
+                  )}
+                </small>
+              </span>
             </button>
           ))
         ) : (
@@ -424,12 +560,12 @@ export function App() {
           }}
         >
           <Settings2 size={15} />
-          {t("Agents & connections")}
+          {t("Settings")}
           <span>{state.agents.length}</span>
         </button>
         <div className="local-label">
           <span className="connection-dot" />
-          {t("Self-hosted workspace")}
+          {t("Your workspace")}
         </div>
       </div>
     </aside>
@@ -473,7 +609,7 @@ export function App() {
                 ? t(automationMode === "projects" ? "Projects" : "Routines")
                 : workMode
                   ? t("Work items")
-                  : (selected?.title ?? t("New conversation"))}
+                  : (selected?.title ?? t("Home"))}
             </span>
           </div>
           <div className="topbar-status">
@@ -509,7 +645,9 @@ export function App() {
                 : automationMode === "routines"
                   ? "Routines"
                   : "Work items"
-              : "Conversation history",
+              : conversationId
+                ? "Conversation history"
+                : "Your assistant",
           )}
           tabIndex={0}
         >
@@ -548,165 +686,17 @@ export function App() {
               </p>
             </div>
           ) : (
-            <section className="welcome">
-              <div className="welcome-heading">
-                <MessageSquare size={22} strokeWidth={1.5} />
-                <h1>{t("New conversation")}</h1>
-                <p>{t("Choose an agent below, then send a message.")}</p>
-              </div>
-              <div className="workspace-context">
-                <div>
-                  <span>{t("Agent")}</span>
-                  <strong>{agent?.name ?? t("Not configured")}</strong>
-                </div>
-                <div>
-                  <span>{t("Execution target")}</span>
-                  <strong>{target?.name ?? t("Not configured")}</strong>
-                </div>
-                {agent?.workdir && (
-                  <div>
-                    <span>{t("Working directory")}</span>
-                    <code>{agent.workdir}</code>
-                  </div>
-                )}
-              </div>
-              <div className="welcome-links">
-                <button onClick={() => setSetup(true)}>
-                  <Settings2 size={15} />
-                  {t("Agents & connections")}
-                  <ArrowRight size={14} />
-                </button>
-                <button onClick={() => void navigate({ to: "/work" })}>
-                  <ClipboardList size={15} />
-                  {t("Work items")}
-                  <ArrowRight size={14} />
-                </button>
-              </div>
-            </section>
+            <Home
+              state={state}
+              agent={agent}
+              target={target}
+              composer={composerPanel}
+              onOpenConversation={openConversation}
+              onAttention={() => setAttention(true)}
+            />
           )}
         </div>
-        {!workMode && (
-          <div className="composer-wrap">
-            {displayError && (
-              <div className="error-banner" role="alert">
-                {t(displayError)}
-                <button
-                  onClick={() => setError("")}
-                  aria-label={t("Dismiss error")}
-                >
-                  ×
-                </button>
-              </div>
-            )}
-            <form
-              ref={form}
-              className="composer"
-              onSubmit={(e) => {
-                e.preventDefault();
-                void composer.handleSubmit();
-              }}
-            >
-              <composer.Field name="prompt">
-                {(field) => (
-                  <textarea
-                    aria-label={t("Message your agent")}
-                    placeholder={
-                      agent
-                        ? t("Describe what you want your agent to do…")
-                        : t("Create an agent to get started…")
-                    }
-                    rows={3}
-                    maxLength={32000}
-                    value={field.state.value}
-                    onBlur={field.handleBlur}
-                    onChange={(e) => field.handleChange(e.target.value)}
-                    onKeyDown={(e) => {
-                      if (
-                        e.key === "Enter" &&
-                        !e.shiftKey &&
-                        !e.nativeEvent.isComposing
-                      ) {
-                        e.preventDefault();
-                        form.current?.requestSubmit();
-                      }
-                    }}
-                  />
-                )}
-              </composer.Field>
-              <div className="composer-tools">
-                <button
-                  type="button"
-                  className="icon-button"
-                  aria-label={t("Agent settings")}
-                  onClick={() => setSetup(true)}
-                >
-                  <Plus size={18} />
-                </button>
-                <div className="agent-picker">
-                  <Bot size={13} />
-                  <Select
-                    aria-label={t("Agent")}
-                    disabled={!!selected}
-                    value={selected?.agentId ?? agentId}
-                    onValueChange={(next) => setAgentId(next)}
-                  >
-                    {!state.agents.length && (
-                      <option value="">{t("Select an agent")}</option>
-                    )}
-                    {state.agents.map((a) => (
-                      <option value={a.id} key={a.id}>
-                        {a.name}
-                      </option>
-                    ))}
-                  </Select>
-                </div>
-                {agent && (
-                  <span className="model-label">
-                    {agent.model ?? t("Provider default")}
-                    {agent.effort ? ` · ${t(agent.effort)}` : ""}
-                  </span>
-                )}
-                <composer.Subscribe selector={(state) => state.values.prompt}>
-                  {(prompt) => (
-                    <button
-                      className="send-button"
-                      aria-label={t("Send message")}
-                      disabled={
-                        !prompt.trim() ||
-                        sending ||
-                        busy ||
-                        (!!conversationId &&
-                          (history.isPending || conversation.isError))
-                      }
-                    >
-                      <ArrowUp size={18} />
-                    </button>
-                  )}
-                </composer.Subscribe>
-              </div>
-            </form>
-            <div className="composer-footer">
-              <span>
-                {target ? (
-                  <>
-                    <Server size={11} />
-                    {target.name}
-                    <span className="footer-dot">·</span>
-                    {agent?.adapter}
-                  </>
-                ) : (
-                  t("No execution target selected")
-                )}
-              </span>
-              <span>
-                {t("Enter to send")}{" "}
-                <span className="hidden sm:inline">
-                  {t("· Shift + Enter for a new line")}
-                </span>
-              </span>
-            </div>
-          </div>
-        )}
+        {!workMode && !!conversationId && composerPanel}
       </main>
       {attention && (
         <Attention

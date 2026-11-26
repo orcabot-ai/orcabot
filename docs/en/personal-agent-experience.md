@@ -2,9 +2,9 @@
 
 English · [简体中文](../zh-CN/personal-agent-experience.md)
 
-This is the product direction agreed on November 26. The landing and personal
-home layouts are awaiting a generated visual reference; this document describes
-the intended experience, not a claim that those screens have shipped.
+The personal home and landing now follow an actual Gemini-generated reference.
+Home uses the existing admission path and real task, attention and conversation
+records. Other core surfaces are being reviewed in the same documented cycle.
 
 Orcabot should feel like an assistant you give work to. The first screen should
 help you hand over a task, see what is happening, and make the decisions that
@@ -38,6 +38,14 @@ and business completion:
 | Evidence is submitted                      | Show what is being reviewed and which criteria it addresses                     |
 | The operator accepts the evidence          | Show the accepted delivery and retain the decision in the thread                |
 | An attempt fails or expires                | Explain what happened and offer the allowed next action, preserving the attempt |
+
+Direct conversation runs have their own recent-conversation section. Their
+completion is distinct from an accepted business delivery. Home summarizes at
+most 20 recent business tasks, with five progress/delivery rows and three rows
+per attention category; when older tasks exist,
+it identifies the partial view and links to the paginated task list. The bounded
+activity endpoint excludes archived conversations and board-owned executions,
+returning only title, identifiers, status and time.
 
 The home screen groups these facts for attention. It does not replace a project's
 workflow definition or bypass its transition guards. Raw event names and claim

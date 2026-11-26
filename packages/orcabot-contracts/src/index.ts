@@ -175,6 +175,19 @@ export type Run = {
 };
 export type StoredEvent = { seq: number; event: RuntimeEvent };
 export type RunPage = { runs: Run[]; nextBefore: number | null };
+export type ActivityItem = {
+  runId: string;
+  conversationId: string;
+  title: string;
+  status: RunStatus;
+  updatedAt: number;
+};
+export type HomeActivity = {
+  active: ActivityItem[];
+  recent: ActivityItem[];
+  moreActive: boolean;
+  moreRecent: boolean;
+};
 export type State = {
   targets: PublicTarget[];
   agents: Agent[];

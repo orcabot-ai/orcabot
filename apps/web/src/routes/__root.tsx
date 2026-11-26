@@ -15,7 +15,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       meta: [
         { charSet: "utf-8" },
         { name: "viewport", content: "width=device-width, initial-scale=1" },
-        { title: "Orcabot — Agent workspace" },
+        { title: "Orcabot — Your personal assistant" },
+        {
+          name: "description",
+          content:
+            "A personal AI assistant for tasks, conversations and recurring work on your machines.",
+        },
+        { name: "page-type", content: "software" },
+        { name: "site-kind", content: "software" },
       ],
       links: [
         { rel: "stylesheet", href: css },
@@ -52,7 +59,12 @@ function Root() {
 }
 function Document({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html
+      lang="en"
+      data-type="software"
+      data-radius="soft"
+      suppressHydrationWarning
+    >
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeBootstrap }} />
         <HeadContent />

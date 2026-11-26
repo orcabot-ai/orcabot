@@ -1,31 +1,51 @@
 {
   "baseline": "0aa6bb581967646711f56604e653c9b31540798f",
-  "workflow": "actual UI screenshot \u2192 Gemini critique and generated image \u2192 implementation \u2192 verification \u2192 English commit",
+  "workflow": "actual UI screenshot → Gemini critique and generated image → implementation → verification → English commit",
   "reviewer": "Gemini web",
   "pages": [
     {
       "id": "unlock",
       "before": "before/01-unlock.jpg",
       "geminiThread": "https://gemini.google.com/app/09cf8496cd38905e",
-      "generatedImage": null,
-      "status": "reviewed-awaiting-image",
-      "changes": [],
-      "after": null,
-      "verification": [],
+      "generatedImage": "references/personal-home-landing-gemini.jpg",
+      "status": "implemented",
+      "changes": [
+        "Personal assistant home places the real composer above progress, decisions and accepted deliveries",
+        "Completed conversations remain discoverable without becoming accepted business work",
+        "Original Orca with pauseable particles and a desktop7:3 entry, entry-first mobile layout",
+        "Bounded authenticated activity metadata and explicit partial task summary; technical context collapsed"
+      ],
+      "after": "after/01-unlock-mobile.png",
+      "verification": [
+        "pnpm check:172 tests,150 passed,22 platform skips",
+        "Browser fixture covers home admission/discovery, older task pagination,7:3 landing, mobile and protected-URL unlock retry",
+        "Actual light/dark and mobile screenshots; independent standards and spec phase reviews approved",
+        "pnpm e2e:21checks passed, including actual particle pixel changes, stable manual pause and reduced-motion fallback"
+      ],
       "commit": null,
-      "critique": "references/details-review.md"
+      "critique": "references/personal-home-review.md"
     },
     {
       "id": "new-thread",
       "before": "before/02-new-thread.jpg",
       "geminiThread": "https://gemini.google.com/app/09cf8496cd38905e",
-      "generatedImage": null,
-      "status": "reviewed-awaiting-image",
-      "changes": [],
-      "after": null,
-      "verification": [],
+      "generatedImage": "references/personal-home-landing-gemini.jpg",
+      "status": "implemented",
+      "changes": [
+        "Personal assistant home places the real composer above progress, decisions and accepted deliveries",
+        "Completed conversations remain discoverable without becoming accepted business work",
+        "Original Orca with pauseable particles and a desktop7:3 entry, entry-first mobile layout",
+        "Bounded authenticated activity metadata and explicit partial task summary; technical context collapsed"
+      ],
+      "after": "after/02-personal-home-light.png",
+      "verification": [
+        "pnpm check:172 tests,150 passed,22 platform skips",
+        "Browser fixture covers home admission/discovery, older task pagination,7:3 landing, mobile and protected-URL unlock retry",
+        "Actual light/dark and mobile screenshots; independent standards and spec phase reviews approved",
+        "pnpm e2e:21checks passed, including actual particle pixel changes, stable manual pause and reduced-motion fallback"
+      ],
       "commit": null,
-      "critique": "references/workspace-review.md"
+      "critique": "references/personal-home-review.md"
     },
     {
       "id": "conversation",
@@ -43,8 +63,8 @@
       "id": "work-list",
       "before": "before/04-work-list-empty.jpg",
       "geminiThread": "https://gemini.google.com/app/09cf8496cd38905e",
-      "generatedImage": null,
-      "status": "reviewed-awaiting-image",
+      "generatedImage": "references/tasks-gemini.jpg",
+      "status": "reviewed-with-image",
       "changes": [],
       "after": null,
       "verification": [],
@@ -55,8 +75,8 @@
       "id": "work-create",
       "before": "before/11-create-work.jpg",
       "geminiThread": "https://gemini.google.com/app/09cf8496cd38905e",
-      "generatedImage": null,
-      "status": "reviewed-awaiting-image",
+      "generatedImage": "references/tasks-gemini.jpg",
+      "status": "reviewed-with-image",
       "changes": [],
       "after": null,
       "verification": [],
@@ -67,8 +87,8 @@
       "id": "work-detail",
       "before": "before/12-work-detail.jpg",
       "geminiThread": "https://gemini.google.com/app/09cf8496cd38905e",
-      "generatedImage": null,
-      "status": "reviewed-awaiting-image",
+      "generatedImage": "references/tasks-gemini.jpg",
+      "status": "reviewed-with-image",
       "changes": [],
       "after": null,
       "verification": [],
@@ -79,8 +99,8 @@
       "id": "projects",
       "before": "before/13-projects.jpg",
       "geminiThread": "https://gemini.google.com/app/09cf8496cd38905e",
-      "generatedImage": null,
-      "status": "reviewed-awaiting-image",
+      "generatedImage": "references/projects-gemini.jpg",
+      "status": "reviewed-with-image",
       "changes": [],
       "after": null,
       "verification": [],
@@ -91,8 +111,8 @@
       "id": "project-create",
       "before": "before/14-project-create.jpg",
       "geminiThread": "https://gemini.google.com/app/09cf8496cd38905e",
-      "generatedImage": null,
-      "status": "reviewed-awaiting-image",
+      "generatedImage": "references/projects-gemini.jpg",
+      "status": "reviewed-with-image",
       "changes": [],
       "after": null,
       "verification": [],
@@ -103,8 +123,8 @@
       "id": "thread-edit",
       "before": "before/15-thread-edit.jpg",
       "geminiThread": "https://gemini.google.com/app/09cf8496cd38905e",
-      "generatedImage": null,
-      "status": "reviewed-awaiting-image",
+      "generatedImage": "references/projects-gemini.jpg",
+      "status": "reviewed-with-image",
       "changes": [],
       "after": null,
       "verification": [],
@@ -248,20 +268,32 @@
     },
     {
       "id": "landing",
-      "before": null,
+      "before": "before/01-unlock.jpg",
       "geminiThread": "https://gemini.google.com/app/09cf8496cd38905e",
-      "generatedImage": null,
-      "status": "awaiting-image",
-      "changes": [],
-      "after": null,
-      "verification": [],
-      "commit": null
+      "generatedImage": "references/personal-home-landing-gemini.jpg",
+      "status": "implemented",
+      "changes": [
+        "Personal assistant home places the real composer above progress, decisions and accepted deliveries",
+        "Completed conversations remain discoverable without becoming accepted business work",
+        "Original Orca with pauseable particles and a desktop7:3 entry, entry-first mobile layout",
+        "Bounded authenticated activity metadata and explicit partial task summary; technical context collapsed"
+      ],
+      "after": "after/22-landing-light.png",
+      "verification": [
+        "pnpm check:172 tests,150 passed,22 platform skips",
+        "Browser fixture covers home admission/discovery, older task pagination,7:3 landing, mobile and protected-URL unlock retry",
+        "Actual light/dark and mobile screenshots; independent standards and spec phase reviews approved",
+        "pnpm e2e:21checks passed, including actual particle pixel changes, stable manual pause and reduced-motion fallback"
+      ],
+      "commit": null,
+      "critique": "references/personal-home-review.md"
     }
   ],
   "imageGenerationBlock": {
-    "reason": "Gemini account image generation quota reached; no new image generated for home/landing or ten-page workspace review.",
+    "reason": "The earlier quota reset. Actual home/landing, task and project comparison images were downloaded; pending requests are not counted as images.",
     "observedDate": "2026-11-26",
-    "status": "awaiting-quota-reset"
+    "status": "resolved",
+    "resolvedDate": "2026-11-26"
   },
   "captureNote": "Later before/ images include the in-progress shared primitive migration; see README.md."
 }

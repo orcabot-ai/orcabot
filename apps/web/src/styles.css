@@ -6,15 +6,15 @@
     "PingFang SC", "Microsoft YaHei", sans-serif;
 }
 :root {
-  --background: #151618;
-  --sidebar: #1b1c1f;
-  --panel: #202124;
-  --surface: #191a1d;
-  --surface-raised: #252629;
-  --hover: #2c2d31;
-  --input: #191a1d;
+  --background: #17212c;
+  --sidebar: #1c2935;
+  --panel: #202d3a;
+  --surface: #1b2733;
+  --surface-raised: #283746;
+  --hover: #304150;
+  --input: #1c2935;
   --code-bg: #121315;
-  --border: #303136;
+  --border: #354452;
   --border-strong: #6a9ff3;
   --accent-soft: #243348;
   --accent: #367de4;
@@ -28,8 +28,8 @@
   --danger-bg: #352124;
   --danger-border: #664046;
   --danger: #f1a0a6;
-  --strong: #f0f0f2;
-  --text: #d6d7dc;
+  --strong: #edf3f8;
+  --text: #d6e1ea;
   --secondary: #b0b2ba;
   --muted: #a0a3ad;
   --subtle: #979ba6;
@@ -47,18 +47,18 @@
   color: var(--text);
   background: var(--background);
   font-synthesis: none;
-  font-size: 13px;
+  font-size: 14px;
 }
 :root[data-theme="light"] {
-  --background: #ffffff;
-  --sidebar: #f7f7f8;
+  --background: #faf9f6;
+  --sidebar: #edf2f6;
   --panel: #ffffff;
   --surface: #ffffff;
   --surface-raised: #f6f6f7;
   --hover: #ededf0;
   --input: #ffffff;
   --code-bg: #f6f6f7;
-  --border: #e6e6e9;
+  --border: #dfe5e9;
   --border-strong: #367de4;
   --accent-soft: #edf3fd;
   --accent: #1d66cd;
@@ -72,13 +72,13 @@
   --danger-bg: #fff2f3;
   --danger-border: #e5c2c6;
   --danger: #b12d3a;
-  --strong: #202126;
-  --text: #373940;
+  --strong: #192c3a;
+  --text: #354956;
   --secondary: #555963;
   --muted: #626672;
   --subtle: #6b707c;
   --overlay: #16181d55;
-  --selected: #20212608;
+  --selected: #dce6f170;
   --success: #288358;
   --success-glow: transparent;
   --shadow: 0 16px 64px #16181d24;
@@ -87,15 +87,15 @@
 }
 @media (prefers-color-scheme: light) {
   :root:not([data-theme="dark"]) {
-    --background: #ffffff;
-    --sidebar: #f7f7f8;
+    --background: #faf9f6;
+    --sidebar: #edf2f6;
     --panel: #ffffff;
     --surface: #ffffff;
     --surface-raised: #f6f6f7;
     --hover: #ededf0;
     --input: #ffffff;
     --code-bg: #f6f6f7;
-    --border: #e6e6e9;
+    --border: #dfe5e9;
     --border-strong: #367de4;
     --accent-soft: #edf3fd;
     --accent: #1d66cd;
@@ -109,13 +109,13 @@
     --danger-bg: #fff2f3;
     --danger-border: #e5c2c6;
     --danger: #b12d3a;
-    --strong: #202126;
-    --text: #373940;
+    --strong: #192c3a;
+    --text: #354956;
     --secondary: #555963;
     --muted: #626672;
     --subtle: #6b707c;
     --overlay: #16181d55;
-    --selected: #20212608;
+    --selected: #dce6f170;
     --success: #288358;
     --success-glow: transparent;
     --shadow: 0 16px 64px #16181d24;
@@ -2238,6 +2238,385 @@ a.artifact-location {
   .theme-control .select-trigger,
   .language-control .select-trigger,
   .agent-picker .select-trigger {
+    min-height: 44px;
+  }
+}
+
+/* Personal assistant surfaces, based on Gemini's generated home and entry board. */
+.landing {
+  min-height: 100svh;
+  padding: 24px;
+  background: var(--background);
+}
+.landing-shell {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 3fr);
+  min-height: calc(100svh - 48px);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+}
+.landing-entry {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  background: var(--panel);
+  border-left: 1px solid var(--border);
+}
+.landing-preferences {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 20px 24px;
+}
+.landing-form {
+  padding: 40px 28px 64px;
+  margin: auto 0;
+}
+.landing-form h1 {
+  font-size: clamp(24px, 2.2vw, 32px);
+  line-height: 1.25;
+  letter-spacing: -0.04em;
+  color: var(--strong);
+  font-weight: 550;
+}
+.landing-intro {
+  font-size: 14px;
+  color: var(--secondary);
+  line-height: 1.65;
+  margin: 12px 0 32px;
+}
+.landing-form label {
+  font-size: 13px;
+  margin-bottom: 16px;
+}
+.landing-form label input {
+  min-height: 44px;
+  font-size: 14px;
+  background: var(--panel);
+}
+.landing-form .button {
+  min-height: 44px;
+  font-size: 14px;
+}
+.landing-note {
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--muted);
+  margin-top: 20px;
+}
+.orca-scene {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-width: 0;
+  min-height: 400px;
+  background: var(--background);
+}
+.orca-art {
+  width: min(76%, 620px);
+  aspect-ratio: 1;
+  position: relative;
+}
+.orca-art .brand-mark {
+  width: 100%;
+  height: 100%;
+}
+.orca-art .brand-mark img {
+  object-fit: contain;
+}
+.orca-art canvas {
+  position: absolute;
+  inset: -15%;
+  width: 130%;
+  height: 130%;
+}
+.scene-motion {
+  display: grid;
+  place-items: center;
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  width: 36px;
+  height: 36px;
+  color: var(--muted);
+  border: 1px solid var(--border);
+  border-radius: 50%;
+}
+.scene-motion:hover {
+  background: var(--hover);
+  color: var(--strong);
+}
+.assistant-home.welcome {
+  display: block;
+  width: min(860px, 100%);
+  max-width: none;
+  margin: 0 auto;
+  padding: 44px 32px 56px;
+}
+.assistant-greeting h1 {
+  font-size: 30px;
+  line-height: 1.3;
+  font-weight: 550;
+  letter-spacing: -0.04em;
+  color: var(--strong);
+}
+.assistant-greeting p {
+  margin: 10px 0 22px;
+  font-size: 14px;
+  color: var(--secondary);
+}
+.assistant-home .composer-wrap {
+  max-width: none;
+  padding: 0;
+  margin: 0;
+}
+.assistant-home .composer {
+  background: var(--panel);
+  border-radius: 10px;
+}
+.assistant-home .composer textarea {
+  min-height: 72px;
+  font-size: 14px;
+}
+.assistant-home .composer-footer {
+  display: none;
+}
+.assistant-context.workspace-context {
+  padding: 0;
+  margin: 12px 0 28px;
+  border: 0;
+}
+.assistant-context summary {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  list-style: none;
+  color: var(--muted);
+  width: fit-content;
+  min-height: 28px;
+  font-size: 12px;
+}
+.assistant-context summary::-webkit-details-marker {
+  display: none;
+}
+.assistant-context[open] summary {
+  margin-bottom: 12px;
+}
+.assistant-context[open] summary svg {
+  transform: rotate(180deg);
+}
+.assistant-context.workspace-context > div {
+  padding: 6px 0;
+}
+.assistant-context.workspace-context span {
+  width: 125px;
+  font-size: 12px;
+}
+.assistant-context.workspace-context code {
+  font-size: 12px;
+}
+.assistant-section {
+  margin-top: 28px;
+}
+.assistant-section-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 10px;
+}
+.assistant-section-heading h2 {
+  font-size: 14px;
+  font-weight: 550;
+  color: var(--strong);
+  letter-spacing: -0.01em;
+}
+.assistant-section-heading .text-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 28px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.assistant-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 56px;
+  text-align: left;
+  padding: 10px 2px;
+  border-bottom: 1px solid var(--border);
+  border-radius: 0;
+  font-size: 13px;
+}
+.assistant-row:hover {
+  background: var(--selected);
+}
+.assistant-row > svg,
+.assistant-row-icon {
+  flex-shrink: 0;
+  color: var(--muted);
+  display: flex;
+}
+.assistant-row-title {
+  flex: 1;
+  min-width: 0;
+  color: var(--strong);
+  overflow-wrap: anywhere;
+}
+.assistant-row-title small {
+  display: block;
+  margin-top: 3px;
+  font-size: 11px;
+  color: var(--muted);
+}
+.assistant-stage,
+.assistant-review,
+.assistant-accepted {
+  flex-shrink: 0;
+  font-size: 11px;
+  color: var(--muted);
+  max-width: 35%;
+  overflow-wrap: anywhere;
+}
+.assistant-review {
+  color: var(--warning);
+}
+.assistant-accepted {
+  color: var(--success);
+  background: color-mix(in srgb, var(--success) 10%, transparent);
+  padding: 3px 8px;
+  border-radius: 5px;
+}
+.assistant-empty {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.7;
+  padding: 16px 0;
+}
+.assistant-footnote {
+  margin-top: 32px;
+  color: var(--muted);
+  font-size: 12px;
+}
+@media (max-width: 800px) {
+  .landing {
+    padding: 12px;
+  }
+  .landing-shell {
+    display: flex;
+    flex-direction: column-reverse;
+    min-height: calc(100svh - 24px);
+  }
+  .landing-entry {
+    border-left: 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .landing-preferences {
+    padding: 12px 20px;
+  }
+  .landing-form {
+    padding: 24px 24px 32px;
+  }
+  .landing-form h1 {
+    font-size: 28px;
+  }
+  .landing-intro {
+    margin-bottom: 24px;
+  }
+  .landing-form label input {
+    font-size: 16px;
+  }
+  .orca-scene {
+    flex: 1;
+    min-height: 240px;
+    overflow: hidden;
+  }
+  .orca-art {
+    width: min(48%, 280px);
+  }
+  .scene-motion {
+    width: 44px;
+    height: 44px;
+    bottom: 12px;
+    right: 12px;
+  }
+}
+@media (max-width: 600px) {
+  .assistant-home.welcome {
+    padding: 28px 20px 36px;
+  }
+  .assistant-greeting h1 {
+    font-size: 26px;
+  }
+  .assistant-home .composer-wrap {
+    padding: 0;
+  }
+  .assistant-home .composer textarea {
+    font-size: 16px;
+  }
+  .assistant-context summary,
+  .assistant-section-heading .text-button {
+    min-height: 44px;
+  }
+  .assistant-context.workspace-context span {
+    width: 100px;
+  }
+  .assistant-row {
+    gap: 8px;
+  }
+  .assistant-stage,
+  .assistant-review,
+  .assistant-accepted {
+    max-width: 30%;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .scene-motion {
+    display: none;
+  }
+}
+.assistant-greeting {
+  margin-bottom: 24px;
+}
+.assistant-home .model-label {
+  display: none;
+}
+.thread-time {
+  display: block;
+  font-size: 10px;
+  color: var(--muted);
+  margin-top: 3px;
+  font-weight: 400;
+}
+.assistant-scope {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 20px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.6;
+}
+.assistant-scope .text-button {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+  min-height: 36px;
+}
+@media (max-width: 600px) {
+  .assistant-scope {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .assistant-scope .text-button {
     min-height: 44px;
   }
 }

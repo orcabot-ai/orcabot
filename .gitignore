@@ -29,3 +29,6 @@ coverage/
 
 # TanStack build cache
 .tanstack/
+
+# Local design verification artifacts
+.taste-skill/

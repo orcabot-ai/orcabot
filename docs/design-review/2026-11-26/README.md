@@ -43,18 +43,17 @@ quality assessment. Fixture tests and the real provider execution are distinct.
 The shared-control commit is `3c35137`; GitHub CI passed on both Node 24 and 26.
 Gemini subsequently reviewed the [remaining five surfaces and setup results](references/details-review.md).
 
+## Personal home and entry
+
+The image quota reset. The [actual home/landing comparison image](references/personal-home-landing-gemini.jpg) now backs the implemented personal home and7:3 Orca-particle entry. See [implementation decisions](references/personal-home-review.md), including honest partial summaries and the distinction between completed conversations and accepted work. Light, dark and mobile captures are in `after/`.
+
+`pnpm check` passes172tests:150passed and22platform skips. Home regression coverage includes admission/discovery, partial task pagination and protected-URL unlock retry. Shared controls and workflow checks remain included. The read-only activity API has separate authentication, privacy and bounded-result tests.
+
 ## Remaining work
 
-Gemini has reviewed the other fifteen existing core surfaces in text. The new personal home/landing
-request and subsequent image generation hit the account's image quota. Those
-pages remain awaiting generated images; they are not marked complete. The
-[personal assistant direction](../../en/personal-agent-experience.md) records
-what the redesign must achieve without claiming that it has shipped.
+The [actual task comparison image](references/tasks-gemini.jpg) covers the list, task details and creation surface; these implementations are next. The [project comparison image](references/projects-gemini.jpg) has also been downloaded; implementation is pending. Remaining surfaces have text critiques and are not marked complete.
 
-Observed follow-ups include a result-first conversation, human-readable task
-activity, meaningful thread distinctions, a clearer decision queue and compact
-dialog footers. The workflow's completion gate requires actual images and
-verification for every core page, not only the setup variants.
+Follow-ups include a result-first conversation, human-readable task activity, a clearer decision queue and compact dialog footers. The completion gate requires actual images and verification for every core page, not only setup and Home. The [personal assistant direction](../../en/personal-agent-experience.md) describes this shared product model.
 
 Capture files contain only task-created example data. Raw native captures and
 credentials stay outside the tracked evidence. Some later `before/` captures

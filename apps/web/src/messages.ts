@@ -428,4 +428,45 @@ export const chinese = {
   xhigh: "极高",
   "{count} pending interactions.": "{count} 项交互待处理。",
   "{count} tool activities": "{count} 项工具活动",
+  Home: "首页",
+  Tasks: "任务",
+  Settings: "设置",
+  "Your workspace": "你的工作空间",
+  "Open Orcabot": "打开 Orcabot",
+  "Your personal AI assistant for the work ahead.":
+    "把接下来的事情交给你的 AI 助手。",
+  "Your key opens your workspace and its connected machines.":
+    "密钥用于访问你的工作空间和已连接的机器。",
+  "Your assistant": "你的助手",
+  "What would you like to get done?": "有什么事情想交给我？",
+  "Workspace details": "工作空间详情",
+  "In progress": "进行中",
+  "View tasks": "查看任务",
+  "No tasks in progress. Tell Orca what you want to do next.":
+    "还没有进行中的任务。告诉 Orca 你接下来想做什么。",
+  "Needs your attention": "需要你关注",
+  "View all": "查看全部",
+  "Review delivery": "审核交付",
+  "Your reply is needed": "需要你回复",
+  "Nothing needs your attention right now.": "目前没有需要你处理的事项。",
+  "Recent deliveries": "最近交付",
+  "Accepted work will appear here.": "验收通过的任务会显示在这里。",
+  "Your conversations and results stay in this workspace.":
+    "你的对话和结果都保存在这个工作空间。",
+  "Pause animation": "暂停动效",
+  "Play animation": "播放动效",
+  "Orcabot — Your personal assistant": "Orcabot — 你的个人助手",
+  "Waiting for your reply": "等待你回复",
+  "Earlier execution": "较早的执行",
+  "Recent conversations": "最近对话",
+  "Showing the most recent conversation activity.": "这里显示最近的对话活动。",
+  "Showing {count} recent tasks. Browse older work in the task list.":
+    "这里显示最近的 {count} 条任务，较早的工作可在任务列表中查看。",
+  "Open task list": "打开任务列表",
+  "No in-progress tasks in this recent view.":
+    "最近这些任务中，没有进行中的事项。",
+  "No accepted deliveries in this recent view.":
+    "最近这些任务中，还没有验收通过的交付。",
+  "Pick up where you left off, or hand Orca something new.":
+    "接着处理之前的事，或者交给 Orca 一件新任务。",
 } as const;
