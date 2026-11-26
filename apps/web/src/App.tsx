@@ -33,6 +33,7 @@ import {
   BellDot,
   ClipboardList,
   House,
+  X,
 } from "lucide-react";
 import {
   active,
@@ -445,7 +446,7 @@ export function App() {
           aria-label={t("Hide sidebar")}
           onClick={closeNavigation}
         >
-          <PanelLeftClose size={16} />
+          {narrow ? <X size={18} /> : <PanelLeftClose size={16} />}
         </button>
       </div>
       <button

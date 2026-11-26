@@ -12,15 +12,15 @@
       "changes": [
         "Personal assistant home places the real composer above progress, decisions and accepted deliveries",
         "Completed conversations remain discoverable without becoming accepted business work",
-        "Original Orca with pauseable particles and a desktop7:3 entry, entry-first mobile layout",
+        "Original Orca with pauseable particles and a desktop 7:3 entry, entry-first mobile layout",
         "Bounded authenticated activity metadata and explicit partial task summary; technical context collapsed"
       ],
       "after": "after/01-unlock-mobile.png",
       "verification": [
-        "pnpm check:172 tests,150 passed,22 platform skips",
+        "pnpm check: 172 tests, 150 passed, 22 platform skips",
         "Browser fixture covers home admission/discovery, older task pagination,7:3 landing, mobile and protected-URL unlock retry",
         "Actual light/dark and mobile screenshots; independent standards and spec phase reviews approved",
-        "pnpm e2e:21checks passed, including actual particle pixel changes, stable manual pause and reduced-motion fallback"
+        "pnpm e2e: 21 checks passed, including actual particle pixel changes, stable manual pause and reduced-motion fallback"
       ],
       "commit": "ea0ba84f5fd7c80279584335950640b610849c82",
       "critique": "references/personal-home-review.md"
@@ -34,15 +34,15 @@
       "changes": [
         "Personal assistant home places the real composer above progress, decisions and accepted deliveries",
         "Completed conversations remain discoverable without becoming accepted business work",
-        "Original Orca with pauseable particles and a desktop7:3 entry, entry-first mobile layout",
+        "Original Orca with pauseable particles and a desktop 7:3 entry, entry-first mobile layout",
         "Bounded authenticated activity metadata and explicit partial task summary; technical context collapsed"
       ],
       "after": "after/02-personal-home-light.png",
       "verification": [
-        "pnpm check:172 tests,150 passed,22 platform skips",
+        "pnpm check: 172 tests, 150 passed, 22 platform skips",
         "Browser fixture covers home admission/discovery, older task pagination,7:3 landing, mobile and protected-URL unlock retry",
         "Actual light/dark and mobile screenshots; independent standards and spec phase reviews approved",
-        "pnpm e2e:21checks passed, including actual particle pixel changes, stable manual pause and reduced-motion fallback"
+        "pnpm e2e: 21 checks passed, including actual particle pixel changes, stable manual pause and reduced-motion fallback"
       ],
       "commit": "ea0ba84f5fd7c80279584335950640b610849c82",
       "critique": "references/personal-home-review.md"
@@ -52,7 +52,7 @@
       "before": "before/03-conversation.jpg",
       "geminiThread": "https://gemini.google.com/app/6c400dd47d42e2a3",
       "generatedImage": "references/conversation-gemini.jpg",
-      "status": "implemented",
+      "status": "verified",
       "changes": [
         "Result-first conversation with original request and process disclosures",
         "Permission preview retains scope, allowed outcomes, full request and original execution identity",
@@ -62,11 +62,11 @@
       "after": "after/03-conversation-light.png",
       "verification": [
         "Web typecheck and build passed; independent standards/spec re-reviews approved",
-        "pnpm e2e:30checks passed with no fixture provider calls",
+        "pnpm e2e: 30 checks passed with no fixture provider calls",
         "Allow/deny/answer/cancel, full request details, clipboard fallback, metadata validation and original reference identity covered",
         "Actual conversation/reference captures plus isolated-fixture permission capture retained"
       ],
-      "commit": null,
+      "commit": "6fabd1b",
       "critique": "references/conversation-critique.md",
       "followUpReview": "references/conversation-implementation.md"
     },
@@ -87,7 +87,7 @@
         "Web typecheck and build passed",
         "Browser fixture covers actual creation, Cancel without persistence, collapsed advanced settings and original task identity",
         "Existing workflow evidence/review behavior and responsive context rail remain covered; screenshots retained",
-        "pnpm e2e:24checks passed; missing active-channel prerequisite explicitly covered"
+        "pnpm e2e: 24 checks passed; missing active-channel prerequisite explicitly covered"
       ],
       "commit": "877757c9c351d539b4c1dfe5fffceec1237d85ef",
       "critique": "references/workspace-review.md",
@@ -110,7 +110,7 @@
         "Web typecheck and build passed",
         "Browser fixture covers actual creation, Cancel without persistence, collapsed advanced settings and original task identity",
         "Existing workflow evidence/review behavior and responsive context rail remain covered; screenshots retained",
-        "pnpm e2e:24checks passed; missing active-channel prerequisite explicitly covered"
+        "pnpm e2e: 24 checks passed; missing active-channel prerequisite explicitly covered"
       ],
       "commit": "877757c9c351d539b4c1dfe5fffceec1237d85ef",
       "critique": "references/workspace-review.md",
@@ -133,7 +133,7 @@
         "Web typecheck and build passed",
         "Browser fixture covers actual creation, Cancel without persistence, collapsed advanced settings and original task identity",
         "Existing workflow evidence/review behavior and responsive context rail remain covered; screenshots retained",
-        "pnpm e2e:24checks passed; missing active-channel prerequisite explicitly covered"
+        "pnpm e2e: 24 checks passed; missing active-channel prerequisite explicitly covered"
       ],
       "commit": "877757c9c351d539b4c1dfe5fffceec1237d85ef",
       "critique": "references/workspace-review.md",
@@ -154,8 +154,8 @@
       "after": "after/13-projects-light.png",
       "verification": [
         "Web typecheck and build passed",
-        "pnpm e2e:25checks passed including all three Cancel flows, original thread identity, routine run/pause/resume and preferences",
-        "Independent standards and spec code reviews approved; automation tests9/9passed"
+        "pnpm e2e: 25 checks passed including all three Cancel flows, original thread identity, routine run/pause/resume and preferences",
+        "Independent standards and spec code reviews approved; automation tests 9/9 passed"
       ],
       "commit": "039173a",
       "critique": "references/workspace-review.md",
@@ -176,8 +176,8 @@
       "after": "after/14-project-create-light.png",
       "verification": [
         "Web typecheck and build passed",
-        "pnpm e2e:25checks passed including all three Cancel flows, original thread identity, routine run/pause/resume and preferences",
-        "Independent standards and spec code reviews approved; automation tests9/9passed"
+        "pnpm e2e: 25 checks passed including all three Cancel flows, original thread identity, routine run/pause/resume and preferences",
+        "Independent standards and spec code reviews approved; automation tests 9/9 passed"
       ],
       "commit": "039173a",
       "critique": "references/workspace-review.md",
@@ -198,8 +198,8 @@
       "after": "after/15-thread-edit-light.png",
       "verification": [
         "Web typecheck and build passed",
-        "pnpm e2e:25checks passed including all three Cancel flows, original thread identity, routine run/pause/resume and preferences",
-        "Independent standards and spec code reviews approved; automation tests9/9passed"
+        "pnpm e2e: 25 checks passed including all three Cancel flows, original thread identity, routine run/pause/resume and preferences",
+        "Independent standards and spec code reviews approved; automation tests 9/9 passed"
       ],
       "commit": "039173a",
       "critique": "references/workspace-review.md",
@@ -220,8 +220,8 @@
       "after": "after/16-routines-light.png",
       "verification": [
         "Web typecheck and build passed",
-        "pnpm e2e:25checks passed including all three Cancel flows, original thread identity, routine run/pause/resume and preferences",
-        "Independent standards and spec code reviews approved; automation tests9/9passed"
+        "pnpm e2e: 25 checks passed including all three Cancel flows, original thread identity, routine run/pause/resume and preferences",
+        "Independent standards and spec code reviews approved; automation tests 9/9 passed"
       ],
       "commit": "039173a",
       "critique": "references/workspace-review.md",
@@ -242,8 +242,8 @@
       "after": "after/18-routine-create-light.png",
       "verification": [
         "Web typecheck and build passed",
-        "pnpm e2e:25checks passed including all three Cancel flows, original thread identity, routine run/pause/resume and preferences",
-        "Independent standards and spec code reviews approved; automation tests9/9passed"
+        "pnpm e2e: 25 checks passed including all three Cancel flows, original thread identity, routine run/pause/resume and preferences",
+        "Independent standards and spec code reviews approved; automation tests 9/9 passed"
       ],
       "commit": "039173a",
       "critique": "references/workspace-review.md",
@@ -265,7 +265,7 @@
         "pnpm check: 170 tests, 148 passed, 22 platform skips",
         "pnpm e2e: 16 checks, no fixture provider calls",
         "Actual light/dark setup screenshots and 390px Agent dialog",
-        "Independent standards and spec reviews approved; mobile picker44px defect fixed"
+        "Independent standards and spec reviews approved; mobile picker 44px defect fixed"
       ],
       "commit": "3c351379771be09166c91daba4285d13a1a2f3e1",
       "followUpReview": "references/details-review.md"
@@ -286,7 +286,7 @@
         "pnpm check: 170 tests, 148 passed, 22 platform skips",
         "pnpm e2e: 16 checks, no fixture provider calls",
         "Actual light/dark setup screenshots and 390px Agent dialog",
-        "Independent standards and spec reviews approved; mobile picker44px defect fixed"
+        "Independent standards and spec reviews approved; mobile picker 44px defect fixed"
       ],
       "commit": "3c351379771be09166c91daba4285d13a1a2f3e1",
       "followUpReview": "references/details-review.md"
@@ -307,7 +307,7 @@
         "pnpm check: 170 tests, 148 passed, 22 platform skips",
         "pnpm e2e: 16 checks, no fixture provider calls",
         "Actual light/dark setup screenshots and 390px Agent dialog",
-        "Independent standards and spec reviews approved; mobile picker44px defect fixed"
+        "Independent standards and spec reviews approved; mobile picker 44px defect fixed"
       ],
       "commit": "3c351379771be09166c91daba4285d13a1a2f3e1",
       "followUpReview": "references/details-review.md"
@@ -325,8 +325,8 @@
       ],
       "after": "after/19-attention-light.png",
       "verification": [
-        "Web typecheck/build passed; continuity and engine6/6passed independently",
-        "pnpm e2e:26checks passed including acknowledgement and retained failure history",
+        "Web typecheck/build passed; continuity and engine 6/6 passed independently",
+        "pnpm e2e: 26 checks passed including acknowledgement and retained failure history",
         "Actual first-attempt alert acknowledged through the UI; failed history, accepted business work and both attempts remain"
       ],
       "commit": "6ab836c",
@@ -338,7 +338,7 @@
       "before": "before/20-artifacts.jpg",
       "geminiThread": "https://gemini.google.com/app/6c400dd47d42e2a3",
       "generatedImage": "references/conversation-gemini.jpg",
-      "status": "implemented",
+      "status": "verified",
       "changes": [
         "Result-first conversation with original request and process disclosures",
         "Permission preview retains scope, allowed outcomes, full request and original execution identity",
@@ -348,11 +348,11 @@
       "after": "after/20-artifact-references-light.png",
       "verification": [
         "Web typecheck and build passed; independent standards/spec re-reviews approved",
-        "pnpm e2e:30checks passed with no fixture provider calls",
+        "pnpm e2e: 30 checks passed with no fixture provider calls",
         "Allow/deny/answer/cancel, full request details, clipboard fallback, metadata validation and original reference identity covered",
         "Actual conversation/reference captures plus isolated-fixture permission capture retained"
       ],
-      "commit": null,
+      "commit": "6fabd1b",
       "critique": "references/conversation-critique.md",
       "followUpReview": "references/conversation-implementation.md"
     },
@@ -361,7 +361,7 @@
       "before": "before/17-execution-approval.jpg",
       "geminiThread": "https://gemini.google.com/app/6c400dd47d42e2a3",
       "generatedImage": "references/permission-gemini.jpg",
-      "status": "implemented",
+      "status": "verified",
       "changes": [
         "Result-first conversation with original request and process disclosures",
         "Permission preview retains scope, allowed outcomes, full request and original execution identity",
@@ -371,11 +371,11 @@
       "after": "after/17-execution-permission.png",
       "verification": [
         "Web typecheck and build passed; independent standards/spec re-reviews approved",
-        "pnpm e2e:30checks passed with no fixture provider calls",
+        "pnpm e2e: 30 checks passed with no fixture provider calls",
         "Allow/deny/answer/cancel, full request details, clipboard fallback, metadata validation and original reference identity covered",
         "Actual conversation/reference captures plus isolated-fixture permission capture retained"
       ],
-      "commit": null,
+      "commit": "6fabd1b",
       "critique": "references/conversation-critique.md",
       "followUpReview": "references/conversation-implementation.md"
     },
@@ -384,12 +384,22 @@
       "before": "before/21-mobile-navigation.jpg",
       "geminiThread": "https://gemini.google.com/app/819c9d7c44d7e256",
       "generatedImage": "references/mobile-gemini.jpg",
-      "status": "reviewed-with-image",
-      "changes": [],
-      "after": null,
-      "verification": [],
+      "status": "implemented",
+      "changes": [
+        "Wider personal-assistant drawer, clearer close action, 14px navigation and 44px controls",
+        "Original Orca and real dated threads; one workspace status and secondary Settings",
+        "Safe-area-aware footer and horizontal entrance retain full-height bounds",
+        "Existing Base UI focus, inert background, route dismissal and preference persistence retained"
+      ],
+      "after": "after/21-mobile-navigation-light.png",
+      "verification": [
+        "pnpm check: 172 tests, 150 passed, 22 platform skips",
+        "Actual 390x844 light/dark and 320x600 short-screen captures",
+        "pnpm e2e: 31 checks passed, including 44px controls, 320x600 footer and focus/Escape/route behavior"
+      ],
       "commit": null,
-      "critique": "references/details-review.md"
+      "critique": "references/details-review.md",
+      "followUpReview": "references/mobile-review.md"
     },
     {
       "id": "landing",
@@ -400,22 +410,22 @@
       "changes": [
         "Personal assistant home places the real composer above progress, decisions and accepted deliveries",
         "Completed conversations remain discoverable without becoming accepted business work",
-        "Original Orca with pauseable particles and a desktop7:3 entry, entry-first mobile layout",
+        "Original Orca with pauseable particles and a desktop 7:3 entry, entry-first mobile layout",
         "Bounded authenticated activity metadata and explicit partial task summary; technical context collapsed"
       ],
       "after": "after/22-landing-light.png",
       "verification": [
-        "pnpm check:172 tests,150 passed,22 platform skips",
+        "pnpm check: 172 tests, 150 passed, 22 platform skips",
         "Browser fixture covers home admission/discovery, older task pagination,7:3 landing, mobile and protected-URL unlock retry",
         "Actual light/dark and mobile screenshots; independent standards and spec phase reviews approved",
-        "pnpm e2e:21checks passed, including actual particle pixel changes, stable manual pause and reduced-motion fallback"
+        "pnpm e2e: 21 checks passed, including actual particle pixel changes, stable manual pause and reduced-motion fallback"
       ],
       "commit": "ea0ba84f5fd7c80279584335950640b610849c82",
       "critique": "references/personal-home-review.md"
     }
   ],
   "imageGenerationBlock": {
-    "reason": "The earlier quota reset. Actual home/landing, task and project comparison images were downloaded; pending requests are not counted as images.",
+    "reason": "The initial quota reset and later transient image errors were resolved. Actual generated references for all 19 core surfaces are retained, including a corrected permission image and a separate mobile review.",
     "observedDate": "2026-11-26",
     "status": "resolved",
     "resolvedDate": "2026-11-26"

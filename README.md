@@ -6,8 +6,8 @@
 </p>
 
 <h1 align="center">Orcabot</h1>
-<p align="center"><strong>Turn AI conversations into reviewed work.</strong></p>
-<p align="center">A self-hosted AI workbench for tasks, threads, and routines.<br />Keep the goal, run work on the right machine, and review what comes back.</p>
+<p align="center"><strong>Give Orca something to do.</strong></p>
+<p align="center">A self-hosted personal AI assistant for your tasks and conversations.<br />See progress, make decisions, and find the result when you return.</p>
 
 <p align="center">
   <a href="#try-orcabot">Try Orcabot</a> ·
@@ -21,17 +21,18 @@
 </p>
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/screenshots/readme-work-dark.png" />
-  <img src="docs/screenshots/readme-work-light.png" alt="Orcabot task review with a goal, acceptance criteria, execution status, and submitted evidence" width="1440" />
+  <source media="(prefers-color-scheme: dark)" srcset="docs/screenshots/readme-home-dark.png" />
+  <img src="docs/screenshots/readme-home-light.png" alt="Orcabot personal home with a message entry, current work, attention and accepted deliveries" width="1440" />
 </picture>
 
-_Actual Orcabot UI with example data from an isolated fixture. No paid model calls._
+_Actual Orcabot UI from the example task used in this review. Task and execution history are stored by the worker._
 
-## Less checking in. More work you can review.
+## Start with something you want done
 
-For builders and operators running AI work across local and remote machines,
-Orcabot keeps the conversation connected to the task and its result. Return to a
-thread, see what happened, and decide what needs your attention next.
+Tell Orca what you need on Home. See what is in progress, what needs your decision,
+and which deliveries have been accepted. Conversations keep the context; tasks
+keep the goal and its review. Projects, routines and machine connections support
+that work.
 
 | What you want              | How Orcabot helps                                                                                                                             |
 | -------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |

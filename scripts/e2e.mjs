@@ -611,6 +611,38 @@ try {
   );
   await wait('!!document.querySelector(".sidebar-drawer")');
   assert.ok(await ev('document.querySelector(".main").inert'));
+  assert.ok(
+    await ev(
+      'Array.from(document.querySelectorAll(".sidebar-drawer button")).every(b=>b.getBoundingClientRect().height>=44)',
+    ),
+  );
+  await S("Emulation.setDeviceMetricsOverride", {
+    width: 320,
+    height: 600,
+    deviceScaleFactor: 1,
+    mobile: true,
+  });
+  await wait("innerHeight===600");
+  await wait(
+    'document.querySelector(".sidebar-drawer").getBoundingClientRect().height<=innerHeight+1',
+  );
+  assert.ok(
+    await ev(
+      '(()=>{const r=document.querySelector(".sidebar-drawer .sidebar-bottom").getBoundingClientRect();return r.bottom<=innerHeight+1&&r.top>=0})()',
+    ),
+    "Mobile navigation footer must remain within a short screen",
+  );
+  await S("Emulation.setDeviceMetricsOverride", {
+    width: 320,
+    height: 844,
+    deviceScaleFactor: 1,
+    mobile: true,
+  });
+  await wait("innerHeight===844");
+  reports.push(
+    "Mobile drawer retains 44px controls and reachable bottom actions on a 320x600 screen",
+  );
+
   await ev(
     '[...document.querySelectorAll(".sidebar-drawer button")].at(-1).focus()',
   );
@@ -972,6 +1004,13 @@ try {
   reports.push(
     "Landing unlock rejects an invalid key and preserves the original protected task URL after retry",
   );
+  await S("Emulation.setDeviceMetricsOverride", {
+    width: 1440,
+    height: 1000,
+    deviceScaleFactor: 1,
+    mobile: false,
+  });
+  await wait("innerWidth===1440");
   // Permissions go through the original fixture execution, never a global grant.
   for (const outcome of ["accepted", "declined", "answered", "cancelled"]) {
     const c = await request("/conversations", {
@@ -1016,13 +1055,16 @@ try {
           Buffer.from(permissionShot.data, "base64"),
         );
       }
-      await click(
+      const decisionLabel =
         outcome === "accepted"
           ? "Allow this request"
           : outcome === "cancelled"
             ? "Cancel request"
-            : "Deny request",
+            : "Deny request";
+      await ev(
+        `(()=>{const button=[...document.querySelectorAll('.interaction button')].find(b=>b.textContent.trim()===${JSON.stringify(decisionLabel)});button.setAttribute('data-e2e-decision','current')})()`,
       );
+      await hit('[data-e2e-decision="current"]');
     } else {
       assert.equal(
         await ev('document.querySelector(".permission-details").open'),

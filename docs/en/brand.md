@@ -29,7 +29,7 @@ fill. Status indicators keep their own warning, success and error colors.
 Dialogs and selectors use Base UI primitives, following the composition and density of [coss ui](https://coss.com/ui/docs). Nested menus handle their own Escape before the parent dialog. Fields keep visible labels; setup dialogs use a 480px frame, 32px desktop fields, progressive advanced settings, Cancel and one primary action. Other desktop fields are at least 36px; mobile fields and navigation targets are at least 44px.
 
 Manrope Variable is self-hosted for Latin text, with local system fallbacks for Chinese. It introduces softer letterforms without a network font request. Its OFL-1.1 text ships at `/fonts/Manrope-OFL.txt`. The owner-supplied Orca mark remains unchanged.
-The mobile sidebar reuses the dialog focus trap, makes the background inert,
+The wider mobile sidebar uses14px navigation text,44px targets, a clear close action and a safe-area-aware footer. Its horizontal entrance keeps full-height content in bounds. It reuses the dialog focus trap, makes the background inert,
 closes on route selection or Escape, and returns keyboard focus after dismissal.
 Brief opacity/transform entrances respect reduced motion. Long configuration
 values wrap inside the content scroller.
@@ -40,7 +40,7 @@ The installed Taste skill is development tooling, not a shipped dependency. Its
 neutral palette, plain copy, shared controls, hierarchy and restrained motion
 principles apply to this operational application. Its marketing-page heroes,
 shader scenes and screen-height sales sections do not describe a workbench; no
-marketing-page gate result is claimed.
+marketing-page gate result is claimed. Its open findings and application-specific assessment are recorded in the [Taste checker report](../design-review/2026-11-26/references/taste-check.md).
 
 The browser fixture checks actual API/UI behavior, both themes at 1440, 1024, 768,
 390 and 320px, internal overflow, dialog/navigation focus and session preferences.

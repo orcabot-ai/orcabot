@@ -1737,7 +1737,7 @@ a.artifact-location {
   padding: 0;
 }
 .setup-panel.sidebar-drawer {
-  width: min(280px, calc(100vw - 48px));
+  width: min(360px, calc(100vw - 24px));
   height: 100dvh;
   max-height: none;
   margin: 0;
@@ -3042,4 +3042,57 @@ a.artifact-location {
 .output-location code {
   font-size: 11px;
   overflow-wrap: anywhere;
+}
+
+/* Mobile navigation follows Gemini's personal assistant drawer reference. */
+.sidebar-drawer .brand {
+  height: 64px;
+  padding: 0 16px;
+  font-size: 18px;
+}
+.sidebar-drawer .work-nav,
+.sidebar-drawer .new-conversation,
+.sidebar-drawer .sidebar-bottom button,
+.sidebar-drawer .conversation-nav button {
+  min-height: 44px;
+  font-size: 14px;
+}
+.sidebar-drawer .work-nav {
+  margin-left: 12px;
+  margin-right: 12px;
+}
+.sidebar-drawer .new-conversation {
+  margin-bottom: 12px;
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--on-accent);
+}
+.sidebar-drawer .new-conversation:hover {
+  background: var(--accent-hover);
+}
+.sidebar-drawer .section-heading {
+  margin-top: 16px;
+}
+.sidebar-drawer .conversation-nav {
+  min-height: 0;
+}
+.sidebar-drawer .sidebar-bottom {
+  flex-shrink: 0;
+  padding-bottom: max(14px, env(safe-area-inset-bottom));
+}
+.sidebar-drawer .thread-time {
+  font-size: 12px;
+}
+.sidebar-drawer {
+  animation: navigation-in 150ms ease-out;
+}
+@keyframes navigation-in {
+  from {
+    opacity: 0;
+    transform: translateX(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }

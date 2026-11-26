@@ -6,8 +6,8 @@
 </p>
 
 <h1 align="center">Orcabot</h1>
-<p align="center"><strong>让 AI 对话走向可验收的成果。</strong></p>
-<p align="center">可自托管的 AI 工作台，连接任务、对话与例行工作。<br />保留目标，在合适的机器上执行，回来时直接检查成果。</p>
+<p align="center"><strong>交给 Orca 一件事。</strong></p>
+<p align="center">可自托管的个人 AI 助手，帮你处理任务与持续的对话。<br />了解进展，处理需要你决定的事，回来时找到结果。</p>
 
 <p align="center">
   <a href="#体验-orcabot">体验 Orcabot</a> ·
@@ -21,15 +21,15 @@
 </p>
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/screenshots/readme-work-dark.png" />
-  <img src="docs/screenshots/readme-work-light.png" alt="Orcabot 任务审核页面，包含目标、验收标准、执行状态和已提交的交付证据" width="1440" />
+  <source media="(prefers-color-scheme: dark)" srcset="docs/screenshots/readme-home-dark.png" />
+  <img src="docs/screenshots/readme-home-light.png" alt="Orcabot 个人首页，包含委托入口、进行中工作、待处理事项与已验收交付" width="1440" />
 </picture>
 
-_实际 Orcabot 界面，使用隔离测试夹具中的示例数据，未调用付费模型。界面默认英文，可切换简体中文。_
+_实际 Orcabot 界面，展示此次产品验证中的示例任务；任务与执行历史由 worker 保存。界面默认英文，可切换简体中文。_
 
-## 少一点反复盯进度，多一点可检查的成果
+## 从一件想做的事情开始
 
-面向在本地和远端机器上运行 AI 任务的开发者与操作者，Orcabot 将对话、任务与结果放在一起。回来时能继续原来的讨论、了解发生了什么，再决定下一步需要关注什么。
+在首页告诉 Orca 需要什么，查看正在处理的工作、需要你决定的事项与已验收交付。对话保留上下文，任务保留目标和审核记录；项目、例行任务与机器连接围绕这些工作展开。
 
 | 你想做什么           | Orcabot 如何帮你                                                                  |
 | -------------------- | --------------------------------------------------------------------------------- |

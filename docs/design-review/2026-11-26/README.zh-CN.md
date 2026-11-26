@@ -1,47 +1,39 @@
-# Orcabot UI 审阅 — 11 月 26 日
+# Orcabot UI审阅 — 11月26日
 
 [English](README.md) · 简体中文
 
-流程为：真实页面截图 → 上传 Gemini → 点评与实际生成的效果图 → 按图实现 → 验证产品行为 → 英文提交。
+本轮覆盖19个核心页面与弹窗：真实截图、Gemini点评和实际生成图、按图实现、整改截图、独立review及英文提交。实现与检查已完成，最后一个实现提交由收尾审计写入清单。
 
-见[覆盖清单](manifest.json)、[配置图稿说明](references/setup-review.md)、[工作台审阅](references/workspace-review.md)及[原始生成图](references/setup-dialogs-gemini.jpg)。
+见[覆盖清单](manifest.json)。图稿是设计参考，不是产品数据，也不代表图中功能都已实现。
 
-## 已完成范围
+| 分组                     | 界面数 | 图稿与实现材料                                                                                                                                          |
+| ------------------------ | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 个人首页与入口           | 3      | [实际图稿](references/personal-home-landing-gemini.jpg) · [实现取舍](references/personal-home-review.md)                                                |
+| 助手、本机与远端配置     | 3      | [实际图稿](references/setup-dialogs-gemini.jpg) · [审阅](references/setup-review.md)                                                                    |
+| 任务列表、创建与详情     | 3      | [实际图稿](references/tasks-gemini.jpg) · [边界修正](references/task-review.md)                                                                         |
+| 项目、线程管理与例行任务 | 5      | [项目图稿](references/projects-gemini.jpg) · [例行任务图稿](references/routines-attention-gemini.jpg) · [实现](references/organization-review.md)       |
+| 待处理事项               | 1      | [实际图稿](references/routines-attention-gemini.jpg) · [验证](references/attention-review.md)                                                           |
+| 对话、授权与交付引用     | 3      | [对话图稿](references/conversation-gemini.jpg) · [更正后的授权图](references/permission-gemini.jpg) · [实现](references/conversation-implementation.md) |
+| 手机导航                 | 1      | [实际图稿](references/mobile-gemini.jpg) · [响应式验证](references/mobile-review.md)                                                                    |
 
-Agent、本机连接、远端连接三个配置变体按照第一张生成图整改。共享弹窗与选择器采用 Base UI，参考 [coss ui](https://coss.com/ui/docs)，并自托管 Manrope。远端必填密钥保持可见且默认掩码，本地连接地址和 MCP 逐步展开。没有实现图稿虚构的 Browse 按钮，也没有替换原版鲸鱼标志；移动端控件保留 44px 触摸区域。
+## 改了什么
 
-`pnpm check` 通过：170 项测试中 148 项通过、22 项因平台跳过。`pnpm e2e` 的 16 组浏览器流程检查通过，使用隔离的确定性执行夹具。新增覆盖助手配置保存、嵌套菜单 Escape、密钥显隐重置、取消不产生连接、手机助手选择器实际高度。
+首页以真实委托入口为主，展示进展、待处理事项和已验收交付，技术配置退到次级位置。共享设计采用Manrope、暖近白与柔和海蓝，保留原版Orca。Base UI弹窗与选择器参考coss组合方式，配置逐步展开，取消和主动作明确，手机触摸区域可用。7:3入口把粒子留在品牌区，支持暂停与减少动效。
 
-## 真实执行流程
+任务采用聚焦的创建抽屉和可理解的活动记录；多阶段SOP中的审核通过不会冒充最终验收。对话结果在过程记录之前，授权保留原执行与范围，文件位置不会伪装成Web路由。引用仍是未经验证的位置元数据，不上传文件。手机抽屉保留焦点、背景隔离和可见的底部操作。
 
-另有真实任务通过正在运行的 Orcabot worker 与 OctoRuntime 执行。第一次尝试等待授权过期，记录保留；第二次在逐次授权后完成。通过 UI 验证：
+图稿虚构的人物、任务、部署地址、工作日日程、无限执行、替代标志和混淆权限/验收的操作均未采用。最初的额度限制和后续出图错误已通过实际下载解决；更正后的授权图与单独手机审阅均保留。
 
-1. 执行完成不会自动验收业务任务。
-2. 提交证据使任务进入审核。
-3. 单独记录操作者决策后，任务进入 accepted。
-4. 刷新后保留证据、决策与两次执行尝试。
-5. 原始执行保存了包含本地计算摘要的文件引用，页面仍如实标记引用未经自动验证。
+## 验证
 
-俄罗斯方块仅作为验证 Orcabot 整体流程的场景，不宣称进行了完整游戏质量验收。隔离夹具与真实模型执行分别记录。
+`pnpm check`共172项：150项通过、22项平台跳过。`pnpm e2e`通过31组浏览器流程，夹具不调用付费模型。覆盖实际界面受理、原始标识、证据/审核边界、较早任务分页、取消/焦点、会话偏好、深浅模式、320px布局、短屏导航、授权允许/拒绝/回答/取消、复制降级与隐藏字段校验。每个实现分组及review提出的修正都经过标准与规格两条独立审阅。
 
-共享控件提交为 `3c35137`，GitHub Node 24/26 CI 均通过。Gemini 随后完成了[剩余五个页面与整改结果复核](references/details-review.md)。
+另有真实任务经过运行中的Orcabot worker与OctoRuntime：首次尝试等待授权过期，第二次在逐次授权后完成。通过UI验证了执行完成不自动验收、提交证据进入审核、操作者单独决定验收；刷新后保留两次尝试、证据与决定。附加的文件引用仍标记为未经验证。确认处理被替代的首次尝试后，警报清除，但失败历史和业务已验收状态保持不变。
 
-## 个人首页与入口
+俄罗斯方块只是验证Orcabot整体流程的场景，不宣称做了完整游戏质量验收。夹具与真实模型材料分开记录，授权整改截图来自隔离夹具。
 
-图片额度已恢复，[实际生成的首页/Landing 对照图](references/personal-home-landing-gemini.jpg)已用于实现个人首页和7:3虎鲸粒子入口。[实现取舍](references/personal-home-review.md)记录了摘要范围、普通对话完成与业务验收的区别。`after/`保留深浅色与手机截图。
+Taste营销页gate仍有12项未通过，不宣称Taste PASS；每项及适用性说明见[检查报告](references/taste-check.md)。常规应用测试和截图覆盖单独记录。
 
-`pnpm check`共172项测试，150项通过、22项平台跳过。首页新增验证覆盖委托后找回原对话、较早任务分页、错误密钥重试和保留原任务链接；共享控件与工作流用例仍在。有界活动接口另外验证了授权、隐私与结果范围。
+追踪材料只含本任务创建的示例数据，凭据与原始系统截图不提交。部分较晚的`before/`图片包含共享控件整改中间状态，不表示全部来自最早Git基线。
 
-## 任务与工作整理
-
-任务列表、交付/活动详情与创建抽屉已按照[实际任务图稿](references/tasks-gemini.jpg)实现，[实现说明](references/task-review.md)记录边界修复。[项目](references/projects-gemini.jpg)和[例行任务](references/routines-attention-gemini.jpg)图稿也已用于项目、线程管理和例行任务界面；[实现取舍](references/organization-review.md)明确了没有采用的图稿虚构能力。
-
-工作整理阶段通过25组浏览器流程检查，新增待处理事项回归后当前为26组。项目、线程编辑、例行任务的取消不会保存草稿；例行执行仍回到原线程，并保留间隔和次数上限。
-
-## 剩余工作
-
-待处理事项已按实际图稿实现，每次执行只显示一条摘要，处理确认单独留痕，见[验证记录](references/attention-review.md)。对话、执行授权和交付引用已按实际图稿整改，其中授权图纠正了请求权限与业务验收混淆，见[实现与验证](references/conversation-implementation.md)。当前通过30组浏览器流程检查。[手机导航图稿](references/mobile-gemini.jpg)也已下载，最后的响应式整改尚待完成。每个列出的核心页面都完成按图整改与验证后，整个流程才算完成。
-
-追踪截图只包含任务创建的示例数据；原始系统窗口截图与凭据不提交。部分较晚的 `before/` 截图已包含共享控件整改的中间状态，它们是页面审阅输入，不表示全部来自最早 Git 基线。
-
-运行 `pnpm ui:review` 校验材料并报告进度；`pnpm ui:review --require-complete` 要求所有页面都有实际图稿、整改后截图、验证和提交记录，否则返回失败。待完成页面不会被算作完成。
+运行`pnpm ui:review`校验材料；`pnpm ui:review --require-complete`要求每个界面都有实际图稿、整改截图、检查和提交记录。
