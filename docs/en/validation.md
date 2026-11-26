@@ -225,3 +225,20 @@ separates reported/documented behavior from Orcabot adaptation proposals.
   code/assets; Apache imports retain provenance. The installed dependency inventory
   contains 316 package records, with one missing standalone upstream license text
   explicitly recorded. No blanket relicensing or signed release claim is made.
+
+## Workbench presentation update, 2026-11-26
+
+The compact neutral shell, collection rows, task/context split and functional new
+conversation view are covered by 14 browser checks. The fixture validates light
+and dark layouts at 1440, 1024, 768, 390 and 320px, including internal content
+scroll widths. Mobile navigation is checked for focus containment, inert
+background, Escape/route dismissal, restored focus and correct breadcrumbs.
+Long valid Agent, target and directory values wrap at 390/320px. Removing the
+wrapping constraints makes that browser assertion fail; restoring them passes.
+Both independent reviews reproduced and verified the fix. Application commands,
+original execution identities and evidence/review gates remain unchanged.
+
+Screenshots: [light](../screenshots/readme-work-light.png),
+[dark](../screenshots/readme-work-dark.png),
+[tablet](../screenshots/workbench-tablet.png),
+[mobile](../screenshots/workbench-mobile.png). They contain isolated fixture data.

@@ -83,11 +83,8 @@ export function Board({
     <section className="board-page">
       <div className="board-heading">
         <div>
-          <div className="eyebrow">{t("DELIVER WORK")}</div>
           <h1>{t("Work items")}</h1>
-          <p className="muted">
-            {t("Give your agents a goal. Review the result, not every step.")}
-          </p>
+          <p className="muted">{t("Goals, execution, and review.")}</p>
         </div>
         <button
           className="button primary"
@@ -124,12 +121,21 @@ export function Board({
       {query.data?.items.length === 0 && !creating && (
         <div className="board-empty">
           <ClipboardList size={36} />
-          <h2>{t("A clear goal. A reviewed result.")}</h2>
+          <h2>{t("No work items")}</h2>
           <p>
             {t(
-              "Create a work item with acceptance criteria to start your first delivery.",
+              "Create a work item to define a goal and its acceptance criteria.",
             )}
           </p>
+        </div>
+      )}
+      {query.data && query.data.items.length > 0 && (
+        <div className="collection-heading">
+          <span>
+            {t("All work")}{" "}
+            <span className="collection-count">{query.data.items.length}</span>
+          </span>
+          <span>{t("Status")}</span>
         </div>
       )}
       <div className="board-list">
@@ -145,7 +151,10 @@ export function Board({
               <strong>{w.title}</strong>
               <p>{w.goal}</p>
             </div>
-            <span className="board-stage">{t(w.state)}</span>
+            <span className="board-stage" data-state={w.state}>
+              <i aria-hidden="true" />
+              {t(w.state)}
+            </span>
             <ArrowUpRight size={17} />
           </button>
         ))}
@@ -415,243 +424,264 @@ function WorkDetailView({ id }: { id: string }) {
       </button>
       <div className="board-heading mt-5">
         <div>
-          <div className="eyebrow">{t("BUSINESS OUTCOME")}</div>
           <h1>{work.title}</h1>
           <p className="muted">
             {definition.workflow.id} · v{definition.workflow.version}
           </p>
         </div>
-        <span className="board-stage">{t(work.state)}</span>
+        <span className="board-stage" data-state={work.state}>
+          <i aria-hidden="true" />
+          {t(work.state)}
+        </span>
       </div>
       <ErrorText error={query.error} />
       <ErrorText error={command.error} />
-      <article className="board-card">
-        <h2>{t("Goal")}</h2>
-        <p className="board-prose">{work.goal}</p>
-        <h3>{t("Acceptance criteria")}</h3>
-        <ul>
-          {work.criteria.map((c, i) => (
-            <li key={i}>{c}</li>
-          ))}
-        </ul>
-      </article>
-      {task && (
-        <article className="board-card">
-          <div className="board-heading">
-            <div>
-              <h2>{t("Current task")}</h2>
-              <p className="muted">
-                {t(task.stage)} · {t(task.status)} · {t("Claim generation")}{" "}
-                {task.generation}
-              </p>
-            </div>
-            {terminal && <Check size={24} />}
-          </div>
-          {task.leaseUntil && (
-            <p className="muted">
-              {t("Claim expires")}{" "}
-              {new Date(task.leaseUntil).toLocaleTimeString(
-                locale === "zh" ? "zh-CN" : "en-US",
+      <div className="work-layout">
+        <aside className="work-context" aria-label={t("Task details")}>
+          <article className="board-card">
+            <h2>{t("Goal")}</h2>
+            <p className="board-prose">{work.goal}</p>
+            <h3>{t("Acceptance criteria")}</h3>
+            <ul>
+              {work.criteria.map((c, i) => (
+                <li key={i}>{c}</li>
+              ))}
+            </ul>
+          </article>
+          {task && (
+            <article className="board-card">
+              <div className="board-heading">
+                <div>
+                  <h2>{t("Current task")}</h2>
+                  <p className="muted">
+                    {t(task.stage)} · {t(task.status)} · {t("Claim generation")}{" "}
+                    {task.generation}
+                  </p>
+                </div>
+                {terminal && <Check size={24} />}
+              </div>
+              {task.leaseUntil && (
+                <p className="muted">
+                  {t("Claim expires")}{" "}
+                  {new Date(task.leaseUntil).toLocaleTimeString(
+                    locale === "zh" ? "zh-CN" : "en-US",
+                  )}
+                </p>
               )}
-            </p>
+              <div className="flex gap-2 flex-wrap mt-4">
+                {!terminal && task.status === "ready" && (
+                  <button
+                    className="button primary"
+                    disabled={command.isPending}
+                    onClick={() =>
+                      void act(
+                        "claim",
+                        { expectedRevision: task.revision },
+                        true,
+                      )
+                    }
+                  >
+                    {t("Claim task")}
+                  </button>
+                )}
+                {task.status === "claimed" && claim && (
+                  <>
+                    <button
+                      className="button primary"
+                      disabled={command.isPending}
+                      onClick={() =>
+                        void act(
+                          "dispatch",
+                          {
+                            expectedRevision: task.revision,
+                            claimToken: claim,
+                          },
+                          true,
+                        )
+                      }
+                    >
+                      {t("Start execution")}
+                    </button>
+                    <button
+                      className="button"
+                      disabled={command.isPending}
+                      onClick={() =>
+                        void act(
+                          "renew",
+                          {
+                            expectedRevision: task.revision,
+                            claimToken: claim,
+                          },
+                          true,
+                        )
+                      }
+                    >
+                      {t("Renew claim")}
+                    </button>
+                    <button
+                      className="button"
+                      disabled={command.isPending}
+                      onClick={() =>
+                        void act(
+                          "release",
+                          {
+                            expectedRevision: task.revision,
+                            claimToken: claim,
+                          },
+                          true,
+                        )
+                      }
+                    >
+                      {t("Release claim")}
+                    </button>
+                  </>
+                )}
+                {task.status === "claimed" && !claim && (
+                  <p className="muted">
+                    {t(
+                      "This task is claimed in another session. Wait for release or expiry.",
+                    )}
+                  </p>
+                )}
+                {task.status === "failed" && (
+                  <button
+                    className="button"
+                    disabled={command.isPending}
+                    onClick={() =>
+                      void act("retry", { expectedRevision: work.revision })
+                    }
+                  >
+                    {t("Create another attempt")}
+                  </button>
+                )}
+                {task.conversationId && (
+                  <button
+                    className="button"
+                    onClick={() =>
+                      void navigate({
+                        to: "/conversations/$conversationId",
+                        params: { conversationId: task.conversationId! },
+                      })
+                    }
+                  >
+                    {t("Open execution")}
+                    <ArrowUpRight size={14} />
+                  </button>
+                )}
+              </div>
+              {task.status === "unknown" && (
+                <p className="notice mt-4">
+                  {t(
+                    "Execution outcome is unknown. Recover the original run before creating replacement work.",
+                  )}
+                </p>
+              )}
+              <p className="muted mt-4">
+                {t("Execution completion does not accept this work item.")}
+              </p>
+            </article>
           )}
-          <div className="flex gap-2 flex-wrap mt-4">
-            {!terminal && task.status === "ready" && (
-              <button
-                className="button primary"
-                disabled={command.isPending}
-                onClick={() =>
-                  void act("claim", { expectedRevision: task.revision }, true)
-                }
-              >
-                {t("Claim task")}
-              </button>
+        </aside>
+        <div className="work-main">
+          {task?.status === "completed" &&
+            definition.executionStates.includes(work.state) && (
+              <EvidenceForm key={task.id} detail={query.data} />
             )}
-            {task.status === "claimed" && claim && (
-              <>
-                <button
-                  className="button primary"
-                  disabled={command.isPending}
-                  onClick={() =>
-                    void act(
-                      "dispatch",
-                      { expectedRevision: task.revision, claimToken: claim },
-                      true,
-                    )
-                  }
-                >
-                  {t("Start execution")}
-                </button>
-                <button
-                  className="button"
-                  disabled={command.isPending}
-                  onClick={() =>
-                    void act(
-                      "renew",
-                      { expectedRevision: task.revision, claimToken: claim },
-                      true,
-                    )
-                  }
-                >
-                  {t("Renew claim")}
-                </button>
-                <button
-                  className="button"
-                  disabled={command.isPending}
-                  onClick={() =>
-                    void act(
-                      "release",
-                      { expectedRevision: task.revision, claimToken: claim },
-                      true,
-                    )
-                  }
-                >
-                  {t("Release claim")}
-                </button>
-              </>
-            )}
-            {task.status === "claimed" && !claim && (
+          {latest && (
+            <article className="board-card">
+              <h2>{t("Submitted evidence")}</h2>
+              <div className="markdown">
+                <Markdown>{latest.content}</Markdown>
+              </div>
+              <code className="board-digest">SHA-256 {latest.sha256}</code>
               <p className="muted">
                 {t(
-                  "This task is claimed in another session. Wait for release or expiry.",
+                  "The digest identifies this submitted text. External files and URLs are not verified.",
                 )}
               </p>
-            )}
-            {task.status === "failed" && (
-              <button
-                className="button"
-                disabled={command.isPending}
-                onClick={() =>
-                  void act("retry", { expectedRevision: work.revision })
-                }
-              >
-                {t("Create another attempt")}
-              </button>
-            )}
-            {task.conversationId && (
-              <button
-                className="button"
-                onClick={() =>
-                  void navigate({
-                    to: "/conversations/$conversationId",
-                    params: { conversationId: task.conversationId! },
-                  })
-                }
-              >
-                {t("Open execution")}
-                <ArrowUpRight size={14} />
-              </button>
-            )}
-          </div>
-          {task.status === "unknown" && (
-            <p className="notice mt-4">
-              {t(
-                "Execution outcome is unknown. Recover the original run before creating replacement work.",
-              )}
-            </p>
+            </article>
           )}
-          <p className="muted mt-4">
-            {t("Execution completion does not accept this work item.")}
-          </p>
-        </article>
-      )}
-      {task?.status === "completed" &&
-        definition.executionStates.includes(work.state) && (
-          <EvidenceForm key={task.id} detail={query.data} />
-        )}
-      {latest && (
-        <article className="board-card">
-          <h2>{t("Submitted evidence")}</h2>
-          <div className="markdown">
-            <Markdown>{latest.content}</Markdown>
-          </div>
-          <code className="board-digest">SHA-256 {latest.sha256}</code>
-          <p className="muted">
-            {t(
-              "The digest identifies this submitted text. External files and URLs are not verified.",
-            )}
-          </p>
-        </article>
-      )}
-      {reviewing && latest && (
-        <ReviewForm key={latest.id} detail={query.data} />
-      )}
-      <article className="board-card">
-        <h2>{t("Shared thread")}</h2>
-        <div className="work-events">
-          {events.map((e) => (
-            <div key={e.seq} className="work-event">
-              <small>
-                {e.actor === "operator" ? t("Operator") : "Runtime"} ·{" "}
-                {new Date(e.createdAt).toLocaleString(
-                  locale === "zh" ? "zh-CN" : "en-US",
-                )}
-              </small>
-              <strong>{t(e.type)}</strong>
-              {typeof e.data.text === "string" && (
-                <div className="markdown">
-                  <Markdown>{e.data.text}</Markdown>
+          {reviewing && latest && (
+            <ReviewForm key={latest.id} detail={query.data} />
+          )}
+          <article className="board-card">
+            <h2>{t("Shared thread")}</h2>
+            <div className="work-events">
+              {events.map((e) => (
+                <div key={e.seq} className="work-event">
+                  <small>
+                    {e.actor === "operator" ? t("Operator") : "Runtime"} ·{" "}
+                    {new Date(e.createdAt).toLocaleString(
+                      locale === "zh" ? "zh-CN" : "en-US",
+                    )}
+                  </small>
+                  <strong>{t(e.type)}</strong>
+                  {typeof e.data.text === "string" && (
+                    <div className="markdown">
+                      <Markdown>{e.data.text}</Markdown>
+                    </div>
+                  )}
+                  {typeof e.data.note === "string" && <p>{e.data.note}</p>}
                 </div>
-              )}
-              {typeof e.data.note === "string" && <p>{e.data.note}</p>}
+              ))}
             </div>
-          ))}
+            <div className="flex gap-2 mt-4">
+              {eventAfter > 0 && (
+                <button className="button" onClick={() => setEventAfter(0)}>
+                  {t("Start of thread")}
+                </button>
+              )}
+              {query.data.nextEventAfter !== null && (
+                <button
+                  className="button"
+                  onClick={() => setEventAfter(query.data!.nextEventAfter!)}
+                >
+                  {t("More activity")}
+                </button>
+              )}
+            </div>
+            <MessageForm workId={id} />
+          </article>
+          <article className="board-card">
+            <h2>{t("Execution attempts")}</h2>
+            {tasks.map((attempt) => (
+              <div className="board-attempt" key={attempt.id}>
+                <span>
+                  {t(attempt.stage)} · {t(attempt.status)}
+                </span>
+                {attempt.conversationId && (
+                  <button
+                    className="text-button"
+                    onClick={() =>
+                      void navigate({
+                        to: "/conversations/$conversationId",
+                        params: { conversationId: attempt.conversationId! },
+                      })
+                    }
+                  >
+                    {t("Open execution")}
+                  </button>
+                )}
+              </div>
+            ))}
+            <div className="flex gap-2 mt-4">
+              {taskBefore !== null && (
+                <button className="button" onClick={() => setTaskBefore(null)}>
+                  {t("Latest items")}
+                </button>
+              )}
+              {query.data.nextBefore !== null && (
+                <button
+                  className="button"
+                  onClick={() => setTaskBefore(query.data!.nextBefore)}
+                >
+                  {t("Earlier items")}
+                </button>
+              )}
+            </div>
+          </article>
         </div>
-        <div className="flex gap-2 mt-4">
-          {eventAfter > 0 && (
-            <button className="button" onClick={() => setEventAfter(0)}>
-              {t("Start of thread")}
-            </button>
-          )}
-          {query.data.nextEventAfter !== null && (
-            <button
-              className="button"
-              onClick={() => setEventAfter(query.data!.nextEventAfter!)}
-            >
-              {t("More activity")}
-            </button>
-          )}
-        </div>
-        <MessageForm workId={id} />
-      </article>
-      <article className="board-card">
-        <h2>{t("Execution attempts")}</h2>
-        {tasks.map((attempt) => (
-          <div className="board-attempt" key={attempt.id}>
-            <span>
-              {t(attempt.stage)} · {t(attempt.status)}
-            </span>
-            {attempt.conversationId && (
-              <button
-                className="text-button"
-                onClick={() =>
-                  void navigate({
-                    to: "/conversations/$conversationId",
-                    params: { conversationId: attempt.conversationId! },
-                  })
-                }
-              >
-                {t("Open execution")}
-              </button>
-            )}
-          </div>
-        ))}
-        <div className="flex gap-2 mt-4">
-          {taskBefore !== null && (
-            <button className="button" onClick={() => setTaskBefore(null)}>
-              {t("Latest items")}
-            </button>
-          )}
-          {query.data.nextBefore !== null && (
-            <button
-              className="button"
-              onClick={() => setTaskBefore(query.data!.nextBefore)}
-            >
-              {t("Earlier items")}
-            </button>
-          )}
-        </div>
-      </article>
+      </div>
     </section>
   );
 }

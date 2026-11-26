@@ -352,6 +352,195 @@ try {
   assert.equal(listed.items[0].id, routine.id);
   assert.equal(listed.items[0].runs, 1);
   reports.push("built headless routine CLI outside the checkout");
+
+  // Exercise the task/context layout with the same admission and evidence APIs.
+  const command = (path, body) =>
+    request(path, { commandId: crypto.randomUUID(), ...body });
+  const fixtureAgent = (await request("/state")).agents[0];
+  const work = await command("/board/work", {
+    title: "Prepare the release brief",
+    goal: "Summarize the changes, call out risks, and list the checks needed before release.",
+    criteria: [
+      "Include a concise summary",
+      "List risks and verification steps",
+    ],
+    agentId: fixtureAgent.id,
+    channelId: "general",
+    definitionId: "standard-delivery",
+    definitionVersion: 1,
+  });
+  let detail = await request("/board/work/" + work.id);
+  const claimed = await command("/board/tasks/" + detail.task.id + "/claim", {
+    expectedRevision: detail.task.revision,
+  });
+  await command("/board/tasks/" + detail.task.id + "/dispatch", {
+    expectedRevision: claimed.task.revision,
+    claimToken: claimed.claimToken,
+  });
+  for (let i = 0; i < 100; i++) {
+    detail = await request("/board/work/" + work.id);
+    if (detail.task.status === "completed") break;
+    await pause(50);
+  }
+  assert.equal(detail.task.status, "completed");
+  await command("/board/work/" + work.id + "/evidence", {
+    expectedRevision: detail.work.revision,
+    taskId: detail.task.id,
+    content:
+      "## Release brief\n\nProject threads retain the conversation. Routines return repeat work to the same thread.\n\n**Before release:** review dependency notices, run the checks, and confirm the delivery criteria.\n\nExample content from an isolated documentation fixture.",
+    checks: [true, true],
+  });
+  await ev("sessionStorage.setItem('orcabot.locale','en')");
+  for (const theme of ["light", "dark"]) {
+    await ev(`localStorage.setItem('orcabot.theme',${JSON.stringify(theme)})`);
+    for (const width of [1440, 1024, 768, 390, 320]) {
+      await S("Emulation.setDeviceMetricsOverride", {
+        width,
+        height: width < 600 ? 844 : 900,
+        deviceScaleFactor: 1,
+        mobile: width < 600,
+      });
+      await go("/work/" + work.id);
+      await wait('document.body.textContent.includes("Submitted evidence")');
+      await wait("[...document.images].every(i=>i.complete&&i.naturalWidth>0)");
+      await ev("document.fonts.ready");
+      assert.equal(await ev("document.documentElement.dataset.theme"), theme);
+      assert.ok(
+        await ev("document.body.scrollWidth<=innerWidth"),
+        `Overflow at ${width}/${theme}`,
+      );
+      assert.ok(
+        await ev(
+          'document.querySelector(".content-scroll").scrollWidth<=document.querySelector(".content-scroll").clientWidth',
+        ),
+        `Content overflow at ${width}/${theme}`,
+      );
+      if (width >= 1024) {
+        assert.ok(
+          await ev(
+            'document.querySelector(".work-main").getBoundingClientRect().right <= document.querySelector(".work-context").getBoundingClientRect().left',
+          ),
+          "Context must stay beside the document",
+        );
+      }
+      if (width === 1440 || (theme === "light" && [768, 390].includes(width))) {
+        await pause(180);
+        const frame = await S("Page.captureScreenshot", { format: "png" });
+        const filename =
+          width === 1440
+            ? `readme-work-${theme}.png`
+            : width === 768
+              ? "workbench-tablet.png"
+              : "workbench-mobile.png";
+        await writeFile(
+          join(root, "docs/screenshots", filename),
+          Buffer.from(frame.data, "base64"),
+        );
+      }
+    }
+  }
+  reports.push(
+    "task review and context rail in both themes at 1440, 1024, 768, 390 and 320px",
+  );
+  const key = (key, code, extra = {}) =>
+    S("Input.dispatchKeyEvent", {
+      type: "keyDown",
+      key,
+      code,
+      windowsVirtualKeyCode: key === "Tab" ? 9 : 27,
+      ...extra,
+    });
+  await ev(
+    `document.querySelector('button[aria-label="Show sidebar"]').focus();document.querySelector('button[aria-label="Show sidebar"]').click()`,
+  );
+  await wait('!!document.querySelector(".sidebar-drawer")');
+  assert.ok(await ev('document.querySelector(".main").inert'));
+  await ev(
+    '[...document.querySelectorAll(".sidebar-drawer button")].at(-1).focus()',
+  );
+  await key("Tab", "Tab");
+  assert.ok(
+    await ev(
+      'document.querySelector(".sidebar-drawer").contains(document.activeElement)',
+    ),
+  );
+  await key("Escape", "Escape");
+  await wait('!document.querySelector(".sidebar-drawer")');
+  await wait(
+    'document.activeElement?.getAttribute("aria-label")==="Show sidebar"',
+  );
+  await ev(
+    `document.querySelector('button[aria-label="Show sidebar"]').click()`,
+  );
+  await wait('!!document.querySelector(".sidebar-drawer")');
+  await click("Projects");
+  await wait(
+    'location.pathname === "/projects" && !document.querySelector(".sidebar-drawer")',
+  );
+  assert.equal(
+    await ev(
+      'document.querySelector(".topbar > div:first-child > span:last-child").textContent',
+    ),
+    "Projects",
+  );
+  assert.equal(await ev('document.querySelector(".main").inert'), false);
+  reports.push(
+    "mobile navigation traps focus, closes on route/Escape, restores focus and shows the right breadcrumb",
+  );
+  await go("/");
+  await wait('!!document.querySelector(".workspace-context")');
+  assert.ok(
+    await ev(
+      'document.querySelector(".workspace-context").textContent.includes("Fixture assistant")',
+    ),
+  );
+  assert.ok(
+    await ev(
+      'document.querySelector(".workspace-context").textContent.includes("/fixture/project")',
+    ),
+  );
+  reports.push(
+    "new thread displays the actual configured agent and working directory",
+  );
+  const longTarget = await request("/targets", {
+    name: "Target".repeat(24),
+    kind: "local",
+    endpoint: "/fixture/long.sock",
+  });
+  const longAgent = await request("/agents", {
+    name: "Agent".repeat(24),
+    targetId: longTarget.id,
+    adapter: "codex",
+    workdir: "/fixture/" + "workspace".repeat(20),
+    mcp: {},
+  });
+  await go("/");
+  await wait(
+    `!!document.querySelector('.agent-picker option[value="${longAgent.id}"]')`,
+  );
+  await ev(
+    `(()=>{const s=document.querySelector('.agent-picker select');Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype,'value').set.call(s,${JSON.stringify(longAgent.id)});s.dispatchEvent(new Event('change',{bubbles:true}))})()`,
+  );
+  await wait(
+    `document.querySelector('.workspace-context').textContent.includes(${JSON.stringify(longAgent.name)})`,
+  );
+  for (const width of [390, 320]) {
+    await S("Emulation.setDeviceMetricsOverride", {
+      width,
+      height: 844,
+      deviceScaleFactor: 1,
+      mobile: true,
+    });
+    assert.ok(
+      await ev(
+        'document.querySelector(".content-scroll").scrollWidth<=document.querySelector(".content-scroll").clientWidth',
+      ),
+      `Long configuration overflow at ${width}`,
+    );
+  }
+  reports.push(
+    "long Agent, target and directory metadata wrap inside the mobile content scroller",
+  );
   assert.deepEqual(exceptions, []);
   console.log(
     JSON.stringify(

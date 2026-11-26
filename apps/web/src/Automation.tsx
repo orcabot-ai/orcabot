@@ -70,13 +70,12 @@ export function Automation({
     <div className="board-page">
       <div className="board-heading">
         <div>
-          <div className="eyebrow">{t("YOUR WORKSPACE")}</div>
           <h1>{t(mode === "projects" ? "Projects" : "Routines")}</h1>
           <p className="muted">
             {t(
               mode === "projects"
-                ? "A workspace for every thread."
-                : "Standing instructions. Results in the original thread.",
+                ? "Project workspaces and their threads."
+                : "Scheduled instructions and execution budgets.",
             )}
           </p>
         </div>
@@ -102,9 +101,11 @@ export function Automation({
       {mode === "projects" ? (
         <div className="automation-grid">
           {projects.data?.items.map((p) => (
-            <section className="board-card" key={p.id}>
-              <Folder size={20} />
-              <h2>{p.name}</h2>
+            <section className="board-card project-card" key={p.id}>
+              <div className="automation-title">
+                <Folder size={17} />
+                <h2>{p.name}</h2>
+              </div>
               <p className="muted automation-path">{p.workdir}</p>
               <button
                 className="button mt-4"
@@ -174,7 +175,7 @@ export function Automation({
       ) : (
         <div className="board-list">
           {routines.data?.items.map((r) => (
-            <section className="board-card" key={r.id}>
+            <section className="board-card routine-card" key={r.id}>
               <div className="flex items-center justify-between">
                 <h2>{r.title}</h2>
                 <span className="pill">{t(r.enabled ? "On" : "Paused")}</span>
@@ -252,13 +253,7 @@ export function Automation({
         : routines.data?.items.length === 0) && (
         <div className="board-empty">
           {mode === "projects" ? <Folder size={36} /> : <Clock size={36} />}
-          <h2>
-            {t(
-              mode === "projects"
-                ? "Keep related work together."
-                : "Make recurring work explicit.",
-            )}
-          </h2>
+          <h2>{t(mode === "projects" ? "No projects" : "No routines")}</h2>
           <p>
             {t(
               mode === "projects"

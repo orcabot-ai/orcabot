@@ -1,8 +1,9 @@
+import { Dialog } from "./Dialog.js";
 import { Automation } from "./Automation.js";
 import { BrandMark } from "./BrandMark.js";
 import { Board } from "./Board.js";
 import { LanguageControl, useI18n } from "./i18n.js";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   useQuery,
   useInfiniteQuery,
@@ -20,11 +21,11 @@ import {
   PanelLeftClose,
   PanelLeft,
   ChevronDown,
-  Globe2,
+  Folder,
+  Clock3,
   Server,
   KeyRound,
   ArrowRight,
-  Command,
   Bot,
   BellDot,
   ClipboardList,
@@ -78,7 +79,24 @@ export function App() {
   const [sidebar, setSidebar] = useState(
     () => window.matchMedia("(min-width: 601px)").matches,
   );
+  const [narrow, setNarrow] = useState(
+    () => window.matchMedia("(max-width: 600px)").matches,
+  );
+  useEffect(() => {
+    const media = window.matchMedia("(max-width: 600px)");
+    const update = () => {
+      setNarrow(media.matches);
+      setSidebar(!media.matches);
+    };
+    media.addEventListener("change", update);
+    return () => media.removeEventListener("change", update);
+  }, []);
   const scroll = useRef<HTMLDivElement>(null);
+  const navigationToggle = useRef<HTMLButtonElement>(null);
+  const closeNavigation = () => {
+    setSidebar(false);
+    requestAnimationFrame(() => navigationToggle.current?.focus());
+  };
   const form = useRef<HTMLFormElement>(null);
   const workspace = useQuery({
     queryKey: ["state"],
@@ -241,12 +259,9 @@ export function App() {
         </div>
         <section className="unlock-card">
           <BrandMark />
-          <div className="eyebrow mt-7">{t("YOUR AGENTS. ONE WORKSPACE.")}</div>
           <h1>{t("Welcome to Orcabot")}</h1>
           <p className="muted mt-3 mb-7">
-            {t(
-              "Use the service key from your startup URL to open the workbench.",
-            )}
+            {t("Enter the service key printed by your worker.")}
           </p>
           <form
             onSubmit={(e) => {
@@ -293,120 +308,158 @@ export function App() {
         </section>
       </div>
     );
+  const navigation = (
+    <aside
+      id="workspace-navigation"
+      className="sidebar"
+      aria-label={t("Workspace navigation")}
+    >
+      <div className="brand">
+        <BrandMark small />
+        <span>Orcabot</span>
+        <button
+          className="icon-button ml-auto"
+          aria-label={t("Hide sidebar")}
+          onClick={closeNavigation}
+        >
+          <PanelLeftClose size={16} />
+        </button>
+      </div>
+      <div className="workspace-switch">
+        <span className="workspace-initial">O</span>
+        <div>
+          <strong>{t("My workspace")}</strong>
+          <small>{t("Self-hosted workspace")}</small>
+        </div>
+      </div>
+      <button
+        className="new-conversation"
+        onClick={() => {
+          void navigate({ to: "/" });
+          if (window.matchMedia("(max-width: 600px)").matches)
+            setSidebar(false);
+          setError("");
+          composer.reset();
+        }}
+      >
+        <Plus size={16} />
+        {t("New conversation")}
+      </button>
+      <button
+        className={`work-nav ${path.startsWith("/work") ? "selected" : ""}`}
+        aria-current={path.startsWith("/work") ? "page" : undefined}
+        onClick={() => {
+          void navigate({ to: "/work" });
+          if (window.matchMedia("(max-width: 600px)").matches)
+            setSidebar(false);
+        }}
+      >
+        <ClipboardList size={16} />
+        {t("Work items")}
+      </button>
+      <button
+        className={`work-nav ${automationMode === "projects" ? "selected" : ""}`}
+        aria-current={automationMode === "projects" ? "page" : undefined}
+        onClick={() => {
+          void navigate({ to: "/projects" });
+          if (narrow) setSidebar(false);
+        }}
+      >
+        <Folder size={16} />
+        {t("Projects")}
+      </button>
+      <button
+        className={`work-nav ${automationMode === "routines" ? "selected" : ""}`}
+        aria-current={automationMode === "routines" ? "page" : undefined}
+        onClick={() => {
+          void navigate({ to: "/routines" });
+          if (narrow) setSidebar(false);
+        }}
+      >
+        <Clock3 size={16} />
+        {t("Routines")}
+      </button>
+      <div className="section-heading">
+        {t("Threads")}
+        <span>{state.conversations.length}</span>
+      </div>
+      <nav className="conversation-nav">
+        {state.conversations.length ? (
+          state.conversations.map((c) => (
+            <button
+              key={c.id}
+              className={selected?.id === c.id ? "selected" : ""}
+              onClick={() => {
+                void openConversation(c.id);
+                if (window.matchMedia("(max-width: 600px)").matches)
+                  setSidebar(false);
+                setError("");
+              }}
+            >
+              <MessageSquare size={14} />
+              <span>{c.title}</span>
+            </button>
+          ))
+        ) : (
+          <div className="sidebar-empty">
+            {t("Your conversations will appear here.")}
+          </div>
+        )}
+      </nav>
+      <div className="sidebar-bottom">
+        <button
+          onClick={() => {
+            if (narrow) setSidebar(false);
+            setAttention(true);
+          }}
+        >
+          <BellDot size={15} />
+          {t("Needs attention")}
+        </button>
+        <button
+          onClick={() => {
+            if (narrow) setSidebar(false);
+            setSetup(true);
+          }}
+        >
+          <Settings2 size={15} />
+          {t("Agents & connections")}
+          <span>{state.agents.length}</span>
+        </button>
+        <div className="local-label">
+          <span className="connection-dot" />
+          {t("Self-hosted workspace")}
+        </div>
+      </div>
+    </aside>
+  );
   return (
     <div className="workbench">
-      {sidebar && (
-        <aside className="sidebar">
-          <div className="brand">
-            <BrandMark small />
-            <span>Orcabot</span>
-            <span className="preview-tag">{t("PREVIEW")}</span>
-            <button
-              className="icon-button ml-auto"
-              aria-label={t("Hide sidebar")}
-              onClick={() => setSidebar(false)}
-            >
-              <PanelLeftClose size={16} />
-            </button>
-          </div>
-          <div className="workspace-switch">
-            <span className="workspace-initial">O</span>
-            <div>
-              <strong>{t("My workspace")}</strong>
-              <small>{t("Agent control center")}</small>
-            </div>
-            <ChevronDown size={13} className="ml-auto muted" />
-          </div>
-          <button
-            className="new-conversation"
-            onClick={() => {
-              void navigate({ to: "/" });
-              if (window.matchMedia("(max-width: 600px)").matches)
-                setSidebar(false);
-              setError("");
-              composer.reset();
-            }}
+      <a className="skip-link" href="#workspace-content">
+        {t("Skip to content")}
+      </a>
+      {sidebar &&
+        (narrow ? (
+          <Dialog
+            title={t("Workspace navigation")}
+            className="sidebar-drawer"
+            onClose={closeNavigation}
           >
-            <Plus size={16} />
-            {t("New conversation")}
-            <span>↗</span>
-          </button>
-          <button
-            className={`work-nav ${path.startsWith("/work") ? "selected" : ""}`}
-            onClick={() => {
-              void navigate({ to: "/work" });
-              if (window.matchMedia("(max-width: 600px)").matches)
-                setSidebar(false);
-            }}
-          >
-            <ClipboardList size={16} />
-            {t("Work items")}
-          </button>
-          <button
-            className={`work-nav ${automationMode === "projects" ? "selected" : ""}`}
-            onClick={() => void navigate({ to: "/projects" })}
-          >
-            <ClipboardList size={16} />
-            {t("Projects")}
-          </button>
-          <button
-            className={`work-nav ${automationMode === "routines" ? "selected" : ""}`}
-            onClick={() => void navigate({ to: "/routines" })}
-          >
-            <BellDot size={16} />
-            {t("Routines")}
-          </button>
-          <div className="section-heading">
-            {t("CONVERSATIONS")}
-            <span>{state.conversations.length}</span>
-          </div>
-          <nav className="conversation-nav">
-            {state.conversations.length ? (
-              state.conversations.map((c) => (
-                <button
-                  key={c.id}
-                  className={selected?.id === c.id ? "selected" : ""}
-                  onClick={() => {
-                    void openConversation(c.id);
-                    if (window.matchMedia("(max-width: 600px)").matches)
-                      setSidebar(false);
-                    setError("");
-                  }}
-                >
-                  <MessageSquare size={14} />
-                  <span>{c.title}</span>
-                </button>
-              ))
-            ) : (
-              <div className="sidebar-empty">
-                {t("Your conversations will appear here.")}
-              </div>
-            )}
-          </nav>
-          <div className="sidebar-bottom">
-            <button onClick={() => setAttention(true)}>
-              <BellDot size={15} />
-              {t("Needs attention")}
-            </button>
-            <button onClick={() => setSetup(true)}>
-              <Settings2 size={15} />
-              {t("Agents & connections")}
-              <span>{state.agents.length}</span>
-            </button>
-            <div className="local-label">
-              <span className="connection-dot" />
-              {t("Self-hosted workspace")}
-            </div>
-          </div>
-        </aside>
-      )}
-      <main className="main">
+            {navigation}
+          </Dialog>
+        ) : (
+          navigation
+        ))}
+      <main className="main" inert={narrow && sidebar}>
         <header className="topbar">
           <div className="flex items-center gap-3 min-w-0">
-            {!sidebar && (
+            {(narrow || !sidebar) && (
               <button
+                ref={navigationToggle}
                 className="icon-button"
                 aria-label={t("Show sidebar")}
+                aria-expanded={sidebar}
+                aria-controls="workspace-navigation"
                 onClick={() => setSidebar(true)}
               >
                 <PanelLeft size={17} />
@@ -415,9 +468,11 @@ export function App() {
             <span className="muted hidden sm:inline">{t("Workspace")}</span>
             <span className="muted hidden sm:inline">/</span>
             <span className="truncate">
-              {workMode
-                ? t("Work items")
-                : (selected?.title ?? t("New conversation"))}
+              {automationMode
+                ? t(automationMode === "projects" ? "Projects" : "Routines")
+                : workMode
+                  ? t("Work items")
+                  : (selected?.title ?? t("New conversation"))}
             </span>
           </div>
           <div className="topbar-status">
@@ -442,10 +497,19 @@ export function App() {
           </div>
         </header>
         <div
+          id="workspace-content"
           className="content-scroll"
           ref={scroll}
           role="region"
-          aria-label={t("Conversation history")}
+          aria-label={t(
+            workMode
+              ? automationMode === "projects"
+                ? "Projects"
+                : automationMode === "routines"
+                  ? "Routines"
+                  : "Work items"
+              : "Conversation history",
+          )}
           tabIndex={0}
         >
           {automationMode ? (
@@ -484,41 +548,38 @@ export function App() {
             </div>
           ) : (
             <section className="welcome">
-              <div className="hero-mark">◒</div>
-              <div className="eyebrow">
-                {t("ONE WORKSPACE. MANY POSSIBILITIES.")}
+              <div className="welcome-heading">
+                <MessageSquare size={22} strokeWidth={1.5} />
+                <h1>{t("New conversation")}</h1>
+                <p>{t("Choose an agent below, then send a message.")}</p>
               </div>
-              <h1>{t("What are we working on?")}</h1>
-              <p>
-                {t("Connect your agents. Give them direction.")}
-                <br />
-                {t("Keep every run in sight, wherever it happens.")}
-              </p>
-              <div className="welcome-cards">
-                <button onClick={() => setSetup(true)}>
-                  <div className="welcome-icon">
-                    <Bot size={19} />
+              <div className="workspace-context">
+                <div>
+                  <span>{t("Agent")}</span>
+                  <strong>{agent?.name ?? t("Not configured")}</strong>
+                </div>
+                <div>
+                  <span>{t("Execution target")}</span>
+                  <strong>{target?.name ?? t("Not configured")}</strong>
+                </div>
+                {agent?.workdir && (
+                  <div>
+                    <span>{t("Working directory")}</span>
+                    <code>{agent.workdir}</code>
                   </div>
-                  <strong>
-                    {state.agents.length
-                      ? t("Manage your agents")
-                      : t("Create your first agent")}
-                  </strong>
-                  <span>{t("Choose a harness, model and workspace.")}</span>
-                  <ArrowRight size={15} />
-                </button>
-                <button onClick={() => setSetup(true)}>
-                  <div className="welcome-icon">
-                    <Globe2 size={19} />
-                  </div>
-                  <strong>{t("Connect an execution target")}</strong>
-                  <span>{t("Work locally or on another machine.")}</span>
-                  <ArrowRight size={15} />
-                </button>
+                )}
               </div>
-              <div className="welcome-footnote">
-                <Command size={12} />{" "}
-                {t("A focused place for headless agent work.")}
+              <div className="welcome-links">
+                <button onClick={() => setSetup(true)}>
+                  <Settings2 size={15} />
+                  {t("Agents & connections")}
+                  <ArrowRight size={14} />
+                </button>
+                <button onClick={() => void navigate({ to: "/work" })}>
+                  <ClipboardList size={15} />
+                  {t("Work items")}
+                  <ArrowRight size={14} />
+                </button>
               </div>
             </section>
           )}

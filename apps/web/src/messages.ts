@@ -1,5 +1,25 @@
 // English messages are stable lookup keys; execution data is never translated.
 export const chinese = {
+  "Workspace navigation": "工作区导航",
+  "Skip to content": "跳到内容",
+  Threads: "工作线程",
+  "Choose an agent below, then send a message.":
+    "选择下方的 Agent，然后发送消息。",
+  "Not configured": "未配置",
+  "Enter the service key printed by your worker.":
+    "输入 worker 启动时输出的服务密钥。",
+  "Task details": "任务详情",
+  "All work": "全部任务",
+  "No work items": "暂无任务",
+  "Create a work item to define a goal and its acceptance criteria.":
+    "创建任务，写明目标和验收标准。",
+  "Project workspaces and their threads.": "项目工作区及所属线程。",
+  "Scheduled instructions and execution budgets.": "定时指令与执行预算。",
+  "No projects": "暂无项目",
+  "No routines": "暂无例行任务",
+  "Goals, execution, and review.": "目标、执行与审核。",
+  Task: "任务",
+  Status: "状态",
   "Paused by you": "已手动暂停",
   "Execution needs investigation": "需要调查执行状态",
   "Paused after three failed runs": "连续失败三次后暂停",
