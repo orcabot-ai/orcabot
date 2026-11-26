@@ -546,6 +546,35 @@ try {
   reports.push(
     "task review and context rail in both themes at 1440, 1024, 768, 390 and 320px",
   );
+  await go("/");
+  await wait('!!document.querySelector(".assistant-home")');
+  await hit('button[aria-label="Open attention"]');
+  await wait('!!document.querySelector(".attention-summary")');
+  assert.equal(
+    await ev('document.querySelectorAll(".attention-summary").length'),
+    1,
+  );
+  assert.equal(
+    await ev('document.querySelector(".attention-request").open'),
+    false,
+  );
+  await field(
+    "Investigation note",
+    "Reviewed the isolated fixture interruption; preserve the failed outcome.",
+  );
+  await click("Acknowledge");
+  await wait('!document.querySelector(".attention-summary")');
+  const investigated = await request("/runs/fixture-attention-failure");
+  assert.equal(investigated.run.status, "failed");
+  assert.equal(
+    investigated.reviews[0].note,
+    "Reviewed the isolated fixture interruption; preserve the failed outcome.",
+  );
+  assert.equal((await request("/attention")).items.length, 0);
+  await hit('button[aria-label="Close attention"]');
+  reports.push(
+    "Attention shows one summary per execution, keeps full context inspectable and records acknowledgement without changing failure history",
+  );
   const key = async (key, code, extra = {}) => {
     await S("Input.dispatchKeyEvent", {
       type: "keyDown",

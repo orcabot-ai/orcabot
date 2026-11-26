@@ -1,21 +1,13 @@
 import { WorkAttention } from "./WorkAttention.js";
 import { useI18n } from "./i18n.js";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "@tanstack/react-form";
-import {
-  createColumnHelper,
-  tableFeatures,
-  useTable,
-} from "@tanstack/react-table";
 import { X, ArrowRight, RefreshCw, Check, AlertTriangle } from "lucide-react";
 import type { AttentionPage, AttentionItem } from "orcabot-contracts";
 import { api, friendly } from "./api.js";
 import { Dialog } from "./Dialog.js";
 
-const features = tableFeatures({});
-const column = createColumnHelper<typeof features, AttentionItem>();
-const emptyItems: AttentionItem[] = [];
 export function Attention({
   onClose,
   onOpen,
@@ -37,50 +29,8 @@ export function Attention({
     refetchInterval: 15_000,
   });
   const page = query.data;
-  const items = page?.items ?? emptyItems;
+  const items = page?.items ?? [];
   const selected = items.find((item) => item.run.id === focused) ?? items[0];
-  const columns = useMemo(
-    () =>
-      column.columns([
-        column.accessor("title", {
-          header: t("Conversation"),
-          cell: (info) => (
-            <button
-              className="text-button attention-title"
-              onClick={() => setFocused(info.row.original.run.id)}
-              aria-pressed={info.row.original.run.id === selected?.run.id}
-            >
-              {info.getValue()}
-            </button>
-          ),
-        }),
-        column.accessor((item) => item.run.status, {
-          id: "status",
-          header: t("Outcome"),
-          cell: (info) => (
-            <span className={`status ${info.getValue()}`}>
-              {t(info.getValue())}
-            </span>
-          ),
-        }),
-        column.accessor((item) => item.run.updatedAt, {
-          id: "updatedAt",
-          header: t("Updated"),
-          cell: (info) => (
-            <time dateTime={new Date(info.getValue()).toISOString()}>
-              {new Date(info.getValue()).toLocaleString(
-                locale === "zh" ? "zh-CN" : "en-US",
-              )}
-            </time>
-          ),
-        }),
-      ]),
-    [selected?.run.id, t, locale],
-  );
-  const table = useTable(
-    { features, columns, data: items, getRowId: (item) => item.run.id },
-    (state) => state,
-  );
   const recover = useMutation({
     mutationFn: (id: string) => api(`/runs/${id}/recover`, {}),
     onSuccess: async () => {
@@ -104,9 +54,8 @@ export function Attention({
       onClose={onClose}
       className="attention-panel"
     >
-      <div className="flex items-center justify-between gap-3">
+      <div className="dialog-heading">
         <div>
-          <div className="eyebrow">{t("OPERATOR ATTENTION")}</div>
           <h2>{t("Needs attention")}</h2>
         </div>
         <button
@@ -118,9 +67,7 @@ export function Attention({
         </button>
       </div>
       <p className="muted my-4">
-        {t(
-          "Resolve agent questions, inspect failures, and reconnect to original executions.",
-        )}
+        {t("The decisions and interruptions that need you.")}
       </p>
       <WorkAttention onClose={onClose} />
       <h3 className="attention-subheading">
@@ -158,110 +105,93 @@ export function Attention({
           </p>
         </div>
       )}
-      {items.length > 0 && (
-        <div className="attention-table-scroll">
-          <table className="attention-table">
-            <caption className="sr-only">
-              {t("Executions requiring attention on this page")}
-            </caption>
-            <thead>
-              {table.getHeaderGroups().map((group) => (
-                <tr key={group.id}>
-                  {group.headers.map((header) => (
-                    <th key={header.id}>
-                      {!header.isPlaceholder && (
-                        <table.FlexRender header={header} />
+      <div className="attention-items">
+        {items.map((item) => (
+          <article className="attention-item" key={item.run.id}>
+            <button
+              className="attention-summary"
+              aria-expanded={selected?.run.id === item.run.id}
+              onClick={() => setFocused(item.run.id)}
+            >
+              <span>
+                <strong>{item.title}</strong>
+                <small>
+                  {item.agent} ·{" "}
+                  {new Date(item.run.updatedAt).toLocaleString(
+                    locale === "zh" ? "zh-CN" : "en-US",
+                  )}
+                </small>
+              </span>
+              <span className={`status ${item.run.status}`}>
+                <AlertTriangle size={12} />
+                {t(item.run.status)}
+              </span>
+            </button>
+            {selected?.run.id === item.run.id && (
+              <div className="attention-decision">
+                {item.run.error && (
+                  <p className="error-text">
+                    {t(friendly(new Error(item.run.error)))}
+                  </p>
+                )}
+                {item.pendingCount > 0 && (
+                  <p className="muted">
+                    {t("{count} pending interactions.", {
+                      count: item.pendingCount,
+                    })}{" "}
+                    {t(
+                      item.run.status === "unknown"
+                        ? "Recover observation before responding."
+                        : "Respond in the conversation.",
+                    )}
+                  </p>
+                )}
+                <div className="flex gap-2 flex-wrap mt-4">
+                  {item.run.conversationId && (
+                    <button
+                      className="button"
+                      onClick={() =>
+                        void onOpen(item.run.conversationId!)
+                          .then(onClose)
+                          .catch((err) => setError(friendly(err)))
+                      }
+                    >
+                      {t("Open conversation")}
+                      <ArrowRight size={14} />
+                    </button>
+                  )}
+                  {item.run.status === "unknown" && (
+                    <button
+                      className="button"
+                      disabled={recover.isPending}
+                      onClick={() =>
+                        void recover.mutateAsync(item.run.id).catch(() => {})
+                      }
+                    >
+                      <RefreshCw size={14} />
+                      {t(
+                        recover.isPending
+                          ? "Recovering…"
+                          : "Recover observation",
                       )}
-                    </th>
-                  ))}
-                </tr>
-              ))}
-            </thead>
-            <tbody>
-              {table.getRowModel().rows.map((row) => (
-                <tr
-                  key={row.id}
-                  className={selected?.run.id === row.id ? "selected" : ""}
-                >
-                  {row.getAllCells().map((cell) => (
-                    <td key={cell.id}>
-                      <table.FlexRender cell={cell} />
-                    </td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
-      {selected && (
-        <article className="attention-item mt-4">
-          <div className="flex justify-between gap-3">
-            <strong>{selected.title}</strong>
-            <span className={`status ${selected.run.status}`}>
-              <AlertTriangle size={12} />
-              {t(selected.run.status)}
-            </span>
-          </div>
-          <small className="muted">
-            {selected.agent} ·{" "}
-            {new Date(selected.run.updatedAt).toLocaleString(
-              locale === "zh" ? "zh-CN" : "en-US",
+                    </button>
+                  )}
+                </div>
+                <details className="attention-request">
+                  <summary>{t("Original request")}</summary>
+                  <p className="attention-prompt">{item.run.prompt}</p>
+                </details>
+                {item.run.status !== "waiting" && item.pendingCount === 0 && (
+                  <ReviewForm
+                    key={`${item.run.id}:${item.run.lastSeq}`}
+                    item={item}
+                  />
+                )}
+              </div>
             )}
-          </small>
-          <p className="attention-prompt">{selected.run.prompt}</p>
-          {selected.run.error && (
-            <p className="muted text-xs">
-              {t(friendly(new Error(selected.run.error)))}
-            </p>
-          )}
-          {selected.pendingCount > 0 && (
-            <p className="muted">
-              {t("{count} pending interactions.", {
-                count: selected.pendingCount,
-              })}{" "}
-              {selected.run.status === "unknown"
-                ? t("Recover observation before responding.")
-                : t("Respond in the conversation.")}
-            </p>
-          )}
-          <div className="flex gap-2 flex-wrap mt-4">
-            {selected.run.conversationId && (
-              <button
-                className="button"
-                onClick={() =>
-                  void onOpen(selected.run.conversationId!)
-                    .then(onClose)
-                    .catch((err) => setError(friendly(err)))
-                }
-              >
-                {t("Open conversation")}
-                <ArrowRight size={14} />
-              </button>
-            )}
-            {selected.run.status === "unknown" && (
-              <button
-                className="button"
-                disabled={recover.isPending}
-                onClick={() =>
-                  void recover.mutateAsync(selected.run.id).catch(() => {})
-                }
-              >
-                <RefreshCw size={14} />
-                {recover.isPending
-                  ? t("Recovering…")
-                  : t("Recover observation")}
-              </button>
-            )}
-          </div>
-          {selected.run.status !== "waiting" && selected.pendingCount === 0 && (
-            <ReviewForm
-              key={`${selected.run.id}:${selected.run.lastSeq}`}
-              item={selected}
-            />
-          )}
-        </article>
-      )}
+          </article>
+        ))}
+      </div>
       {page?.nextBefore !== null && page?.nextBefore !== undefined && (
         <button
           className="button mt-5"

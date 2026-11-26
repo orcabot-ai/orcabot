@@ -53,11 +53,11 @@ The image quota reset. The [actual home/landing comparison image](references/per
 
 The task list, delivery/activity detail and creation sheet now follow the [actual task image](references/tasks-gemini.jpg); [decisions and boundary fixes](references/task-review.md) are recorded. The [project](references/projects-gemini.jpg) and [routine](references/routines-attention-gemini.jpg) images also back the implemented project/thread/routine surfaces. Their [implementation notes](references/organization-review.md) identify generated capabilities that were deliberately not adopted.
 
-The current E2E suite passes25checks. Project, thread-edit and routine Cancel actions discard drafts; routine execution still returns to the original thread and retains interval/run-limit guards.
+The organization-phase E2E suite passed25checks; the Attention regression brings the current suite to26. Project, thread-edit and routine Cancel actions discard drafts; routine execution still returns to the original thread and retains interval/run-limit guards.
 
 ## Remaining work
 
-Attention has an actual visual reference and is next to implement. Conversation, execution approvals, deliverable references and mobile navigation have text critiques; a new generated comparison image is pending. These surfaces are not marked complete. The completion gate requires image-backed changes and verification for every listed core page.
+Attention now follows its actual visual reference, with one summary per execution and a separately recorded acknowledgement; see [queue verification](references/attention-review.md). Conversation, execution approvals, deliverable references and mobile navigation have text critiques; a new generated comparison image is pending. These surfaces are not marked complete. The completion gate requires image-backed changes and verification for every listed core page.
 
 Capture files contain only task-created example data. Raw native captures and
 credentials stay outside the tracked evidence. Some later `before/` captures

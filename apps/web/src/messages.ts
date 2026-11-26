@@ -516,4 +516,7 @@ export const chinese = {
     "请先开始一段对话，再创建例行任务。",
   "Create project": "创建项目",
   "Create routine": "创建例行任务",
+  "The decisions and interruptions that need you.":
+    "集中处理需要你决定或关注的事情。",
+  "Original request": "原始请求",
 } as const;

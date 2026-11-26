@@ -35,6 +35,22 @@ if (!server.store.agents().length) {
   });
   server.store.addConversation(a.id, "Existing unassigned thread");
 }
+const attentionAgent = server.store.agents()[0];
+const interrupted = server.store.addConversation(
+  attentionAgent.id,
+  "A failed fixture execution",
+);
+server.store.addRun("fixture-attention-failure", interrupted.id, {
+  agent: attentionAgent,
+  prompt: "A short original fixture request for an investigation note.",
+  sessionId: "fixture-attention-session",
+  history: "",
+});
+server.store.append("fixture-attention-failure", {
+  protocolVersion: 2,
+  type: "run.failed",
+  payload: { message: "Fixture execution interrupted" },
+});
 const workerUrl = await server.app.listen({ host: "127.0.0.1", port: 0 });
 const ui = await createWebServer({
   workerUrl,

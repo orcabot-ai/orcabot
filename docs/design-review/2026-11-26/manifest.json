@@ -133,7 +133,7 @@
       "before": "before/13-projects.jpg",
       "geminiThread": "https://gemini.google.com/app/09cf8496cd38905e",
       "generatedImage": "references/projects-gemini.jpg",
-      "status": "implemented",
+      "status": "verified",
       "changes": [
         "Compact dialog system with Cancel and explicit primary action; archive remains separate from saving",
         "Actual project directory and bounded run rules are inspectable on demand",
@@ -146,7 +146,7 @@
         "pnpm e2e:25checks passed including all three Cancel flows, original thread identity, routine run/pause/resume and preferences",
         "Independent standards and spec code reviews approved; automation tests9/9passed"
       ],
-      "commit": null,
+      "commit": "039173a",
       "critique": "references/workspace-review.md",
       "followUpReview": "references/organization-review.md"
     },
@@ -155,7 +155,7 @@
       "before": "before/14-project-create.jpg",
       "geminiThread": "https://gemini.google.com/app/09cf8496cd38905e",
       "generatedImage": "references/projects-gemini.jpg",
-      "status": "implemented",
+      "status": "verified",
       "changes": [
         "Compact dialog system with Cancel and explicit primary action; archive remains separate from saving",
         "Actual project directory and bounded run rules are inspectable on demand",
@@ -168,7 +168,7 @@
         "pnpm e2e:25checks passed including all three Cancel flows, original thread identity, routine run/pause/resume and preferences",
         "Independent standards and spec code reviews approved; automation tests9/9passed"
       ],
-      "commit": null,
+      "commit": "039173a",
       "critique": "references/workspace-review.md",
       "followUpReview": "references/organization-review.md"
     },
@@ -177,7 +177,7 @@
       "before": "before/15-thread-edit.jpg",
       "geminiThread": "https://gemini.google.com/app/09cf8496cd38905e",
       "generatedImage": "references/projects-gemini.jpg",
-      "status": "implemented",
+      "status": "verified",
       "changes": [
         "Compact dialog system with Cancel and explicit primary action; archive remains separate from saving",
         "Actual project directory and bounded run rules are inspectable on demand",
@@ -190,7 +190,7 @@
         "pnpm e2e:25checks passed including all three Cancel flows, original thread identity, routine run/pause/resume and preferences",
         "Independent standards and spec code reviews approved; automation tests9/9passed"
       ],
-      "commit": null,
+      "commit": "039173a",
       "critique": "references/workspace-review.md",
       "followUpReview": "references/organization-review.md"
     },
@@ -199,7 +199,7 @@
       "before": "before/16-routines.jpg",
       "geminiThread": "https://gemini.google.com/app/09cf8496cd38905e",
       "generatedImage": "references/routines-attention-gemini.jpg",
-      "status": "implemented",
+      "status": "verified",
       "changes": [
         "Compact dialog system with Cancel and explicit primary action; archive remains separate from saving",
         "Actual project directory and bounded run rules are inspectable on demand",
@@ -212,7 +212,7 @@
         "pnpm e2e:25checks passed including all three Cancel flows, original thread identity, routine run/pause/resume and preferences",
         "Independent standards and spec code reviews approved; automation tests9/9passed"
       ],
-      "commit": null,
+      "commit": "039173a",
       "critique": "references/workspace-review.md",
       "followUpReview": "references/organization-review.md"
     },
@@ -221,7 +221,7 @@
       "before": "before/18-routine-create.jpg",
       "geminiThread": "https://gemini.google.com/app/09cf8496cd38905e",
       "generatedImage": "references/routines-attention-gemini.jpg",
-      "status": "implemented",
+      "status": "verified",
       "changes": [
         "Compact dialog system with Cancel and explicit primary action; archive remains separate from saving",
         "Actual project directory and bounded run rules are inspectable on demand",
@@ -234,7 +234,7 @@
         "pnpm e2e:25checks passed including all three Cancel flows, original thread identity, routine run/pause/resume and preferences",
         "Independent standards and spec code reviews approved; automation tests9/9passed"
       ],
-      "commit": null,
+      "commit": "039173a",
       "critique": "references/workspace-review.md",
       "followUpReview": "references/organization-review.md"
     },
@@ -306,12 +306,21 @@
       "before": "before/19-attention.jpg",
       "geminiThread": "https://gemini.google.com/app/09cf8496cd38905e",
       "generatedImage": "references/routines-attention-gemini.jpg",
-      "status": "reviewed-with-image",
-      "changes": [],
-      "after": null,
-      "verification": [],
+      "status": "implemented",
+      "changes": [
+        "One summary per execution with focused actions and original request disclosure",
+        "Business reviews continue to the guarded task review screen",
+        "Acknowledgement records an investigation note and clears the alert while preserving the outcome"
+      ],
+      "after": "after/19-attention-light.png",
+      "verification": [
+        "Web typecheck/build passed; continuity and engine6/6passed independently",
+        "pnpm e2e:26checks passed including acknowledgement and retained failure history",
+        "Actual first-attempt alert acknowledged through the UI; failed history, accepted business work and both attempts remain"
+      ],
       "commit": null,
-      "critique": "references/details-review.md"
+      "critique": "references/details-review.md",
+      "followUpReview": "references/attention-review.md"
     },
     {
       "id": "artifacts",
