@@ -206,6 +206,15 @@ test("web proxy bounds its authority, rejects redirects and adapts worker sessio
       );
     }
     assert.equal((await ui.inject({ url: "/outside" })).statusCode, 200);
+    const oversized = await ui.inject({
+      method: "POST",
+      url: "/api/cookie",
+      headers: { "content-type": "application/json" },
+      payload: JSON.stringify({ text: "x".repeat(270000) }),
+    });
+    assert.equal(oversized.statusCode, 413);
+    assert.equal(oversized.json().error, "REQUEST_TOO_LARGE");
+    // Rejected at the UI boundary, including when upstream would accept it.
     assert.equal(calls, 3);
   } finally {
     await ui.close();

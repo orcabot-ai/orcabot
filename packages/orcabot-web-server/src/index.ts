@@ -54,6 +54,18 @@ export async function createWebServer(options: WebServerOptions) {
     requestTimeout: 30000,
     trustProxy: false,
   });
+  app.setErrorHandler((error, _request, reply) => {
+    const code = (error as { statusCode?: number }).statusCode;
+    const status = code && code >= 400 && code < 500 ? code : 500;
+    return reply.code(status).send({
+      error:
+        status === 413
+          ? "REQUEST_TOO_LARGE"
+          : status === 400
+            ? "INVALID_REQUEST"
+            : "WEB_REQUEST_FAILED",
+    });
+  });
   app.addHook("onRequest", async (req, reply) => {
     reply
       .header("Cache-Control", "no-store")
@@ -77,6 +89,9 @@ export async function createWebServer(options: WebServerOptions) {
     rewritePrefix: "/api",
     http2: false,
     websocket: false,
+    // Parse bounded JSON at the browser boundary rather than streaming an
+    // oversized upload into a worker that may close the upstream connection.
+    proxyPayloads: false,
     retryMethods: [],
     maxRetriesOn503: 0,
     undici: { headersTimeout: 30000, bodyTimeout: 0 },
