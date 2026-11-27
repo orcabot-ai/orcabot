@@ -2262,7 +2262,7 @@ a.artifact-location {
   height: 100dvh;
   min-height: 0;
   display: grid;
-  padding: 16px;
+  padding: 0;
   overflow: hidden;
   background: var(--background);
   caret-color: var(--accent-text);
@@ -2272,7 +2272,7 @@ a.artifact-location {
   grid-template-columns: minmax(0, 7fr) minmax(0, 3fr);
   min-height: 0;
   overflow: hidden;
-  border-radius: 16px;
+  border-radius: 0;
   background: var(--panel);
 }
 .landing-entry {
@@ -2367,27 +2367,22 @@ a.artifact-location {
   min-height: 0;
   overflow: hidden;
   isolation: isolate;
-  background: #385b9b;
+  background: #101c39;
 }
 .login-art,
-.login-shade,
-.login-particles {
+.login-shade {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   pointer-events: none;
 }
+.login-art {
+  object-fit: cover;
+  object-position: center;
+}
 .login-shade {
-  background: linear-gradient(180deg, #10234b44, transparent 35%, #10234b22);
-}
-.login-particles {
-  opacity: 0.9;
-}
-@media (prefers-reduced-motion: reduce) {
-  .login-particles {
-    visibility: hidden;
-  }
+  background: #0b142733;
 }
 .scene-brand {
   position: absolute;
@@ -2413,14 +2408,16 @@ a.artifact-location {
 }
 .scene-welcome {
   position: absolute;
-  bottom: 48px;
-  left: 40px;
-  right: 40px;
+  top: 50%;
+  left: clamp(40px, 6vw, 104px);
+  right: clamp(40px, 6vw, 104px);
+  transform: translateY(-50%);
   color: #f3f6ff;
 }
 .scene-welcome p {
-  font-size: 36px;
-  line-height: 1.25;
+  max-width: 13ch;
+  font-size: clamp(40px, 4vw, 64px);
+  line-height: 1.15;
   letter-spacing: -0.035em;
   font-weight: 500;
   text-wrap: balance;
@@ -2448,17 +2445,17 @@ a.artifact-location {
     font-size: 12px;
   }
   .scene-welcome p {
-    font-size: 32px;
+    font-size: 40px;
   }
 }
 @media (max-width: 700px) {
   .landing {
-    padding: 10px;
+    padding: 0;
   }
   .landing-shell {
     grid-template-columns: minmax(0, 1fr);
     grid-template-rows: minmax(96px, 24%) minmax(0, 1fr);
-    border-radius: 14px;
+    border-radius: 0;
   }
   .scene-brand {
     top: 20px;
@@ -2470,19 +2467,21 @@ a.artifact-location {
     height: 28px;
   }
   .scene-welcome {
+    top: auto;
     left: 22px;
     right: 22px;
     bottom: 18px;
+    transform: none;
   }
   .scene-welcome p {
+    max-width: none;
     font-size: 20px;
   }
   .scene-welcome > span {
     display: none;
   }
-  .login-art,
-  .login-particles {
-    transform: scaleX(-1);
+  .login-art {
+    object-position: center 48%;
   }
   .landing-preferences {
     padding: 10px 16px 0;
@@ -2519,9 +2518,6 @@ a.artifact-location {
   }
 }
 @media (max-height: 480px) and (min-width: 701px) {
-  .scene-welcome {
-    bottom: 28px;
-  }
   .scene-welcome p {
     font-size: 28px;
   }

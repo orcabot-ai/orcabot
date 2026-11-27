@@ -10,3 +10,5 @@ The browser UI uses React, TanStack and Tailwind. English is the default languag
 ## Entry surface
 
 The owner clarified on 2026-11-27 that `/welcome` is a **login page**, not a marketing landing page. It must remain one screen with no vertical page scrolling, a 70% visual / 30% entry split on desktop, a small supplied brand mark, and a real login form. No task-story demo, marketing sections or feature cards belong here. The previous ocean artwork and giant whale motifs were rejected; the visual treatment is delegated. On narrow phones prioritize the actual login and preserve a compact brand surface without overflow.
+
+On 2026-11-27 the owner rejected the detailed ocean illustration as too decorative for an AI product. Keep the Gemini-generated background quiet and atmospheric, with direct personal-AI copy, the small logo and real HTML login. No scenery or ornamental motifs. The shell is full bleed with no outer margin or enclosing rounded frame.

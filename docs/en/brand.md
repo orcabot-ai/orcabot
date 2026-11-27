@@ -19,16 +19,7 @@ fill. Status indicators keep their own warning, success and error colors.
 - Home starts with the real message composer and groups actual progress, attention
   and accepted deliveries. Workspace details disclose the selected Agent, target
   and directory on demand. Completed conversations stay separate from accepted work.
-- `/welcome` is a single-screen login, not a marketing page. Desktop uses a
-  70% visual / 30% entry split. The left side contains a small original mark and
-  original abstract blue ribbon geometry; the right contains language/theme
-  controls and the actual service-key form. Four restrained foreground currents connect decorative conversation, context and
-  delivery marks. Motion pauses offscreen or in a hidden tab and is removed for
-  reduced-motion preferences. There is no background image request or product demo. Phones use a compact brand header above the entry.
-  Normal desktop and phone sizes need no vertical scrolling. On unusually short
-  windows or when a keyboard reduces the viewport, the form region can scroll
-  internally so every field and action remains reachable. See the
-  [login review](../design-review/2026-11-27/login/README.md).
+- `/welcome` is a single-screen login with a 70% visual / 30% entry split on desktop. The shell fills the viewport without an exterior margin or rounded outer frame. A locally bundled Gemini-generated matte blue background supports concise personal-AI copy; the supplied small logo and greeting remain HTML. The right side keeps language/theme controls and the actual service-key form. There are no floating icon badges or canvas effects. Phones use a compact crop above the form. Short windows may scroll inside the form region only. See the [artwork review](../design-review/2026-11-27/login-artwork/README.md).
 - Form fields use a shared 12px radius; dialogs and message composers use 20px. Text hierarchy,
   alignment and separators carry the layout. Shadows are limited to overlays.
 

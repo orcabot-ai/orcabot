@@ -2,7 +2,7 @@
 
 English · [简体中文](../zh-CN/personal-agent-experience.md)
 
-The personal home follows a Gemini-generated reference. The login is a single-screen 70/30 entry, with original abstract geometry and a real service-key form.
+The personal home follows a Gemini-generated reference. The login is a single-screen 70/30 entry, with locally bundled Gemini artwork and a real service-key form.
 Home uses the existing admission path and real task, attention and conversation
 records. Other core surfaces are being reviewed in the same documented cycle.
 
@@ -53,17 +53,7 @@ generation numbers belong in inspectable details rather than the primary story.
 
 ## Visual direction
 
-Use the supplied Orca mark and blue accents, Manrope for Latin text and local
-Chinese font fallbacks. Forms use coss-inspired Base UI primitives. The landing
-is a login screen: 70% brand visual and 30% operational entry on desktop,
-without vertical page scrolling. The small supplied mark and original abstract
-blue geometry stay separate from the form. Phones use a short visual header;
-the actual login remains visible in one screen. Extremely short viewports use
-an internal form scroller instead of hiding fields or disabling zoom. There are
-no marketing sections, task demonstrations or background image requests. Four
-foreground currents and a quiet connected field suggest context arriving and
-results returning. They pause offscreen or in hidden tabs and disappear with
-reduced motion; the login form never moves.
+Use the supplied Orca mark and blue accents, Manrope for Latin text and local Chinese font fallbacks. Forms use coss-inspired Base UI primitives. Login is a full-bleed 70/30 desktop split, with no exterior margins or enclosing round frame. A locally bundled Gemini ink-blue atmospheric background replaces the rejected ocean scene, vector ribbon and icon badges; typography and authentication remain real HTML. Phones use a compact image header, and extremely short windows allow internal form scrolling. The artwork and controls remain static, including under reduced motion. No task demonstration or invented live status appears before login.
 
 Headings should sound like an assistant helping with a concrete task. Prefer
 “Needs your decision” and the actual task title over infrastructure terminology.

@@ -1,7 +1,8 @@
 // English messages are stable lookup keys; execution data is never translated.
 export const chinese = {
-  "A space for your ideas.": "留一点空间，给你的想法。",
-  "And a little help along the way.": "接下来的事，有 Orca 一起。",
+  "Your personal AI workspace.": "你的个人 AI 工作空间。",
+  "Conversations, tasks, and results. Together.":
+    "对话、任务与成果，都在这里。",
   "Your workspace is ready when you are.": "你的工作区，随时可以开始。",
   "Use the service key shown when you start Orcabot.":
     "输入启动 Orcabot 时显示的服务密钥。",

@@ -1026,9 +1026,12 @@ try {
   await go("/welcome");
   await wait('!!document.querySelector(".landing-shell")');
   const loginCapture = async (name) => {
+    await wait(
+      "document.querySelector('.login-art')?.complete && document.querySelector('.login-art').naturalWidth>0",
+    );
     const directory = join(
       captureRoot,
-      "docs/design-review/2026-11-27/login/captures",
+      "docs/design-review/2026-11-27/login-artwork/captures",
     );
     await mkdir(directory, { recursive: true });
     const screenshot = await S("Page.captureScreenshot", {
@@ -1082,65 +1085,18 @@ try {
     ),
   );
   await wait(
-    "document.querySelector('.login-particles').dataset.motion==='running'",
+    "document.querySelector('.login-art')?.complete && document.querySelector('.login-art').naturalWidth>0",
   );
-  const particleFrame = await ev(
-    "document.querySelector('.login-particles').toDataURL()",
+  assert.equal(
+    await ev(
+      "document.querySelectorAll('.login-context-marks, canvas.login-particles').length",
+    ),
+    0,
   );
-  await wait(
-    `document.querySelector('.login-particles').toDataURL()!==${JSON.stringify(particleFrame)}`,
-  );
-
-  // Optional wall-clock evidence for the canvas, which CSS animation scrubbing cannot measure.
-  const captureMotion = async (mode) => {
-    if (!process.env.ORCABOT_E2E_MOTION_CAPTURE) return;
-    const directory = join(captureRoot, "login-motion", mode);
-    await mkdir(directory, { recursive: true });
-    const frames = [];
-    const started = performance.now();
-    let index = 0;
-    do {
-      const elapsedMs = performance.now() - started;
-      const state = await ev(
-        "document.querySelector('.login-particles').dataset.motion",
-      );
-      const screenshot = await S("Page.captureScreenshot", {
-        format: "jpeg",
-        quality: 85,
-      });
-      const image = `frame-${String(index++).padStart(3, "0")}.jpg`;
-      await writeFile(
-        join(directory, image),
-        Buffer.from(screenshot.data, "base64"),
-      );
-      frames.push({ elapsedMs, state, image });
-      if (mode === "reduced" && index === 1) await pause(6000);
-      else
-        await pause(
-          Math.max(0, started + index * (1000 / 12) - performance.now()),
-        );
-    } while (
-      mode === "reduced" ? index < 2 : performance.now() - started < 6100
-    );
-    await writeFile(
-      join(directory, "report.json"),
-      JSON.stringify(
-        { mode, frames, durationMs: performance.now() - started },
-        null,
-        2,
-      ),
-    );
-  };
-  await captureMotion("normal");
-
   await S("Emulation.setEmulatedMedia", {
     features: [{ name: "prefers-reduced-motion", value: "reduce" }],
   });
-  await wait(
-    "document.querySelector('.login-particles').dataset.motion==='reduced' && getComputedStyle(document.querySelector('.login-particles')).visibility==='hidden'",
-  );
   await loginCapture("reduced-motion");
-  await captureMotion("reduced");
   await S("Emulation.setEmulatedMedia", { features: [] });
   for (const [width, height] of [
     [1440, 900],
@@ -1177,6 +1133,12 @@ try {
             "(()=>{const r=document.querySelector('.landing-form .button').getBoundingClientRect();return r.height>=44&&r.top>=0&&r.bottom<=innerHeight})()",
           ),
           "Login action visible without scrolling",
+        );
+        assert.ok(
+          await ev(
+            "(()=>{const r=document.querySelector('.landing-shell').getBoundingClientRect();return r.x===0 && r.y===0 && Math.abs(r.width-innerWidth)<1 && Math.abs(r.height-innerHeight)<1 && getComputedStyle(document.querySelector('.landing-shell')).borderRadius==='0px'})()",
+          ),
+          "Login fills the viewport without exterior margins or a rounded frame",
         );
         await loginCapture(`${width}-${locale}-${theme}`);
       }
