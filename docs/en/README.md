@@ -13,6 +13,7 @@
 - [Board Readiness Review](board-readiness-review.md)
 - [Ds Bot Reference](ds-bot-reference.md)
 - [Reference Designs](reference-designs.md)
+- [Herdr / T3 Code feature plan (proposal)](agent-workbench-plan.md)
 - [Validation](validation.md)
 - [Licensing / 许可与依赖](licensing.md)
 - [Brand / 品牌与动效](brand.md)

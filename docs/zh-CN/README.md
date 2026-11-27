@@ -13,6 +13,7 @@
 - [维度就绪度评审](board-readiness-review.md)
 - [DS-Bot 参考分析](ds-bot-reference.md)
 - [设计参考](reference-designs.md)
+- [Herdr / T3 Code 借鉴与功能规划（提案）](agent-workbench-plan.md)
 - [验证与边界](validation.md)
 - [Licensing / 许可与依赖](licensing.md)
 - [Brand / 品牌与动效](brand.md)
