@@ -1031,9 +1031,51 @@ try {
     ),
     "Desktop landing must retain the requested7:3 split",
   );
+  const contrast = (foreground, background) => {
+    const luminance = (color) =>
+      color
+        .match(/[\d.]+/g)
+        .slice(0, 3)
+        .map(Number)
+        .map((v) => {
+          v /= 255;
+          return v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4;
+        })
+        .reduce(
+          (total, value, i) => total + value * [0.2126, 0.7152, 0.0722][i],
+          0,
+        );
+    const values = [luminance(foreground), luminance(background)].sort(
+      (a, b) => a - b,
+    );
+    return (values[1] + 0.05) / (values[0] + 0.05);
+  };
+  for (const theme of ["dark", "light"]) {
+    await selectValue(".theme-control [role=combobox]", theme);
+    for (const hover of [false, true]) {
+      const point = await ev(
+        `(()=>{const r=document.querySelector('.landing-form .button.primary').getBoundingClientRect();return {x:r.x+r.width/2,y:r.y+r.height/2}})()`,
+      );
+      await S("Input.dispatchMouseEvent", {
+        type: "mouseMoved",
+        ...(hover ? point : { x: 2, y: 2 }),
+      });
+      await pause(180);
+      const colors = await ev(
+        `(()=>{const s=getComputedStyle(document.querySelector('.landing-form .button.primary'));return {text:s.color,fill:s.backgroundColor}})()`,
+      );
+      assert.ok(
+        contrast(colors.text, colors.fill) >= 4.5,
+        `Landing CTA contrast in ${theme}, hover=${hover}: ${JSON.stringify(colors)}`,
+      );
+    }
+  }
   const canvasPixels = "document.querySelector('.orca-art canvas').toDataURL()";
-  await wait(
-    "document.querySelector('.orca-art .brand-light')?.naturalWidth>0",
+  await wait("document.querySelector('.whale-landscape')?.naturalWidth>0");
+  assert.ok(
+    await ev(
+      `(()=>{const image=document.querySelector('.whale-landscape');const scene=document.querySelector('.orca-scene');const mark=document.querySelector('.scene-brand .brand-mark');return image.naturalWidth>0&&image.currentSrc.includes('/scenes/whale-ocean-')&&image.getAttribute('fetchpriority')==='high'&&image.getBoundingClientRect().width>=scene.clientWidth-1&&mark.getBoundingClientRect().width<=40&&!document.querySelector('.orca-art .brand-mark')})()`,
+    ),
   );
   const movingFrame = await ev(canvasPixels);
   await wait(`${canvasPixels}!==${JSON.stringify(movingFrame)}`);
@@ -1056,9 +1098,7 @@ try {
     features: [{ name: "prefers-reduced-motion", value: "reduce" }],
   });
   await go("/welcome");
-  await wait(
-    "document.querySelector('.orca-art .brand-light')?.naturalWidth>0",
-  );
+  await wait("document.querySelector('.whale-landscape')?.naturalWidth>0");
   await pause(100);
   const reducedFrame = await ev(canvasPixels);
   await pause(150);
@@ -1074,7 +1114,7 @@ try {
   );
   await S("Emulation.setEmulatedMedia", { features: [] });
   reports.push(
-    "Landing particles animate, pause to a stable frame and retain a still brand under reduced motion",
+    "Generated whale landscape loads, ambient particles animate and pause, and reduced motion retains the still scene",
   );
   for (const width of [390, 320]) {
     await S("Emulation.setDeviceMetricsOverride", {
@@ -1088,6 +1128,15 @@ try {
       await ev("document.body.scrollWidth<=innerWidth"),
       "Mobile landing must not overflow",
     );
+    await wait("document.querySelector('.whale-landscape')?.naturalWidth>0");
+    const mobileScene = await ev(
+      `(()=>{const entry=document.querySelector('.landing-entry').getBoundingClientRect();const scene=document.querySelector('.orca-scene').getBoundingClientRect();return {entryY:entry.y,sceneY:scene.y,width:scene.width,height:scene.height}})()`,
+    );
+    assert.ok(
+      mobileScene.entryY < mobileScene.sceneY &&
+        Math.abs(mobileScene.width - mobileScene.height) < 2,
+      "Mobile scene layout: " + JSON.stringify(mobileScene),
+    );
     assert.ok(
       await ev(
         'document.querySelector(".landing-form .button").getBoundingClientRect().height>=44',
@@ -1095,7 +1144,7 @@ try {
     );
   }
   reports.push(
-    "Orca landing retains7:3 desktop layout, pause control and usable mobile entry",
+    "Whale scene retains 7:3 desktop layout, small brand identity, pause control and entry-first mobile layout",
   );
   await S("Network.clearBrowserCookies");
   await go("/work/" + work.id);

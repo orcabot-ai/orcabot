@@ -2255,14 +2255,19 @@ a.artifact-location {
 
 /* Personal assistant surfaces, based on Gemini's generated home and entry board. */
 .landing {
+  --entry-action: #1d66cd;
+  --entry-action-hover: #1858b4;
+  --entry-action-text: #ffffff;
   min-height: 100svh;
+  display: grid;
+  align-items: center;
   padding: 24px;
   background: var(--background);
 }
 .landing-shell {
   display: grid;
   grid-template-columns: minmax(0, 7fr) minmax(0, 3fr);
-  min-height: calc(100svh - 48px);
+  min-height: min(calc(100svh - 48px), max(640px, 72vw));
   border: 1px solid var(--border);
   border-radius: 16px;
   overflow: hidden;
@@ -2302,13 +2307,31 @@ a.artifact-location {
   margin-bottom: 16px;
 }
 .landing-form label input {
-  min-height: 44px;
-  font-size: 14px;
+  min-height: 48px;
+  padding: 12px 14px;
+  border-radius: var(--radius-field);
+  border-color: var(--field-border);
+  font-size: 16px;
+  background: var(--field-fill);
+}
+.landing-form label input:focus {
+  outline: 2px solid var(--accent-text);
+  outline-offset: 1px;
+  border-color: transparent !important;
   background: var(--panel);
 }
 .landing-form .button {
-  min-height: 44px;
+  min-height: 48px;
+  border-radius: var(--radius-field);
   font-size: 14px;
+}
+.landing-form .button.primary {
+  background: var(--entry-action);
+  color: var(--entry-action-text);
+  border-color: transparent;
+}
+.landing-form .button.primary:hover:not(:disabled) {
+  background: var(--entry-action-hover);
 }
 .landing-note {
   font-size: 12px;
@@ -2318,29 +2341,52 @@ a.artifact-location {
 }
 .orca-scene {
   position: relative;
-  display: grid;
-  place-items: center;
   min-width: 0;
   min-height: 400px;
-  background: var(--background);
+  overflow: hidden;
+  background: #087d9c;
 }
 .orca-art {
-  width: min(76%, 620px);
-  aspect-ratio: 1;
-  position: relative;
+  position: absolute;
+  inset: 0;
 }
-.orca-art .brand-mark {
+.orca-art picture,
+.orca-art .whale-landscape {
+  display: block;
   width: 100%;
   height: 100%;
 }
-.orca-art .brand-mark img {
-  object-fit: contain;
+.orca-art .whale-landscape {
+  object-fit: cover;
+  object-position: 35% 54%;
 }
 .orca-art canvas {
   position: absolute;
-  inset: -15%;
-  width: 130%;
-  height: 130%;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.scene-brand {
+  position: absolute;
+  top: 28px;
+  left: 28px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #133849;
+  font-size: 17px;
+  font-weight: 650;
+  letter-spacing: -0.025em;
+}
+.scene-brand .brand-mark {
+  width: 32px;
+  height: 32px;
+}
+.scene-brand .brand-mark .brand-light {
+  display: block;
+}
+.scene-brand .brand-mark .brand-dark {
+  display: none;
 }
 .scene-motion {
   display: grid;
@@ -2348,15 +2394,15 @@ a.artifact-location {
   position: absolute;
   bottom: 20px;
   right: 20px;
-  width: 36px;
-  height: 36px;
-  color: var(--muted);
-  border: 1px solid var(--border);
+  width: 44px;
+  height: 44px;
+  color: #ffffff;
+  background: #073c50;
+  border: 1px solid #b6e5ef;
   border-radius: 50%;
 }
 .scene-motion:hover {
-  background: var(--hover);
-  color: var(--strong);
+  background: #0b5269;
 }
 .assistant-home.welcome {
   display: block;
@@ -2543,16 +2589,17 @@ a.artifact-location {
     font-size: 16px;
   }
   .orca-scene {
-    flex: 1;
-    min-height: 240px;
-    overflow: hidden;
+    flex: none;
+    min-height: 0;
+    aspect-ratio: 1;
   }
-  .orca-art {
-    width: min(48%, 280px);
+  .scene-brand {
+    top: 20px;
+    left: 20px;
   }
   .scene-motion {
-    width: 44px;
-    height: 44px;
+    width: 48px;
+    height: 48px;
     bottom: 12px;
     right: 12px;
   }
