@@ -2253,76 +2253,98 @@ a.artifact-location {
   }
 }
 
-/* Personal assistant surfaces, based on Gemini's generated home and entry board. */
+/* A single-screen login: visual identity on the left, the real entry on the right. */
 .landing {
-  --entry-action: #1d66cd;
-  --entry-action-hover: #1858b4;
-  --entry-action-text: #ffffff;
-  min-height: 100svh;
+  --entry-action: #315ac5;
+  --entry-action-hover: #274aa5;
+  --entry-action-text: #fff;
+  height: 100svh;
+  height: 100dvh;
+  min-height: 0;
   display: grid;
-  align-items: center;
-  padding: 24px;
+  padding: 16px;
+  overflow: hidden;
   background: var(--background);
+  caret-color: var(--accent-text);
 }
 .landing-shell {
   display: grid;
   grid-template-columns: minmax(0, 7fr) minmax(0, 3fr);
-  min-height: min(calc(100svh - 48px), max(640px, 72vw));
-  border: 1px solid var(--border);
-  border-radius: 16px;
+  min-height: 0;
   overflow: hidden;
+  border-radius: 16px;
+  background: var(--panel);
 }
 .landing-entry {
+  min-width: 0;
+  min-height: 0;
   display: flex;
   flex-direction: column;
-  min-width: 0;
   background: var(--panel);
-  border-left: 1px solid var(--border);
 }
 .landing-preferences {
   display: flex;
+  flex: none;
   justify-content: flex-end;
-  gap: 8px;
-  padding: 20px 24px;
+  gap: 4px;
+  padding: 20px 20px 8px;
+}
+.landing-preferences .select-trigger {
+  min-height: 44px;
+  background: transparent;
+  border-color: transparent;
+}
+.landing-form-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  display: flex;
+  flex-direction: column;
+  scrollbar-width: thin;
 }
 .landing-form {
-  padding: 40px clamp(24px, 3vw, 52px) 64px;
-  margin: auto 0;
+  width: 100%;
+  max-width: 408px;
+  padding: 32px 28px 64px;
+  margin: auto;
+  flex: none;
 }
 .landing-form h1 {
-  font-size: clamp(24px, 2.2vw, 34px);
-  line-height: 1.25;
-  letter-spacing: -0.04em;
+  font-size: 28px;
+  line-height: 1.3;
+  letter-spacing: -0.035em;
   color: var(--strong);
   font-weight: 550;
+  text-wrap: balance;
 }
 .landing-intro {
   font-size: 14px;
   color: var(--secondary);
   line-height: 1.65;
-  margin: 12px 0 32px;
+  margin: 12px 0 28px;
 }
 .landing-form label {
-  font-size: 13px;
+  font-size: 12px;
   margin-bottom: 16px;
 }
 .landing-form label input {
   min-height: 48px;
   padding: 12px 14px;
-  border-radius: var(--radius-field);
+  border-radius: 12px;
   border-color: var(--field-border);
   font-size: 16px;
   background: var(--field-fill);
 }
 .landing-form label input:focus {
   outline: 2px solid var(--accent-text);
-  outline-offset: 1px;
+  outline-offset: 2px;
   border-color: transparent !important;
   background: var(--panel);
 }
 .landing-form .button {
   min-height: 48px;
-  border-radius: var(--radius-field);
+  border-radius: 12px;
   font-size: 14px;
 }
 .landing-form .button.primary {
@@ -2335,107 +2357,49 @@ a.artifact-location {
 }
 .landing-note {
   font-size: 12px;
-  line-height: 1.6;
+  line-height: 1.7;
   color: var(--muted);
   margin-top: 20px;
 }
-/* The generated artwork stays readable without animation or JavaScript. */
 .orca-scene {
   position: relative;
   min-width: 0;
-  min-height: 400px;
+  min-height: 0;
   overflow: hidden;
   isolation: isolate;
-  background: #061b58;
+  background: #385b9b;
 }
-.orca-art {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  pointer-events: none;
-}
-.ocean-image,
-.ocean-image img {
+.login-art,
+.login-shade,
+.login-particles {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
+  pointer-events: none;
 }
-.ocean-image img {
-  object-fit: cover;
-  object-position: center;
+.login-shade {
+  background: linear-gradient(180deg, #10234b44, transparent 35%, #10234b22);
 }
-.ocean-image {
-  transform: scale(1.045);
-  animation: ocean-drift 24s ease-in-out infinite alternate;
-}
-/* Two broad refractions track the light already present in the artwork. */
-.ocean-light {
-  position: absolute;
-  width: 70%;
-  height: 75%;
-  opacity: 0.22;
-  mix-blend-mode: screen;
-  background: radial-gradient(
-    ellipse,
-    #509bdc55,
-    #137eac15 45%,
-    transparent 70%
-  );
-  animation: ocean-refraction 14s ease-in-out infinite alternate;
-}
-.ocean-light-near {
-  right: -12%;
-  top: -18%;
-  transform: rotate(-25deg);
-}
-.ocean-light-far {
-  left: 0;
-  bottom: -30%;
-  animation-delay: -7s;
-  animation-duration: 18s;
-}
-.orca-art[data-playing="false"] *,
-.orca-art[data-playing="false"] {
-  animation-play-state: paused;
-}
-@keyframes ocean-drift {
-  from {
-    transform: scale(1.045) translate(-0.6%, 0.5%);
-  }
-  to {
-    transform: scale(1.065) translate(0.6%, -0.5%);
-  }
-}
-@keyframes ocean-refraction {
-  from {
-    opacity: 0.15;
-    transform: translate(-3%, 2%) rotate(-25deg);
-  }
-  to {
-    opacity: 0.5;
-    transform: translate(8%, -6%) rotate(-18deg);
-  }
+.login-particles {
+  opacity: 0.9;
 }
 @media (prefers-reduced-motion: reduce) {
-  .orca-art * {
-    animation: none !important;
-  }
-  .ocean-image {
-    transform: none;
+  .login-particles {
+    visibility: hidden;
   }
 }
 .scene-brand {
   position: absolute;
-  top: 28px;
-  left: 28px;
+  top: 32px;
+  left: 36px;
   display: flex;
   align-items: center;
   gap: 10px;
-  color: #eef7ff;
-  font-size: 17px;
+  color: #f5f7ff;
+  font-size: 20px;
   font-weight: 650;
-  letter-spacing: -0.025em;
+  letter-spacing: -0.03em;
 }
 .scene-brand .brand-mark {
   width: 32px;
@@ -2447,6 +2411,122 @@ a.artifact-location {
 .scene-brand .brand-mark .brand-dark {
   display: block;
 }
+.scene-welcome {
+  position: absolute;
+  bottom: 48px;
+  left: 40px;
+  right: 40px;
+  color: #f3f6ff;
+}
+.scene-welcome p {
+  font-size: 36px;
+  line-height: 1.25;
+  letter-spacing: -0.035em;
+  font-weight: 500;
+  text-wrap: balance;
+}
+.scene-welcome > span {
+  display: block;
+  font-size: 14px;
+  line-height: 1.6;
+  margin-top: 12px;
+  color: #e3ebff;
+}
+@media (max-width: 1100px) {
+  .landing-form {
+    padding: 24px 22px 48px;
+  }
+  .landing-form h1 {
+    font-size: 24px;
+  }
+  .landing-preferences {
+    padding: 16px 16px 8px;
+  }
+  .landing-preferences .select-trigger {
+    padding-inline: 6px;
+    gap: 4px;
+    font-size: 12px;
+  }
+  .scene-welcome p {
+    font-size: 32px;
+  }
+}
+@media (max-width: 700px) {
+  .landing {
+    padding: 10px;
+  }
+  .landing-shell {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: minmax(96px, 24%) minmax(0, 1fr);
+    border-radius: 14px;
+  }
+  .scene-brand {
+    top: 20px;
+    left: 22px;
+    font-size: 19px;
+  }
+  .scene-brand .brand-mark {
+    width: 28px;
+    height: 28px;
+  }
+  .scene-welcome {
+    left: 22px;
+    right: 22px;
+    bottom: 18px;
+  }
+  .scene-welcome p {
+    font-size: 20px;
+  }
+  .scene-welcome > span {
+    display: none;
+  }
+  .login-art,
+  .login-particles {
+    transform: scaleX(-1);
+  }
+  .landing-preferences {
+    padding: 10px 16px 0;
+  }
+  .landing-form {
+    padding: 20px 24px 36px;
+  }
+  .landing-form h1 {
+    font-size: 26px;
+  }
+  .landing-intro {
+    margin: 10px 0 24px;
+  }
+  .landing-note {
+    margin-top: 16px;
+  }
+}
+@media (max-height: 650px) and (max-width: 700px) {
+  .landing-shell {
+    grid-template-rows: 72px minmax(0, 1fr);
+  }
+  .scene-brand {
+    top: 20px;
+  }
+  .scene-welcome {
+    display: none;
+  }
+  .landing-form {
+    padding-top: 16px;
+    padding-bottom: 20px;
+  }
+  .landing-preferences {
+    padding-top: 4px;
+  }
+}
+@media (max-height: 480px) and (min-width: 701px) {
+  .scene-welcome {
+    bottom: 28px;
+  }
+  .scene-welcome p {
+    font-size: 28px;
+  }
+}
+
 .assistant-home.welcome {
   display: block;
   width: min(860px, 100%);
@@ -2602,45 +2682,6 @@ a.artifact-location {
   margin-top: 32px;
   color: var(--muted);
   font-size: 12px;
-}
-@media (max-width: 800px) {
-  .landing {
-    padding: 12px;
-  }
-  .landing-shell {
-    display: flex;
-    flex-direction: column-reverse;
-    min-height: calc(100svh - 24px);
-  }
-  .landing-entry {
-    flex: 1;
-    border-left: 0;
-    border-bottom: 1px solid var(--border);
-  }
-  .landing-preferences {
-    padding: 12px 20px;
-  }
-  .landing-form {
-    padding: 24px 24px 32px;
-  }
-  .landing-form h1 {
-    font-size: 28px;
-  }
-  .landing-intro {
-    margin-bottom: 24px;
-  }
-  .landing-form label input {
-    font-size: 16px;
-  }
-  .orca-scene {
-    flex: none;
-    min-height: 0;
-    aspect-ratio: 1;
-  }
-  .scene-brand {
-    top: 20px;
-    left: 20px;
-  }
 }
 @media (max-width: 600px) {
   .assistant-home.welcome {

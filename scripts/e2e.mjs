@@ -146,7 +146,7 @@ try {
   const go = async (path) => {
     await S("Page.navigate", { url: config.url + path });
     await wait(
-      '!!document.querySelector(".board-page, .gate, .transcript, .welcome")',
+      '!!document.querySelector(".board-page, .gate, .transcript, .welcome, .landing-shell")',
     );
   };
   const click = async (text) => {
@@ -1025,19 +1025,10 @@ try {
   );
   await go("/welcome");
   await wait('!!document.querySelector(".landing-shell")');
-  assert.ok(
-    await ev(
-      `(()=>{const r=document.querySelector('.landing-shell').getBoundingClientRect();const v=document.querySelector('.orca-scene').getBoundingClientRect();return Math.abs(v.width/r.width-.7)<.01})()`,
-    ),
-    "Desktop landing must retain the requested7:3 split",
-  );
-  const imageReady =
-    "(()=>{const i=document.querySelector('.ocean-image img');return i?.complete&&i.naturalWidth>0})()";
-  await wait(imageReady);
-  const oceanCapture = async (name) => {
+  const loginCapture = async (name) => {
     const directory = join(
       captureRoot,
-      "docs/design-review/2026-11-27/soft-ocean/captures",
+      "docs/design-review/2026-11-27/login/captures",
     );
     await mkdir(directory, { recursive: true });
     const screenshot = await S("Page.captureScreenshot", {
@@ -1059,21 +1050,17 @@ try {
           v /= 255;
           return v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4;
         })
-        .reduce(
-          (total, value, i) => total + value * [0.2126, 0.7152, 0.0722][i],
-          0,
-        );
-    const values = [luminance(foreground), luminance(background)].sort(
+        .reduce((sum, v, i) => sum + v * [0.2126, 0.7152, 0.0722][i], 0);
+    const [a, b] = [luminance(foreground), luminance(background)].sort(
       (a, b) => a - b,
     );
-    return (values[1] + 0.05) / (values[0] + 0.05);
+    return (b + 0.05) / (a + 0.05);
   };
   for (const theme of ["dark", "light"]) {
     await selectValue(".theme-control [role=combobox]", theme);
-    await oceanCapture("desktop-" + theme);
     for (const hover of [false, true]) {
       const point = await ev(
-        `(()=>{const r=document.querySelector('.landing-form .button.primary').getBoundingClientRect();return {x:r.x+r.width/2,y:r.y+r.height/2}})()`,
+        "(()=>{const r=document.querySelector('.landing-form .button.primary').getBoundingClientRect();return{x:r.x+r.width/2,y:r.y+r.height/2}})()",
       );
       await S("Input.dispatchMouseEvent", {
         type: "mouseMoved",
@@ -1081,98 +1068,128 @@ try {
       });
       await pause(180);
       const colors = await ev(
-        `(()=>{const s=getComputedStyle(document.querySelector('.landing-form .button.primary'));return {text:s.color,fill:s.backgroundColor}})()`,
+        "(()=>{const s=getComputedStyle(document.querySelector('.landing-form .button.primary'));return{text:s.color,fill:s.backgroundColor}})()",
       );
       assert.ok(
         contrast(colors.text, colors.fill) >= 4.5,
-        `Landing CTA contrast in ${theme}, hover=${hover}: ${JSON.stringify(colors)}`,
+        `Login action contrast ${theme}/${hover}`,
       );
     }
   }
   assert.ok(
-    await ev(`(()=>{
-    const scene=document.querySelector('.orca-scene');
-    const mark=document.querySelector('.scene-brand .brand-mark');
-    const art=document.querySelector('.orca-art');
-    const image=art.querySelector('img');
-    return !art.querySelector('canvas')&&image.alt===''&&image.fetchPriority==='high'&&
-      image.currentSrc.includes('/scenes/soft-ocean-')&&
-      image.getBoundingClientRect().width>=scene.clientWidth-1&&
-      mark.getBoundingClientRect().width<=40;
-  })()`),
-  );
-  await wait("document.querySelector('.orca-art').dataset.playing==='true'");
-  const flowingTransform = await ev(
-    "getComputedStyle(document.querySelector('.ocean-image')).transform",
+    await ev(
+      "document.querySelector('.scene-brand .brand-mark').getBoundingClientRect().width<=32",
+    ),
   );
   await wait(
-    `getComputedStyle(document.querySelector('.ocean-image')).transform!==${JSON.stringify(flowingTransform)}`,
+    "document.querySelector('.login-particles').dataset.motion==='running'",
   );
-  assert.equal(
-    await ev("document.querySelector('.scene-motion')"),
-    null,
-    "The requested landing has no pause control",
+  const particleFrame = await ev(
+    "document.querySelector('.login-particles').toDataURL()",
   );
+  await wait(
+    `document.querySelector('.login-particles').toDataURL()!==${JSON.stringify(particleFrame)}`,
+  );
+
+  // Optional wall-clock evidence for the canvas, which CSS animation scrubbing cannot measure.
+  const captureMotion = async (mode) => {
+    if (!process.env.ORCABOT_E2E_MOTION_CAPTURE) return;
+    const directory = join(captureRoot, "login-motion", mode);
+    await mkdir(directory, { recursive: true });
+    const frames = [];
+    const started = performance.now();
+    let index = 0;
+    do {
+      const elapsedMs = performance.now() - started;
+      const state = await ev(
+        "document.querySelector('.login-particles').dataset.motion",
+      );
+      const screenshot = await S("Page.captureScreenshot", {
+        format: "jpeg",
+        quality: 85,
+      });
+      const image = `frame-${String(index++).padStart(3, "0")}.jpg`;
+      await writeFile(
+        join(directory, image),
+        Buffer.from(screenshot.data, "base64"),
+      );
+      frames.push({ elapsedMs, state, image });
+      if (mode === "reduced" && index === 1) await pause(6000);
+      else
+        await pause(
+          Math.max(0, started + index * (1000 / 12) - performance.now()),
+        );
+    } while (
+      mode === "reduced" ? index < 2 : performance.now() - started < 6100
+    );
+    await writeFile(
+      join(directory, "report.json"),
+      JSON.stringify(
+        { mode, frames, durationMs: performance.now() - started },
+        null,
+        2,
+      ),
+    );
+  };
+  await captureMotion("normal");
+
   await S("Emulation.setEmulatedMedia", {
     features: [{ name: "prefers-reduced-motion", value: "reduce" }],
   });
-  await go("/welcome");
-  await wait(imageReady);
-  assert.ok(
-    await ev(
-      "document.querySelector('.orca-art').getAnimations({subtree:true}).length===0",
-    ),
-    "Reduced motion keeps the complete image without decorative animation",
+  await wait(
+    "document.querySelector('.login-particles').dataset.motion==='reduced' && getComputedStyle(document.querySelector('.login-particles')).visibility==='hidden'",
   );
-  await oceanCapture("reduced-motion");
-  // Optional timed evidence is for visual review, not part of the normal CI runtime.
-  if (process.env.ORCABOT_CAPTURE_MOTION === "1") {
-    for (let frame = 0; frame < 7; frame++) {
-      await oceanCapture("reduced-frame-" + frame);
-      await pause(700);
-    }
-  }
+  await loginCapture("reduced-motion");
+  await captureMotion("reduced");
   await S("Emulation.setEmulatedMedia", { features: [] });
-  if (process.env.ORCABOT_CAPTURE_MOTION === "1") {
-    for (let frame = 0; frame < 7; frame++) {
-      await oceanCapture("normal-frame-" + frame);
-      await pause(700);
-    }
-  }
-  reports.push(
-    "Soft-ocean artwork loads responsively, optical motion runs without a pause control, and reduced motion retains the image",
-  );
-  for (const width of [390, 320]) {
+  for (const [width, height] of [
+    [1440, 900],
+    [964, 900],
+    [390, 844],
+    [320, 740],
+  ]) {
     await S("Emulation.setDeviceMetricsOverride", {
       width,
-      height: 844,
+      height,
       deviceScaleFactor: 1,
-      mobile: true,
+      mobile: width < 700,
     });
     await wait(`innerWidth===${width}`);
-    assert.ok(
-      await ev("document.body.scrollWidth<=innerWidth"),
-      "Mobile landing must not overflow",
-    );
-    await wait(imageReady);
-    const mobileScene = await ev(
-      `(()=>{const entry=document.querySelector('.landing-entry').getBoundingClientRect();const scene=document.querySelector('.orca-scene').getBoundingClientRect();return {entryY:entry.y,shellY:document.querySelector('.landing-shell').getBoundingClientRect().y,sceneY:scene.y,width:scene.width,height:scene.height}})()`,
-    );
-    assert.ok(
-      mobileScene.entryY < mobileScene.sceneY &&
-        Math.abs(mobileScene.entryY - mobileScene.shellY) < 2 &&
-        Math.abs(mobileScene.width - mobileScene.height) < 2,
-      "Mobile scene layout: " + JSON.stringify(mobileScene),
-    );
-    await oceanCapture("mobile-" + width);
-    assert.ok(
-      await ev(
-        'document.querySelector(".landing-form .button").getBoundingClientRect().height>=44',
-      ),
-    );
+    for (const locale of ["en", "zh"]) {
+      await selectValue(".language-control [role=combobox]", locale);
+      for (const theme of ["light", "dark"]) {
+        await selectValue(".theme-control [role=combobox]", theme);
+        assert.ok(
+          await ev(
+            "document.documentElement.scrollWidth<=innerWidth && document.documentElement.scrollHeight<=innerHeight+1",
+          ),
+          `Single-screen login ${width}/${locale}/${theme}`,
+        );
+        if (width > 700)
+          assert.ok(
+            await ev(
+              "(()=>{const s=document.querySelector('.landing-shell').getBoundingClientRect();const a=document.querySelector('.orca-scene').getBoundingClientRect();return Math.abs(a.width/s.width-.7)<.005})()",
+            ),
+            "Desktop login retains 70/30 split",
+          );
+        assert.ok(
+          await ev(
+            "(()=>{const r=document.querySelector('.landing-form .button').getBoundingClientRect();return r.height>=44&&r.top>=0&&r.bottom<=innerHeight})()",
+          ),
+          "Login action visible without scrolling",
+        );
+        await loginCapture(`${width}-${locale}-${theme}`);
+      }
+    }
   }
+  await go("/welcome");
+  await wait(
+    "!!document.querySelector('.landing-shell .language-control [role=combobox]')&&document.documentElement.lang==='zh-CN'&&document.documentElement.dataset.theme==='dark'",
+  );
+  await selectValue(".language-control [role=combobox]", "en");
+  await selectValue(".theme-control [role=combobox]", "light");
   reports.push(
-    "Soft-ocean scene retains 7:3 desktop layout, small brand identity and entry-first mobile layout",
+    "Login is one screen at desktop and phone sizes, keeps 70/30 on desktop, and preserves locale/theme preferences and accessible action contrast",
   );
   await S("Network.clearBrowserCookies");
   await go("/work/" + work.id);
@@ -1188,14 +1205,59 @@ try {
     ),
     Buffer.from(unlockedFrame.data, "base64"),
   );
+  for (const [width, height] of [
+    [1440, 900],
+    [964, 900],
+    [390, 844],
+    [320, 740],
+    [844, 390],
+    [320, 480],
+  ]) {
+    await S("Emulation.setDeviceMetricsOverride", {
+      width,
+      height,
+      deviceScaleFactor: 1,
+      mobile: width < 700,
+    });
+    await wait(`innerWidth===${width}&&innerHeight===${height}`);
+    assert.ok(
+      await ev(
+        "document.documentElement.scrollWidth<=innerWidth && document.documentElement.scrollHeight<=innerHeight+1",
+      ),
+      `Locked login page overflow at ${width}x${height}`,
+    );
+    if (height >= 740)
+      assert.ok(
+        await ev(
+          "(()=>{const r=document.querySelector('.landing-form .button').getBoundingClientRect();const sc=document.querySelector('.landing-form-scroll');return r.bottom<=innerHeight && sc.scrollHeight<=sc.clientHeight+1})()",
+        ),
+        "Regular login needs no scrolling",
+      );
+    await loginCapture(`locked-${width}x${height}`);
+  }
   const unlock = async (value) => {
     await ev(
       `(()=>{const e=document.querySelector('.landing-form input[name=token]');Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value').set.call(e,${JSON.stringify(value)});e.dispatchEvent(new Event('input',{bubbles:true}));e.dispatchEvent(new Event('change',{bubbles:true}))})()`,
     );
-    await click("Open Orcabot");
+    await hit(".landing-form .button.primary");
   };
   await unlock("fixture-invalid-service-key-long-enough");
   await wait('!!document.querySelector(".landing-form [role=alert]")');
+  await ev(
+    "document.querySelector('.landing-form .button').scrollIntoView({block:'nearest'})",
+  );
+  assert.ok(
+    await ev(
+      "document.querySelector('.landing-form input').getAttribute('aria-invalid')==='true'",
+    ),
+  );
+  assert.equal(
+    await ev(
+      "document.querySelector('.landing-form [role=alert]').textContent",
+    ),
+    "That service key was not accepted. Check the key shown when Orcabot started and try again.",
+  );
+  await loginCapture("invalid-key-short-viewport");
   assert.equal(
     await ev('document.querySelector(".landing-form input[name=token]").type'),
     "password",

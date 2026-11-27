@@ -1,0 +1,13 @@
+{
+  "mode": "normal",
+  "durationMs": 6168.640749999995,
+  "frameCount": 74,
+  "firstElapsedMs": 0.00041599999894970097,
+  "lastElapsedMs": 6083.716208000002,
+  "uniqueImages": 74,
+  "states": ["running"],
+  "limitations": [
+    "Wall-clock sample, not an every-device performance guarantee.",
+    "Full raw frames are local E2E artifacts; filmstrip is a subset."
+  ]
+}

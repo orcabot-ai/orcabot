@@ -1,0 +1,13 @@
+{
+  "mode": "reduced",
+  "durationMs": 6046.293582999999,
+  "frameCount": 2,
+  "firstElapsedMs": 0.0001249999986612238,
+  "lastElapsedMs": 6014.866332999998,
+  "uniqueImages": 1,
+  "states": ["reduced"],
+  "limitations": [
+    "Wall-clock sample, not an every-device performance guarantee.",
+    "Full raw frames are local E2E artifacts; filmstrip is a subset."
+  ]
+}

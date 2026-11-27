@@ -23,19 +23,21 @@ export function Landing({
             <LanguageControl />
             <ThemeControl />
           </div>
-          <div id="orcabot-entry" className="landing-form">
-            <h1>{t("Welcome to Orcabot")}</h1>
-            <p className="landing-intro">
-              {t("Your personal AI assistant for the work ahead.")}
-            </p>
-            {children}
-            <p className="landing-note">
-              {t(
-                keyRequired
-                  ? "Your key opens your workspace and its connected machines."
-                  : "Pick up where you left off, or hand Orca something new.",
-              )}
-            </p>
+          <div className="landing-form-scroll">
+            <div id="orcabot-entry" className="landing-form" tabIndex={-1}>
+              <h1>{t("Welcome to Orcabot")}</h1>
+              <p className="landing-intro">
+                {t("Your workspace is ready when you are.")}
+              </p>
+              {children}
+              <p className="landing-note">
+                {t(
+                  keyRequired
+                    ? "Use the service key shown when you start Orcabot."
+                    : "Pick up where you left off, or hand Orca something new.",
+                )}
+              </p>
+            </div>
           </div>
         </div>
       </section>

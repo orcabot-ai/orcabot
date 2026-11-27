@@ -229,7 +229,11 @@ export function App() {
         setError("");
         if (path === "/welcome") await navigate({ to: "/" });
       } catch (err) {
-        setError(friendly(err));
+        setError(
+          err instanceof ApiError && err.status === 401
+            ? "That service key was not accepted. Check the key shown when Orcabot started and try again."
+            : friendly(err),
+        );
       }
     },
   });
@@ -268,7 +272,7 @@ export function App() {
               void unlockForm.handleSubmit();
             }}
           >
-            <label>
+            <label htmlFor="entry-service-key">
               <span className="flex items-center gap-2">
                 <KeyRound size={14} />
                 {t("Service key")}
@@ -279,9 +283,11 @@ export function App() {
                     value={field.state.value}
                     onBlur={field.handleBlur}
                     onChange={(event) => field.handleChange(event.target.value)}
+                    id="entry-service-key"
                     name="token"
                     type="password"
-                    autoFocus
+                    aria-invalid={Boolean(error)}
+                    aria-describedby={error ? "entry-key-error" : undefined}
                     autoComplete="off"
                     required
                     minLength={32}
@@ -290,7 +296,7 @@ export function App() {
               </unlockForm.Field>
             </label>
             {error && (
-              <p className="error-text mb-4" role="alert">
+              <p id="entry-key-error" className="error-text mb-4" role="alert">
                 {t(error)}
               </p>
             )}

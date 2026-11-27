@@ -1,5 +1,10 @@
 // English messages are stable lookup keys; execution data is never translated.
 export const chinese = {
+  "A space for your ideas.": "留一点空间，给你的想法。",
+  "And a little help along the way.": "接下来的事，有 Orca 一起。",
+  "Your workspace is ready when you are.": "你的工作区，随时可以开始。",
+  "Use the service key shown when you start Orcabot.":
+    "输入启动 Orcabot 时显示的服务密钥。",
   "Local connection": "本机连接",
   "Remote connection": "远端连接",
   "Give your assistant a place to work.": "给你的助手安排一个工作空间。",
@@ -395,6 +400,8 @@ export const chinese = {
   "Page not found": "页面不存在",
   "Orcabot — Agent workspace": "Orcabot — Agent 工作台",
   "Something went wrong. Please try again.": "出现了一些问题，请重试。",
+  "That service key was not accepted. Check the key shown when Orcabot started and try again.":
+    "服务密钥未被接受。请核对 Orcabot 启动时显示的密钥，然后重试。",
   "Your session has expired. Reload to unlock the workbench.":
     "会话已过期，请刷新页面并重新解锁工作台。",
   "This conversation already has active or unresolved work. Start a new conversation for independent work.":

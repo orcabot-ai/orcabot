@@ -19,7 +19,16 @@ fill. Status indicators keep their own warning, success and error colors.
 - Home starts with the real message composer and groups actual progress, attention
   and accepted deliveries. Workspace details disclose the selected Agent, target
   and directory on demand. Completed conversations stay separate from accepted work.
-- `/welcome` pairs a ChatGPT-generated ocean-blue image with a concise entry panel in a 7:3 desktop split. Soft translucent folds and diffuse light use the supplied logo’s navy and bright-blue palette, with readable blue midtones instead of black shadows or milky highlights. The original 32px Orca mark remains separate, in white against the navy artwork. A slow optical drift and two broad refracted light layers follow the image. CSS animation pauses offscreen and in hidden tabs; reduced motion retains the complete still image. There is no pause button, whale illustration, particle field, sharp light trail or graphics dependency. Responsive WebP sources and a JPEG fallback ship locally. Mobile places the working entry first.
+- `/welcome` is a single-screen login, not a marketing page. Desktop uses a
+  70% visual / 30% entry split. The left side contains a small original mark and
+  original abstract blue ribbon geometry; the right contains language/theme
+  controls and the actual service-key form. Four restrained foreground currents connect decorative conversation, context and
+  delivery marks. Motion pauses offscreen or in a hidden tab and is removed for
+  reduced-motion preferences. There is no background image request or product demo. Phones use a compact brand header above the entry.
+  Normal desktop and phone sizes need no vertical scrolling. On unusually short
+  windows or when a keyboard reduces the viewport, the form region can scroll
+  internally so every field and action remains reachable. See the
+  [login review](../design-review/2026-11-27/login/README.md).
 - Form fields use a shared 12px radius; dialogs and message composers use 20px. Text hierarchy,
   alignment and separators carry the layout. Shadows are limited to overlays.
 

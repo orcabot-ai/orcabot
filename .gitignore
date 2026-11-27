@@ -36,4 +36,4 @@ coverage/
 # Local design guidance installations
 /.agents/
 /skills-lock.json
-/.impeccable/
+.impeccable/
