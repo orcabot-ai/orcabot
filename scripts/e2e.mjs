@@ -1031,6 +1031,24 @@ try {
     ),
     "Desktop landing must retain the requested7:3 split",
   );
+  const imageReady =
+    "(()=>{const i=document.querySelector('.ocean-image img');return i?.complete&&i.naturalWidth>0})()";
+  await wait(imageReady);
+  const oceanCapture = async (name) => {
+    const directory = join(
+      captureRoot,
+      "docs/design-review/2026-11-27/soft-ocean/captures",
+    );
+    await mkdir(directory, { recursive: true });
+    const screenshot = await S("Page.captureScreenshot", {
+      format: "png",
+      captureBeyondViewport: true,
+    });
+    await writeFile(
+      join(directory, name + ".png"),
+      Buffer.from(screenshot.data, "base64"),
+    );
+  };
   const contrast = (foreground, background) => {
     const luminance = (color) =>
       color
@@ -1052,6 +1070,7 @@ try {
   };
   for (const theme of ["dark", "light"]) {
     await selectValue(".theme-control [role=combobox]", theme);
+    await oceanCapture("desktop-" + theme);
     for (const hover of [false, true]) {
       const point = await ev(
         `(()=>{const r=document.querySelector('.landing-form .button.primary').getBoundingClientRect();return {x:r.x+r.width/2,y:r.y+r.height/2}})()`,
@@ -1070,17 +1089,25 @@ try {
       );
     }
   }
-  const canvasPixels = "document.querySelector('.orca-art canvas').toDataURL()";
-  await wait(
-    "document.querySelector('.whale-fallback')?.dataset.ready==='true'",
-  );
   assert.ok(
-    await ev(
-      `(()=>{const scene=document.querySelector('.orca-scene');const mark=document.querySelector('.scene-brand .brand-mark');const art=document.querySelector('.orca-art');const canvas=art.querySelector('canvas');return art.dataset.renderer==='procedural'&&!art.querySelector('img,picture,image')&&canvas.width>0&&canvas.getBoundingClientRect().width>=scene.clientWidth-1&&mark.getBoundingClientRect().width<=40&&!art.querySelector('.brand-mark')})()`,
-    ),
+    await ev(`(()=>{
+    const scene=document.querySelector('.orca-scene');
+    const mark=document.querySelector('.scene-brand .brand-mark');
+    const art=document.querySelector('.orca-art');
+    const image=art.querySelector('img');
+    return !art.querySelector('canvas')&&image.alt===''&&image.fetchPriority==='high'&&
+      image.currentSrc.includes('/scenes/soft-ocean-')&&
+      image.getBoundingClientRect().width>=scene.clientWidth-1&&
+      mark.getBoundingClientRect().width<=40;
+  })()`),
   );
-  const movingFrame = await ev(canvasPixels);
-  await wait(`${canvasPixels}!==${JSON.stringify(movingFrame)}`);
+  await wait("document.querySelector('.orca-art').dataset.playing==='true'");
+  const flowingTransform = await ev(
+    "getComputedStyle(document.querySelector('.ocean-image')).transform",
+  );
+  await wait(
+    `getComputedStyle(document.querySelector('.ocean-image')).transform!==${JSON.stringify(flowingTransform)}`,
+  );
   assert.equal(
     await ev("document.querySelector('.scene-motion')"),
     null,
@@ -1090,25 +1117,30 @@ try {
     features: [{ name: "prefers-reduced-motion", value: "reduce" }],
   });
   await go("/welcome");
-  await wait(
-    "document.querySelector('.whale-fallback')?.dataset.ready==='true'",
-  );
-  await pause(100);
-  const reducedFrame = await ev(canvasPixels);
-  await pause(150);
-  assert.equal(
-    await ev(canvasPixels),
-    reducedFrame,
-    "Reduced motion must retain a still visual",
-  );
+  await wait(imageReady);
   assert.ok(
     await ev(
-      "(()=>{const c=document.querySelector('.orca-art canvas');const p=c.getContext('2d').getImageData(0,0,c.width,c.height).data;return p.some((v,i)=>i%4===3&&v>0)})()",
+      "document.querySelector('.orca-art').getAnimations({subtree:true}).length===0",
     ),
+    "Reduced motion keeps the complete image without decorative animation",
   );
+  await oceanCapture("reduced-motion");
+  // Optional timed evidence is for visual review, not part of the normal CI runtime.
+  if (process.env.ORCABOT_CAPTURE_MOTION === "1") {
+    for (let frame = 0; frame < 7; frame++) {
+      await oceanCapture("reduced-frame-" + frame);
+      await pause(700);
+    }
+  }
   await S("Emulation.setEmulatedMedia", { features: [] });
+  if (process.env.ORCABOT_CAPTURE_MOTION === "1") {
+    for (let frame = 0; frame < 7; frame++) {
+      await oceanCapture("normal-frame-" + frame);
+      await pause(700);
+    }
+  }
   reports.push(
-    "Procedural whale renders without scene images, currents animate without a pause control, and reduced motion retains the complete scene",
+    "Soft-ocean artwork loads responsively, optical motion runs without a pause control, and reduced motion retains the image",
   );
   for (const width of [390, 320]) {
     await S("Emulation.setDeviceMetricsOverride", {
@@ -1122,17 +1154,17 @@ try {
       await ev("document.body.scrollWidth<=innerWidth"),
       "Mobile landing must not overflow",
     );
-    await wait(
-      "document.querySelector('.whale-fallback')?.dataset.ready==='true'",
-    );
+    await wait(imageReady);
     const mobileScene = await ev(
-      `(()=>{const entry=document.querySelector('.landing-entry').getBoundingClientRect();const scene=document.querySelector('.orca-scene').getBoundingClientRect();return {entryY:entry.y,sceneY:scene.y,width:scene.width,height:scene.height}})()`,
+      `(()=>{const entry=document.querySelector('.landing-entry').getBoundingClientRect();const scene=document.querySelector('.orca-scene').getBoundingClientRect();return {entryY:entry.y,shellY:document.querySelector('.landing-shell').getBoundingClientRect().y,sceneY:scene.y,width:scene.width,height:scene.height}})()`,
     );
     assert.ok(
       mobileScene.entryY < mobileScene.sceneY &&
+        Math.abs(mobileScene.entryY - mobileScene.shellY) < 2 &&
         Math.abs(mobileScene.width - mobileScene.height) < 2,
       "Mobile scene layout: " + JSON.stringify(mobileScene),
     );
+    await oceanCapture("mobile-" + width);
     assert.ok(
       await ev(
         'document.querySelector(".landing-form .button").getBoundingClientRect().height>=44',
@@ -1140,7 +1172,7 @@ try {
     );
   }
   reports.push(
-    "Whale scene retains 7:3 desktop layout, small brand identity and entry-first mobile layout",
+    "Soft-ocean scene retains 7:3 desktop layout, small brand identity and entry-first mobile layout",
   );
   await S("Network.clearBrowserCookies");
   await go("/work/" + work.id);

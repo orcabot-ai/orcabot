@@ -2,7 +2,7 @@
 
 English · [简体中文](../zh-CN/personal-agent-experience.md)
 
-The personal home and landing now follow an actual Gemini-generated reference.
+The personal home follows a Gemini-generated reference. The entry background uses a ChatGPT-generated image edited to match the Orca brand palette.
 Home uses the existing admission path and real task, attention and conversation
 records. Other core surfaces are being reviewed in the same documented cycle.
 
@@ -55,10 +55,7 @@ generation numbers belong in inspectable details rather than the primary story.
 
 Use the supplied Orca mark and blue accents, Manrope for Latin text and local
 Chinese font fallbacks. Forms use coss-inspired Base UI primitives. The landing
-has a 7:3 desktop split: a code-drawn, swimming whale in mint, aqua, lilac and pearl points with a small original brand mark on the left, a concise
-entry form on the right. Small screens stack the entry first. Motion needs a
-still state and reduced-motion support. The work area keeps its reading surface
-quiet; particles belong to the landing.
+has a 7:3 desktop split: a ChatGPT-generated ocean-blue background with soft translucent folds and diffuse light and a small original brand mark on the left, a concise entry form on the right. Gentle flowing light follows the artwork, pauses offscreen or in hidden tabs, and becomes static under reduced motion. Small screens stack the entry first. The work area keeps its reading surface quiet; cinematic imagery belongs to the entry.
 
 Headings should sound like an assistant helping with a concrete task. Prefer
 “Needs your decision” and the actual task title over infrastructure terminology.

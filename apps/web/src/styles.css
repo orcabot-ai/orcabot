@@ -2286,11 +2286,11 @@ a.artifact-location {
   padding: 20px 24px;
 }
 .landing-form {
-  padding: 40px 28px 64px;
+  padding: 40px clamp(24px, 3vw, 52px) 64px;
   margin: auto 0;
 }
 .landing-form h1 {
-  font-size: clamp(24px, 2.2vw, 32px);
+  font-size: clamp(24px, 2.2vw, 34px);
   line-height: 1.25;
   letter-spacing: -0.04em;
   color: var(--strong);
@@ -2339,38 +2339,91 @@ a.artifact-location {
   color: var(--muted);
   margin-top: 20px;
 }
+/* The generated artwork stays readable without animation or JavaScript. */
 .orca-scene {
   position: relative;
   min-width: 0;
   min-height: 400px;
   overflow: hidden;
-  background:
-    radial-gradient(ellipse at 18% 18%, #6d558c70 0%, transparent 52%),
-    radial-gradient(ellipse at 83% 45%, #1e8c9b66 0%, transparent 55%),
-    radial-gradient(ellipse at 35% 90%, #4c377d55 0%, transparent 55%),
-    linear-gradient(155deg, #1c2a4c, #102b3c 55%, #141d39);
+  isolation: isolate;
+  background: #061b58;
 }
 .orca-art {
   position: absolute;
   inset: 0;
+  overflow: hidden;
+  pointer-events: none;
 }
-/* Keep the scene's fixed layout while the browser skips offscreen rendering. */
-.orca-art {
-  content-visibility: auto;
-  contain-intrinsic-size: auto 600px;
-}
-.whale-fallback {
-  width: 100%;
-  height: 100%;
-}
-.whale-fallback[data-ready="true"] {
-  display: none;
-}
-.orca-art canvas {
+.ocean-image,
+.ocean-image img {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
+}
+.ocean-image img {
+  object-fit: cover;
+  object-position: center;
+}
+.ocean-image {
+  transform: scale(1.045);
+  animation: ocean-drift 24s ease-in-out infinite alternate;
+}
+/* Two broad refractions track the light already present in the artwork. */
+.ocean-light {
+  position: absolute;
+  width: 70%;
+  height: 75%;
+  opacity: 0.22;
+  mix-blend-mode: screen;
+  background: radial-gradient(
+    ellipse,
+    #509bdc55,
+    #137eac15 45%,
+    transparent 70%
+  );
+  animation: ocean-refraction 14s ease-in-out infinite alternate;
+}
+.ocean-light-near {
+  right: -12%;
+  top: -18%;
+  transform: rotate(-25deg);
+}
+.ocean-light-far {
+  left: 0;
+  bottom: -30%;
+  animation-delay: -7s;
+  animation-duration: 18s;
+}
+.orca-art[data-playing="false"] *,
+.orca-art[data-playing="false"] {
+  animation-play-state: paused;
+}
+@keyframes ocean-drift {
+  from {
+    transform: scale(1.045) translate(-0.6%, 0.5%);
+  }
+  to {
+    transform: scale(1.065) translate(0.6%, -0.5%);
+  }
+}
+@keyframes ocean-refraction {
+  from {
+    opacity: 0.15;
+    transform: translate(-3%, 2%) rotate(-25deg);
+  }
+  to {
+    opacity: 0.5;
+    transform: translate(8%, -6%) rotate(-18deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .orca-art * {
+    animation: none !important;
+  }
+  .ocean-image {
+    transform: none;
+  }
 }
 .scene-brand {
   position: absolute;
@@ -2379,7 +2432,7 @@ a.artifact-location {
   display: flex;
   align-items: center;
   gap: 10px;
-  color: #e5f7f4;
+  color: #eef7ff;
   font-size: 17px;
   font-weight: 650;
   letter-spacing: -0.025em;
@@ -2560,6 +2613,7 @@ a.artifact-location {
     min-height: calc(100svh - 24px);
   }
   .landing-entry {
+    flex: 1;
     border-left: 0;
     border-bottom: 1px solid var(--border);
   }

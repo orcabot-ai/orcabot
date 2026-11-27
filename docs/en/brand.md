@@ -19,10 +19,7 @@ fill. Status indicators keep their own warning, success and error colors.
 - Home starts with the real message composer and groups actual progress, attention
   and accepted deliveries. Workspace details disclose the selected Agent, target
   and directory on demand. Completed conversations stay separate from accepted work.
-- `/welcome` is the one-screen brand entry: original code-drawn whale in mint, aqua, violet and pearl particles on
-  the left 70%, with a separate 32px original Orca mark, functional key entry or an authenticated Open action on the right.
-  Mobile places entry first. The travelling body bend, tail sweep and fin flex sleep on hidden tabs or under
-  reduced motion; the complete static drawing remains visible under reduced motion. There is no pause button, as requested by the owner. The scene uses Canvas 2D with an original SVG fallback, no photographic asset or enlarged logo. Offscreen rendering sleeps, including a fallback for browsers without the content-visibility event.
+- `/welcome` pairs a ChatGPT-generated ocean-blue image with a concise entry panel in a 7:3 desktop split. Soft translucent folds and diffuse light use the supplied logo’s navy and bright-blue palette, with readable blue midtones instead of black shadows or milky highlights. The original 32px Orca mark remains separate, in white against the navy artwork. A slow optical drift and two broad refracted light layers follow the image. CSS animation pauses offscreen and in hidden tabs; reduced motion retains the complete still image. There is no pause button, whale illustration, particle field, sharp light trail or graphics dependency. Responsive WebP sources and a JPEG fallback ship locally. Mobile places the working entry first.
 - Form fields use a shared 12px radius; dialogs and message composers use 20px. Text hierarchy,
   alignment and separators carry the layout. Shadows are limited to overlays.
 

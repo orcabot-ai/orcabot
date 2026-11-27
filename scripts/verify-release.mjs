@@ -63,6 +63,9 @@ try {
     "apps/cli/UPSTREAM.md",
     "apps/cli/dist/web/_shell.html",
     "apps/cli/dist/web/fonts/Manrope-OFL.txt",
+    "apps/cli/dist/web/scenes/soft-ocean-768.webp",
+    "apps/cli/dist/web/scenes/soft-ocean-1254.webp",
+    "apps/cli/dist/web/scenes/soft-ocean-1254.jpg",
   ])
     assert.ok((await readFile(join(installed, file))).length, file);
   const cli = join(installed, "apps/cli/dist/index.js");
