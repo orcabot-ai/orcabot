@@ -1,22 +1,34 @@
 import { useEffect, useRef, useState } from "react";
-import { Pause, Play } from "lucide-react";
 import { BrandMark } from "./BrandMark.js";
-import { useI18n } from "./i18n.js";
 
-// Original geometry, independent of the supplied brand mark or any image asset.
+// Original curved anatomy, independent of the supplied brand mark.
 const BODY =
-  "M-320 5 C-250-12-220-67-130-83 C10-116 175-120 278-79 C340-54 350-8 320 20 C258 83 99 102-43 73 C-170 47-230 13-320 14Z";
+  "M-285-70 C-225-72-203-119-92-116 C20-114 122-60 211-25 C256-8 298 12 314 35 C322 49 302 63 280 69 C220 94 140 74 55 43 C-55 2-162-68-285-60Z";
 const FLUKES =
-  "M-300 8 C-348-3-347-65-449-105 C-450-54-407-3-355 15 C-400 38-417 75-411 112 C-331 83-329 28-300 16Z";
-const FIN = "M91 47 C56 91-32 148-113 171 C-112 130-51 64 5 48Z";
-const DORSAL = "M-155-74 C-141-88-138-109-121-119 C-114-98-95-89-66-91Z";
+  "M-285-69 C-327-92-335-131-420-147 C-413-104-377-66-328-56 C-367-33-401 12-398 45 C-330 22-316-31-285-59Z";
+const FIN =
+  "M150 22 C110 59 47 125-33 143 C-41 131-12 86 22 45 C64 7 111 10 150 22Z";
+const DORSAL = "M-164-108 C-144-114-146-139-126-148 C-123-129-110-119-94-116Z";
+const COLORS = [
+  "#46f5ca",
+  "#48dfff",
+  "#cefff0",
+  "#a88aff",
+  "#ef98d4",
+  "#ffc49b",
+];
+type Point = {
+  x: number;
+  y: number;
+  radius: number;
+  color: string;
+  phase: number;
+};
 
 export function OrcaScene() {
-  const { t } = useI18n();
   const canvas = useRef<HTMLCanvasElement>(null);
   const art = useRef<HTMLDivElement>(null);
   const [ready, setReady] = useState(false);
-  const [paused, setPaused] = useState(false);
   useEffect(() => {
     const node = canvas.current;
     const surface = art.current;
@@ -34,110 +46,153 @@ export function OrcaScene() {
     const flukes = new Path2D(FLUKES);
     const fin = new Path2D(FIN);
     const dorsal = new Path2D(DORSAL);
-    const points = Array.from({ length: 110 }, (_, i) => ({
-      u: ((i * 73) % 113) / 113,
-      v: ((i * 31) % 109) / 109,
-      phase: i * 2.39996,
-    }));
-    const stroke = (
-      path: Path2D,
-      fill: string | CanvasGradient,
-      line: string,
+    // Hit-testing authored geometry must not inherit a previous DPR transform.
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    let seed = 47;
+    const random = () => {
+      seed = (seed * 1664525 + 1013904223) >>> 0;
+      return seed / 4294967296;
+    };
+    const cloud = (
+      shape: Path2D,
+      box: [number, number, number, number],
+      count: number,
     ) => {
-      ctx.fillStyle = fill;
-      ctx.fill(path);
-      ctx.strokeStyle = line;
-      ctx.lineWidth = 0.8;
-      ctx.stroke(path);
+      const result: Point[] = [];
+      for (let i = 0; i < count; i++) {
+        const x = box[0] + random() * box[2],
+          y = box[1] + random() * box[3];
+        if (!ctx.isPointInPath(shape, x, y)) continue;
+        const shade =
+          y < -65 ? Math.floor(random() * 3) : 1 + Math.floor(random() * 5);
+        result.push({
+          x,
+          y,
+          radius: 0.5 + random() * 1.25,
+          color: COLORS[shade],
+          phase: random() * Math.PI * 2,
+        });
+      }
+      return result;
+    };
+    const bodyPoints = cloud(body, [-290, -130, 615, 220], 2400);
+    const tailPoints = cloud(flukes, [-425, -150, 145, 200], 620);
+    const finPoints = cloud(fin, [-40, 5, 195, 145], 520);
+    const dorsalPoints = cloud(dorsal, [-170, -150, 80, 40], 100);
+    // The bend travels back from the shoulders. The tail sweeps through a much
+    // larger arc than the head; this is swimming, rather than whole-body bobbing.
+    const bend = (x: number, time: number) => {
+      const tail = Math.max(0, Math.min(1, (200 - x) / 620));
+      return Math.sin(time * 1.45 + x * 0.007) * tail * tail * 65;
     };
     const draw = () => {
       if (!width || !height) return;
       const time = elapsed / 1000;
       ctx.clearRect(0, 0, width, height);
-      const unit = Math.min(width / 980, height / 760);
-      // The same complete composition fits a square phone and a wide desktop.
+      const unit = Math.min(width / 1000, height / 800);
       ctx.save();
-      ctx.translate(width * 0.53, height * 0.56);
+      ctx.translate(
+        width * 0.54 + Math.sin(time * 0.25) * width * 0.012,
+        height * 0.53,
+      );
       ctx.scale(unit, unit);
-      // Open currents frame the subject without simulating application activity.
-      for (let i = 0; i < 9; i++) {
+      ctx.rotate(-0.17 + Math.sin(time * 0.38) * 0.025);
+      // Long ribbons pass behind the animal and peel away into its wake.
+      for (let i = 0; i < 5; i++) {
+        const ribbon = (x: number) =>
+          130 + i * 19 + Math.sin(x / 220 + time * 0.36 + i * 0.22) * 49;
+        const color = COLORS[[0, 1, 3, 4, 5][i]];
         ctx.beginPath();
-        for (let j = 0; j <= 100; j++) {
-          const x = -650 + j * 13;
+        for (let j = 0; j <= 90; j++) {
+          const x = -700 + j * 15;
+          if (!j) ctx.moveTo(x, ribbon(x));
+          else ctx.lineTo(x, ribbon(x));
+        }
+        ctx.strokeStyle = color;
+        ctx.globalAlpha = 0.13;
+        ctx.lineWidth = 0.8;
+        ctx.stroke();
+        for (let j = 0; j < 10; j++) {
+          const x = -700 + ((j * 137 + time * 29 + i * 61) % 1350);
+          ctx.globalAlpha = 0.3 + (j % 3) * 0.1;
+          ctx.fillStyle = color;
+          ctx.beginPath();
+          ctx.arc(x, ribbon(x), j % 3 === 0 ? 2 : 1, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+      ctx.globalAlpha = 1;
+      const paintCloud = (points: Point[], extraBend = 0) => {
+        for (const p of points) {
           const y =
-            150 + i * 16 + Math.sin(x / 250 + i * 0.11 + time * 0.12) * 42;
+            p.y +
+            bend(p.x, time) +
+            extraBend *
+              Math.sin(time * 1.45 - 0.6) *
+              Math.max(0, (p.y - 20) / 120);
+          ctx.fillStyle = p.color;
+          ctx.globalAlpha = 0.35 + (Math.sin(p.phase + time * 0.6) + 1) * 0.25;
+          ctx.beginPath();
+          ctx.arc(p.x, y, Math.max(0.65 / unit, p.radius), 0, Math.PI * 2);
+          ctx.fill();
+        }
+        ctx.globalAlpha = 1;
+      };
+      // Strip-by-strip deformation keeps anatomy, filaments and points together.
+      // The outline is a faint wash, never an opaque ellipsoid or technical grid.
+      const wash = (shape: Path2D, color: string, extraBend = 0) => {
+        ctx.fillStyle = color;
+        for (let x = -440; x < 330; x += 11) {
+          ctx.save();
+          ctx.beginPath();
+          ctx.rect(x, -220, 11, 440);
+          ctx.clip();
+          ctx.translate(0, bend(x + 5, time) + extraBend);
+          ctx.fill(shape);
+          ctx.restore();
+        }
+      };
+      wash(flukes, "#ab86ff1c");
+      paintCloud(tailPoints);
+      wash(dorsal, "#8af5dd15");
+      paintCloud(dorsalPoints);
+      wash(body, "#54e9d51b");
+      paintCloud(bodyPoints);
+      // A few continuous pearl threads follow the curved back and throat;
+      // they suggest volume without reinstating a latitude/longitude mesh.
+      for (let i = 0; i < 4; i++) {
+        ctx.beginPath();
+        for (let j = 0; j <= 70; j++) {
+          const u = j / 70,
+            x = -280 + u * 590;
+          const y =
+            -65 -
+            Math.sin(u * Math.PI) * (61 - i * 26) +
+            u * 109 +
+            bend(x, time);
           if (!j) ctx.moveTo(x, y);
           else ctx.lineTo(x, y);
         }
-        ctx.strokeStyle = `rgba(118,198,255,${0.075 - i * 0.005})`;
-        ctx.lineWidth = 0.8;
+        ctx.strokeStyle = COLORS[i % 5];
+        ctx.globalAlpha = i === 0 ? 0.62 : 0.2;
+        ctx.lineWidth = i === 0 ? 1 : 0.6;
         ctx.stroke();
       }
-      ctx.translate(0, Math.sin(time * 0.28) * 7);
-      ctx.rotate(-0.12 + Math.sin(time * 0.18) * 0.012);
-      const fill = ctx.createLinearGradient(0, -120, 30, 150);
-      fill.addColorStop(0, "#346caf");
-      fill.addColorStop(0.5, "#173d74");
-      fill.addColorStop(1, "#0d2855");
-      stroke(flukes, fill, "#96d7ff99");
-      stroke(dorsal, fill, "#96d7ff99");
-      stroke(body, fill, "#b3e8ffbb");
-      // A curved lattice is clipped to the original whale contour. Its density
-      // is fixed: resizing increases resolution, never the simulation workload.
-      ctx.save();
-      ctx.clip(body);
-      for (let i = 0; i < 31; i++) {
-        const x = -330 + i * 23;
-        ctx.beginPath();
-        ctx.moveTo(x - 35, -140);
-        ctx.bezierCurveTo(x + 90, -68, x + 95, 50, x - 20, 120);
-        ctx.strokeStyle = `rgba(157,221,255,${0.13 + Math.sin(i * 0.3) * 0.04})`;
-        ctx.lineWidth = 0.65;
-        ctx.stroke();
-      }
-      for (let i = 0; i < 18; i++) {
-        const y = -110 + i * 13;
-        ctx.beginPath();
-        ctx.moveTo(-355, y * 0.15);
-        ctx.bezierCurveTo(-140, y - 28, 180, y - 30, 350, y * 0.5);
-        ctx.strokeStyle = "#b2e7ff33";
-        ctx.lineWidth = 0.65;
-        ctx.stroke();
-      }
-      for (let i = 0; i < 330; i++) {
-        const x = ((i * 137) % 701) - 350;
-        const y = ((i * 71) % 219) - 110;
-        ctx.fillStyle = `rgba(195,237,255,${0.16 + (Math.sin(i + time * 0.35) + 1) * 0.14})`;
-        ctx.fillRect(x, y, i % 7 === 0 ? 1.7 : 0.9, 0.9);
-      }
-      ctx.restore();
-      stroke(fin, fill, "#a3dcff99");
-      // Fin filaments and a quiet eye keep the form legible at mobile scale.
-      for (let i = 0; i < 5; i++) {
-        ctx.beginPath();
-        ctx.moveTo(10 + i * 13, 56);
-        ctx.quadraticCurveTo(-30 + i * 8, 112, -103 + i * 8, 162 - i * 7);
-        ctx.strokeStyle = "#a8dfff44";
-        ctx.lineWidth = 0.7;
-        ctx.stroke();
-      }
+      ctx.globalAlpha = 1;
+      paintCloud(finPoints, 26);
+      // An eye is enough personality; a rigid mouth line would make a hull again.
+      ctx.fillStyle = "#efffff";
       ctx.beginPath();
-      ctx.moveTo(206, 25);
-      ctx.quadraticCurveTo(277, 30, 323, -1);
-      ctx.strokeStyle = "#b9e8ff88";
-      ctx.lineWidth = 0.9;
-      ctx.stroke();
-      ctx.fillStyle = "#d4f3ff";
-      ctx.beginPath();
-      ctx.arc(250, -26, 2, 0, Math.PI * 2);
+      ctx.arc(251, 28 + bend(251, time), 2.1, 0, Math.PI * 2);
       ctx.fill();
       ctx.restore();
-      for (const p of points) {
-        const u = (p.u + time * 0.007) % 1;
-        let x = u * width;
+      // Nearby plankton reacts gently to the pointer, without moving the form.
+      for (let i = 0; i < 55; i++) {
+        const phase = i * 2.39996;
+        let x = ((((i * 73) % 101) / 101 - time * 0.009 + 100) % 1) * width;
         let y =
-          (0.25 + p.v * 0.6) * height +
-          Math.sin(u * 7 + p.phase + time * 0.16) * 16;
+          (0.2 + ((i * 31) % 109) / 155) * height +
+          Math.sin(phase + time * 0.2) * 14;
         const dx = x - pointer.x,
           dy = y - pointer.y,
           distance = Math.hypot(dx, dy);
@@ -145,12 +200,13 @@ export function OrcaScene() {
           x += (dx / distance) * (85 - distance) * 0.12;
           y += (dy / distance) * (85 - distance) * 0.12;
         }
-        const alpha = 0.12 + (Math.sin(p.phase + time * 0.4) + 1) * 0.18;
-        ctx.fillStyle = `rgba(184,229,255,${alpha})`;
+        ctx.globalAlpha = 0.2 + (Math.sin(phase + time * 0.4) + 1) * 0.12;
+        ctx.fillStyle = COLORS[i % COLORS.length];
         ctx.beginPath();
-        ctx.arc(x, y, p.v > 0.7 ? 1.3 : 0.8, 0, Math.PI * 2);
+        ctx.arc(x, y, i % 9 === 0 ? 1.8 : 0.9, 0, Math.PI * 2);
         ctx.fill();
       }
+      ctx.globalAlpha = 1;
     };
     const tick = (time: number) => {
       if (time - clock >= 33) {
@@ -163,7 +219,7 @@ export function OrcaScene() {
     };
     const sync = () => {
       cancelAnimationFrame(frame);
-      if (!paused && !motion.matches && !document.hidden && visible) {
+      if (!motion.matches && !document.hidden && visible) {
         clock = performance.now();
         frame = requestAnimationFrame(tick);
       } else draw();
@@ -226,7 +282,7 @@ export function OrcaScene() {
       document.removeEventListener("visibilitychange", sync);
       motion.removeEventListener("change", sync);
     };
-  }, [paused]);
+  }, []);
   return (
     <div className="orca-scene">
       <div
@@ -240,13 +296,13 @@ export function OrcaScene() {
           viewBox="0 0 1000 760"
           data-ready={ready}
         >
-          <g transform="translate(530 426) rotate(-7)">
-            <g fill="#214b80" stroke="#a3dcff" strokeWidth="1">
+          <g transform="translate(540 403) rotate(-10)">
+            <g fill="#9bf4dd22" stroke="#a1ece6" strokeWidth="1">
               {[FLUKES, DORSAL, BODY, FIN].map((d) => (
                 <path key={d} d={d} />
               ))}
             </g>
-            <circle cx="250" cy="-26" r="2" fill="#d4f3ff" />
+            <circle cx="251" cy="28" r="2" fill="#d4f3ff" />
           </g>
         </svg>
         <canvas ref={canvas} />
@@ -255,15 +311,6 @@ export function OrcaScene() {
         <BrandMark small />
         <span>Orcabot</span>
       </div>
-      <button
-        type="button"
-        className="scene-motion"
-        aria-label={t(paused ? "Play animation" : "Pause animation")}
-        aria-pressed={paused}
-        onClick={() => setPaused(!paused)}
-      >
-        {paused ? <Play size={16} /> : <Pause size={16} />}
-      </button>
     </div>
   );
 }

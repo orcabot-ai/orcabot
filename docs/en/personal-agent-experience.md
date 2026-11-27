@@ -55,7 +55,7 @@ generation numbers belong in inspectable details rather than the primary story.
 
 Use the supplied Orca mark and blue accents, Manrope for Latin text and local
 Chinese font fallbacks. Forms use coss-inspired Base UI primitives. The landing
-has a 7:3 desktop split: a code-drawn digital whale and particle currents with a small original brand mark on the left, a concise
+has a 7:3 desktop split: a code-drawn, swimming whale in mint, aqua, lilac and pearl points with a small original brand mark on the left, a concise
 entry form on the right. Small screens stack the entry first. Motion needs a
 still state and reduced-motion support. The work area keeps its reading surface
 quiet; particles belong to the landing.

@@ -1081,20 +1081,10 @@ try {
   );
   const movingFrame = await ev(canvasPixels);
   await wait(`${canvasPixels}!==${JSON.stringify(movingFrame)}`);
-  await hit(".scene-motion");
   assert.equal(
-    await ev(
-      'document.querySelector(".scene-motion").getAttribute("aria-pressed")',
-    ),
-    "true",
-  );
-  await pause(100);
-  const stillFrame = await ev(canvasPixels);
-  await pause(150);
-  assert.equal(
-    await ev(canvasPixels),
-    stillFrame,
-    "Pause must stop particle rendering",
+    await ev("document.querySelector('.scene-motion')"),
+    null,
+    "The requested landing has no pause control",
   );
   await S("Emulation.setEmulatedMedia", {
     features: [{ name: "prefers-reduced-motion", value: "reduce" }],
@@ -1118,7 +1108,7 @@ try {
   );
   await S("Emulation.setEmulatedMedia", { features: [] });
   reports.push(
-    "Procedural whale renders without scene images, currents animate and pause, and reduced motion retains the complete scene",
+    "Procedural whale renders without scene images, currents animate without a pause control, and reduced motion retains the complete scene",
   );
   for (const width of [390, 320]) {
     await S("Emulation.setDeviceMetricsOverride", {
@@ -1150,7 +1140,7 @@ try {
     );
   }
   reports.push(
-    "Whale scene retains 7:3 desktop layout, small brand identity, pause control and entry-first mobile layout",
+    "Whale scene retains 7:3 desktop layout, small brand identity and entry-first mobile layout",
   );
   await S("Network.clearBrowserCookies");
   await go("/work/" + work.id);

@@ -2345,8 +2345,10 @@ a.artifact-location {
   min-height: 400px;
   overflow: hidden;
   background:
-    radial-gradient(ellipse at 70% 18%, #d4edfc 0%, transparent 47%),
-    linear-gradient(165deg, #b3d9f3 0%, #8bbbe4 25%, #3766a1 55%, #102b54 100%);
+    radial-gradient(ellipse at 18% 18%, #6d558c70 0%, transparent 52%),
+    radial-gradient(ellipse at 83% 45%, #1e8c9b66 0%, transparent 55%),
+    radial-gradient(ellipse at 35% 90%, #4c377d55 0%, transparent 55%),
+    linear-gradient(155deg, #1c2a4c, #102b3c 55%, #141d39);
 }
 .orca-art {
   position: absolute;
@@ -2377,7 +2379,7 @@ a.artifact-location {
   display: flex;
   align-items: center;
   gap: 10px;
-  color: #133849;
+  color: #e5f7f4;
   font-size: 17px;
   font-weight: 650;
   letter-spacing: -0.025em;
@@ -2387,26 +2389,10 @@ a.artifact-location {
   height: 32px;
 }
 .scene-brand .brand-mark .brand-light {
-  display: block;
-}
-.scene-brand .brand-mark .brand-dark {
   display: none;
 }
-.scene-motion {
-  display: grid;
-  place-items: center;
-  position: absolute;
-  bottom: 20px;
-  right: 20px;
-  width: 44px;
-  height: 44px;
-  color: #ffffff;
-  background: #073c50;
-  border: 1px solid #b6e5ef;
-  border-radius: 50%;
-}
-.scene-motion:hover {
-  background: #0b5269;
+.scene-brand .brand-mark .brand-dark {
+  display: block;
 }
 .assistant-home.welcome {
   display: block;
@@ -2601,12 +2587,6 @@ a.artifact-location {
     top: 20px;
     left: 20px;
   }
-  .scene-motion {
-    width: 48px;
-    height: 48px;
-    bottom: 12px;
-    right: 12px;
-  }
 }
 @media (max-width: 600px) {
   .assistant-home.welcome {
@@ -2635,11 +2615,6 @@ a.artifact-location {
   .assistant-review,
   .assistant-accepted {
     max-width: 30%;
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .scene-motion {
-    display: none;
   }
 }
 .assistant-greeting {

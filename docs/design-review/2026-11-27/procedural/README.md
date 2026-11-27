@@ -1,5 +1,7 @@
 # Code-drawn whale entry
 
+> Historical first code-drawn iteration, rejected as rigid and monochrome. See the [swimming revision](../swimming/README.md).
+
 English · [简体中文](README.zh-CN.md)
 
 The owner corrected the previous photographic direction: the whale should be
