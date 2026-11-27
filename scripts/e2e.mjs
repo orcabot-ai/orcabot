@@ -1071,10 +1071,12 @@ try {
     }
   }
   const canvasPixels = "document.querySelector('.orca-art canvas').toDataURL()";
-  await wait("document.querySelector('.whale-landscape')?.naturalWidth>0");
+  await wait(
+    "document.querySelector('.whale-fallback')?.dataset.ready==='true'",
+  );
   assert.ok(
     await ev(
-      `(()=>{const image=document.querySelector('.whale-landscape');const scene=document.querySelector('.orca-scene');const mark=document.querySelector('.scene-brand .brand-mark');return image.naturalWidth>0&&image.currentSrc.includes('/scenes/whale-ocean-')&&image.getAttribute('fetchpriority')==='high'&&image.getBoundingClientRect().width>=scene.clientWidth-1&&mark.getBoundingClientRect().width<=40&&!document.querySelector('.orca-art .brand-mark')})()`,
+      `(()=>{const scene=document.querySelector('.orca-scene');const mark=document.querySelector('.scene-brand .brand-mark');const art=document.querySelector('.orca-art');const canvas=art.querySelector('canvas');return art.dataset.renderer==='procedural'&&!art.querySelector('img,picture,image')&&canvas.width>0&&canvas.getBoundingClientRect().width>=scene.clientWidth-1&&mark.getBoundingClientRect().width<=40&&!art.querySelector('.brand-mark')})()`,
     ),
   );
   const movingFrame = await ev(canvasPixels);
@@ -1098,7 +1100,9 @@ try {
     features: [{ name: "prefers-reduced-motion", value: "reduce" }],
   });
   await go("/welcome");
-  await wait("document.querySelector('.whale-landscape')?.naturalWidth>0");
+  await wait(
+    "document.querySelector('.whale-fallback')?.dataset.ready==='true'",
+  );
   await pause(100);
   const reducedFrame = await ev(canvasPixels);
   await pause(150);
@@ -1109,12 +1113,12 @@ try {
   );
   assert.ok(
     await ev(
-      "Array.from(document.querySelectorAll('.orca-art img')).some(img=>img.naturalWidth>0&&img.getBoundingClientRect().width>0)",
+      "(()=>{const c=document.querySelector('.orca-art canvas');const p=c.getContext('2d').getImageData(0,0,c.width,c.height).data;return p.some((v,i)=>i%4===3&&v>0)})()",
     ),
   );
   await S("Emulation.setEmulatedMedia", { features: [] });
   reports.push(
-    "Generated whale landscape loads, ambient particles animate and pause, and reduced motion retains the still scene",
+    "Procedural whale renders without scene images, currents animate and pause, and reduced motion retains the complete scene",
   );
   for (const width of [390, 320]) {
     await S("Emulation.setDeviceMetricsOverride", {
@@ -1128,7 +1132,9 @@ try {
       await ev("document.body.scrollWidth<=innerWidth"),
       "Mobile landing must not overflow",
     );
-    await wait("document.querySelector('.whale-landscape')?.naturalWidth>0");
+    await wait(
+      "document.querySelector('.whale-fallback')?.dataset.ready==='true'",
+    );
     const mobileScene = await ev(
       `(()=>{const entry=document.querySelector('.landing-entry').getBoundingClientRect();const scene=document.querySelector('.orca-scene').getBoundingClientRect();return {entryY:entry.y,sceneY:scene.y,width:scene.width,height:scene.height}})()`,
     );

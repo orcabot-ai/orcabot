@@ -19,10 +19,10 @@ fill. Status indicators keep their own warning, success and error colors.
 - Home starts with the real message composer and groups actual progress, attention
   and accepted deliveries. Workspace details disclose the selected Agent, target
   and directory on demand. Completed conversations stay separate from accepted work.
-- `/welcome` is the one-screen brand entry: generated photographic-style whale/ocean environment on
+- `/welcome` is the one-screen brand entry: original code-drawn whale and flowing particle currents on
   the left 70%, with a separate 32px original Orca mark, functional key entry or an authenticated Open action on the right.
   Mobile places entry first. Particles pause manually, on hidden tabs or under
-  reduced motion; the generated scene remains visible when motion is paused or reduced.
+  reduced motion; the complete static drawing remains visible when motion is paused or reduced. The scene uses Canvas 2D with an original SVG fallback, no photographic asset or enlarged logo. Offscreen rendering sleeps, including a fallback for browsers without the content-visibility event.
 - Form fields use a shared 12px radius; dialogs and message composers use 20px. Text hierarchy,
   alignment and separators carry the layout. Shadows are limited to overlays.
 

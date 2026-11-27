@@ -2344,21 +2344,25 @@ a.artifact-location {
   min-width: 0;
   min-height: 400px;
   overflow: hidden;
-  background: #087d9c;
+  background:
+    radial-gradient(ellipse at 70% 18%, #d4edfc 0%, transparent 47%),
+    linear-gradient(165deg, #b3d9f3 0%, #8bbbe4 25%, #3766a1 55%, #102b54 100%);
 }
 .orca-art {
   position: absolute;
   inset: 0;
 }
-.orca-art picture,
-.orca-art .whale-landscape {
-  display: block;
+/* Keep the scene's fixed layout while the browser skips offscreen rendering. */
+.orca-art {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 600px;
+}
+.whale-fallback {
   width: 100%;
   height: 100%;
 }
-.orca-art .whale-landscape {
-  object-fit: cover;
-  object-position: 35% 54%;
+.whale-fallback[data-ready="true"] {
+  display: none;
 }
 .orca-art canvas {
   position: absolute;

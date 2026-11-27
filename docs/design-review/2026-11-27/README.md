@@ -1,5 +1,7 @@
 # Whale landscape for the entry
 
+> Historical photographic iteration. The owner subsequently requested code drawing; see the [current procedural scene](procedural/README.md).
+
 English · [简体中文](README.zh-CN.md)
 
 The owner rejected using an oversized logo as the landing artwork. The entry now
