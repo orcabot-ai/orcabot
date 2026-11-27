@@ -1026,12 +1026,18 @@ try {
   await go("/welcome");
   await wait('!!document.querySelector(".landing-shell")');
   const loginCapture = async (name) => {
+    // Settle responsive image selection after a viewport change, then decode before capture.
+    await ev(
+      "new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))",
+    );
     await wait(
       "document.querySelector('.login-art')?.complete && document.querySelector('.login-art').naturalWidth>0",
     );
+    await ev("document.querySelector('.login-art').decode()");
+    await ev("new Promise(resolve=>requestAnimationFrame(resolve))");
     const directory = join(
       captureRoot,
-      "docs/design-review/2026-11-27/login-artwork/captures",
+      "docs/design-review/2026-11-27/login-floating/captures",
     );
     await mkdir(directory, { recursive: true });
     const screenshot = await S("Page.captureScreenshot", {
@@ -1124,9 +1130,9 @@ try {
         if (width > 700)
           assert.ok(
             await ev(
-              "(()=>{const s=document.querySelector('.landing-shell').getBoundingClientRect();const a=document.querySelector('.orca-scene').getBoundingClientRect();return Math.abs(a.width/s.width-.7)<.005})()",
+              "(()=>{const s=document.querySelector('.landing-shell').getBoundingClientRect();const a=document.querySelector('.orca-scene').getBoundingClientRect();const p=document.querySelector('.landing-entry').getBoundingClientRect();return Math.abs(a.width-s.width)<1&&p.width<=420&&p.right<s.right&&p.left>s.width/2})()",
             ),
-            "Desktop login retains 70/30 split",
+            "Desktop login uses a full background and an inset right panel",
           );
         assert.ok(
           await ev(
@@ -1151,7 +1157,7 @@ try {
   await selectValue(".language-control [role=combobox]", "en");
   await selectValue(".theme-control [role=combobox]", "light");
   reports.push(
-    "Login is one screen at desktop and phone sizes, keeps 70/30 on desktop, and preserves locale/theme preferences and accessible action contrast",
+    "Login is one screen at desktop and phone sizes, with an inset panel over a full background, and preserves locale/theme preferences and accessible action contrast",
   );
   await S("Network.clearBrowserCookies");
   await go("/work/" + work.id);

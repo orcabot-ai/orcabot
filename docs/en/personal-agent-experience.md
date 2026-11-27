@@ -2,7 +2,7 @@
 
 English · [简体中文](../zh-CN/personal-agent-experience.md)
 
-The personal home follows a Gemini-generated reference. The login is a single-screen 70/30 entry, with locally bundled Gemini artwork and a real service-key form.
+The personal home follows a Gemini-generated reference. The login is a single-screen entry with a floating sign-in panel, with locally bundled Gemini artwork and a real service-key form.
 Home uses the existing admission path and real task, attention and conversation
 records. Other core surfaces are being reviewed in the same documented cycle.
 
@@ -53,7 +53,7 @@ generation numbers belong in inspectable details rather than the primary story.
 
 ## Visual direction
 
-Use the supplied Orca mark and blue accents, Manrope for Latin text and local Chinese font fallbacks. Forms use coss-inspired Base UI primitives. Login is a full-bleed 70/30 desktop split, with no exterior margins or enclosing round frame. A locally bundled Gemini ink-blue atmospheric background replaces the rejected ocean scene, vector ribbon and icon badges; typography and authentication remain real HTML. Phones use a compact image header, and extremely short windows allow internal form scrolling. The artwork and controls remain static, including under reduced motion. No task demonstration or invented live status appears before login.
+Use the supplied Orca mark and blue accents, Manrope for Latin text and local Chinese font fallbacks. Forms use coss-inspired Base UI primitives. Login uses the approved local Gemini blue-filament background across the full viewport, with a solid theme-aware panel floating on the right. The supplied brand and bilingual copy remain HTML. Phones center the panel below the small brand, and short windows scroll within the form only. Background and controls are static. No task demonstration or invented live status appears before login.
 
 Headings should sound like an assistant helping with a concrete task. Prefer
 “Needs your decision” and the actual task title over infrastructure terminology.

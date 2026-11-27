@@ -1,0 +1,17 @@
+{
+  "generator": "Gemini web image generation",
+  "source": "https://gemini.google.com/app/bde306223c430e20",
+  "created": "2026-11-27",
+  "dimensions": [2752, 1536],
+  "prompt_file": "prompt.txt",
+  "poster_composition": {
+    "mark": "apps/web/public/brand/orca-dark.png",
+    "font": "Manrope Variable (OFL)",
+    "copy": [
+      "Orcabot",
+      "Your personal AI workspace.",
+      "Conversations, tasks, and results. Together."
+    ],
+    "processing": "Original generated backdrop plus subtle lower shading, supplied brand mark and typeset copy. Background remains separately available."
+  }
+}

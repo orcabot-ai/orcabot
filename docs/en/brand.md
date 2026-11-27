@@ -19,7 +19,7 @@ fill. Status indicators keep their own warning, success and error colors.
 - Home starts with the real message composer and groups actual progress, attention
   and accepted deliveries. Workspace details disclose the selected Agent, target
   and directory on demand. Completed conversations stay separate from accepted work.
-- `/welcome` is a single-screen login with a 70% visual / 30% entry split on desktop. The shell fills the viewport without an exterior margin or rounded outer frame. A locally bundled Gemini-generated matte blue background supports concise personal-AI copy; the supplied small logo and greeting remain HTML. The right side keeps language/theme controls and the actual service-key form. There are no floating icon badges or canvas effects. Phones use a compact crop above the form. Short windows may scroll inside the form region only. See the [artwork review](../design-review/2026-11-27/login-artwork/README.md).
+- `/welcome` uses the approved Gemini blue-filament image as one full-screen background. A solid, theme-aware 400px sign-in panel floats on the right, with 20px corners and a soft shadow. The supplied small logo and bilingual statement remain HTML. On phones the panel is centered below the brand. There is no hard 70/30 split or document scrolling; short windows scroll within the form. See the [floating login review](../design-review/2026-11-27/login-floating/README.md).
 - Form fields use a shared 12px radius; dialogs and message composers use 20px. Text hierarchy,
   alignment and separators carry the layout. Shadows are limited to overlays.
 

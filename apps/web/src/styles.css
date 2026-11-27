@@ -2253,7 +2253,7 @@ a.artifact-location {
   }
 }
 
-/* A single-screen login: visual identity on the left, the real entry on the right. */
+/* One continuous brand background with a floating, accessible sign-in panel. */
 .landing {
   --entry-action: #315ac5;
   --entry-action-hover: #274aa5;
@@ -2268,26 +2268,37 @@ a.artifact-location {
   caret-color: var(--accent-text);
 }
 .landing-shell {
-  display: grid;
-  grid-template-columns: minmax(0, 7fr) minmax(0, 3fr);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
   min-height: 0;
+  padding: clamp(24px, 5vw, 80px);
   overflow: hidden;
   border-radius: 0;
-  background: var(--panel);
+  background: #06194d;
 }
 .landing-entry {
+  position: relative;
+  z-index: 1;
+  width: 400px;
+  max-width: 100%;
+  max-height: 100%;
   min-width: 0;
   min-height: 0;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
+  border-radius: 20px;
   background: var(--panel);
+  box-shadow: 0 24px 64px #020b2440;
 }
 .landing-preferences {
   display: flex;
   flex: none;
   justify-content: flex-end;
   gap: 4px;
-  padding: 20px 20px 8px;
+  padding: 16px 20px 0;
 }
 .landing-preferences .select-trigger {
   min-height: 44px;
@@ -2305,9 +2316,9 @@ a.artifact-location {
 }
 .landing-form {
   width: 100%;
-  max-width: 408px;
-  padding: 32px 28px 64px;
-  margin: auto;
+  max-width: none;
+  padding: 24px 32px 36px;
+  margin: 0;
   flex: none;
 }
 .landing-form h1 {
@@ -2362,7 +2373,8 @@ a.artifact-location {
   margin-top: 20px;
 }
 .orca-scene {
-  position: relative;
+  position: absolute;
+  inset: 0;
   min-width: 0;
   min-height: 0;
   overflow: hidden;
@@ -2382,12 +2394,12 @@ a.artifact-location {
   object-position: center;
 }
 .login-shade {
-  background: #0b142733;
+  background: linear-gradient(180deg, #05102b0a 40%, #05102b70);
 }
 .scene-brand {
   position: absolute;
   top: 32px;
-  left: 36px;
+  left: clamp(32px, 5vw, 80px);
   display: flex;
   align-items: center;
   gap: 10px;
@@ -2408,10 +2420,9 @@ a.artifact-location {
 }
 .scene-welcome {
   position: absolute;
-  top: 50%;
-  left: clamp(40px, 6vw, 104px);
-  right: clamp(40px, 6vw, 104px);
-  transform: translateY(-50%);
+  bottom: clamp(40px, 8vh, 100px);
+  left: clamp(32px, 5vw, 80px);
+  width: calc(100% - 400px - clamp(32px, 5vw, 80px) * 3);
   color: #f3f6ff;
 }
 .scene-welcome p {
@@ -2430,36 +2441,18 @@ a.artifact-location {
   color: #e3ebff;
 }
 @media (max-width: 1100px) {
-  .landing-form {
-    padding: 24px 22px 48px;
-  }
-  .landing-form h1 {
-    font-size: 24px;
-  }
-  .landing-preferences {
-    padding: 16px 16px 8px;
-  }
-  .landing-preferences .select-trigger {
-    padding-inline: 6px;
-    gap: 4px;
-    font-size: 12px;
-  }
   .scene-welcome p {
     font-size: 40px;
   }
 }
-@media (max-width: 700px) {
-  .landing {
-    padding: 0;
-  }
+@media (max-width: 850px) {
   .landing-shell {
-    grid-template-columns: minmax(0, 1fr);
-    grid-template-rows: minmax(96px, 24%) minmax(0, 1fr);
-    border-radius: 0;
+    justify-content: center;
+    padding: 88px 16px 24px;
   }
   .scene-brand {
-    top: 20px;
-    left: 22px;
+    top: 24px;
+    left: 24px;
     font-size: 19px;
   }
   .scene-brand .brand-mark {
@@ -2467,27 +2460,13 @@ a.artifact-location {
     height: 28px;
   }
   .scene-welcome {
-    top: auto;
-    left: 22px;
-    right: 22px;
-    bottom: 18px;
-    transform: none;
-  }
-  .scene-welcome p {
-    max-width: none;
-    font-size: 20px;
-  }
-  .scene-welcome > span {
     display: none;
   }
   .login-art {
-    object-position: center 48%;
-  }
-  .landing-preferences {
-    padding: 10px 16px 0;
+    object-position: 35% center;
   }
   .landing-form {
-    padding: 20px 24px 36px;
+    padding: 20px 24px 28px;
   }
   .landing-form h1 {
     font-size: 26px;
@@ -2499,27 +2478,28 @@ a.artifact-location {
     margin-top: 16px;
   }
 }
-@media (max-height: 650px) and (max-width: 700px) {
+@media (max-height: 550px) {
   .landing-shell {
-    grid-template-rows: 72px minmax(0, 1fr);
-  }
-  .scene-brand {
-    top: 20px;
-  }
-  .scene-welcome {
-    display: none;
+    padding-block: 20px;
   }
   .landing-form {
     padding-top: 16px;
-    padding-bottom: 20px;
+    padding-bottom: 24px;
   }
   .landing-preferences {
-    padding-top: 4px;
+    padding-top: 8px;
   }
-}
-@media (max-height: 480px) and (min-width: 701px) {
   .scene-welcome p {
     font-size: 28px;
+  }
+}
+@media (max-height: 550px) and (max-width: 850px) {
+  .landing-shell {
+    padding-top: 72px;
+    padding-bottom: 16px;
+  }
+  .scene-brand {
+    top: 20px;
   }
 }
 

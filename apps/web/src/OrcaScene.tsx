@@ -8,10 +8,10 @@ export function OrcaScene() {
     <div className="orca-scene">
       <img
         className="login-art"
-        src="/scenes/ai-atmosphere-1536.webp"
-        srcSet="/scenes/ai-atmosphere-768.webp 768w, /scenes/ai-atmosphere-1536.webp 1536w"
-        sizes="(max-width: 700px) 100vw, 70vw"
-        width="1536"
+        src="/scenes/ai-flow-1920.webp"
+        srcSet="/scenes/ai-flow-960.webp 960w, /scenes/ai-flow-1920.webp 1920w"
+        sizes="100vw"
+        width="2752"
         height="1536"
         alt=""
         fetchPriority="high"

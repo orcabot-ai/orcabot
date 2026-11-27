@@ -134,6 +134,12 @@ components:
         "textColor": "{colors.on-accent}",
         "rounded": "{rounded.field}",
       },
+    "entry-panel":
+      {
+        "backgroundColor": "{colors.panel}",
+        "rounded": "{rounded.dialog}",
+        "width": "400px",
+      },
     "entry-input":
       {
         "backgroundColor": "{colors.field-fill}",
@@ -170,7 +176,7 @@ components:
 
 Orcabot pairs a calm blue identity with compact, legible operational surfaces. Manrope, cool neutrals, clear field outlines and restrained tonal changes make tasks and conversations easy to scan. The supplied Orcabot silhouette is the identity anchor.
 
-The login uses a quiet Gemini-generated ink-blue atmospheric background behind direct personal-AI copy and a small supplied mark. The owner rejected detailed ocean scenery as too decorative for this AI product; the background remains subdued and free of scenery, particles and ornamental motifs. Its composition belongs to entry only; authenticated workbench surfaces retain their own dense navigation, rows and content regions.
+The login uses the approved blue filament artwork as one continuous full-screen background, with a small supplied mark, real HTML personal-AI copy and an opaque, theme-aware floating sign-in panel. The owner rejected the hard 70/30 split and detailed ocean scenery; the approved artwork establishes the entry atmosphere. Its composition belongs to entry only; authenticated workbench surfaces retain their own dense navigation, rows and content regions.
 
 **Key Characteristics:**
 
@@ -179,7 +185,7 @@ The login uses a quiet Gemini-generated ink-blue atmospheric background behind d
 - Small supplied brand marks and explicit interactive states.
 - Atmosphere on entry; practical density in the workbench.
 
-This is a scan of the implemented web app, not a new visual specification. Source authority: `src/styles.css`, `src/Landing.tsx`, `src/OrcaScene.tsx`, the local WebP assets in `public/scenes/`, and the shared controls. Product commitments live in `PRODUCT.md`; the login composition contract lives in `../../.octospec/tasks/login-gemini-artwork/brief.md`.
+This is a scan of the implemented web app, not a new visual specification. Source authority: `src/styles.css`, `src/Landing.tsx`, `src/OrcaScene.tsx`, the local WebP assets in `public/scenes/`, and the shared controls. Product commitments live in `PRODUCT.md`; the login composition contract lives in `../../.octospec/tasks/login-floating-panel/brief.md`.
 
 ## Colors
 
@@ -195,13 +201,13 @@ Use `strong` for headings and field content, `text` for ordinary content, and th
 
 **The Semantic Appearance Rule.** Change appearance through the existing semantic variables; do not mix light and dark token sets within operational controls.
 
-The login bitmap stays within quiet ink-blue and slate-blue tones. Its dark blue backing and uniform transparent shade preserve contrast for the pale blue-white brand and personal-AI copy. These are background materials, not additional application status colors.
+The approved login bitmap combines deep blue with luminous blue filaments. A dark blue backing and a vertical shade that deepens toward the bottom support pale blue-white HTML brand and personal-AI copy. The floating panel uses the opaque semantic panel fill in either appearance. These artwork colors are background materials, not application status colors.
 
 ## Typography
 
 Manrope Variable is bundled through the font package, with platform and Chinese sans-serif fallbacks. The base is compact; variable weights provide hierarchy without introducing another display family. There is no global modular scale: the frontmatter records observed roles.
 
-Workbench welcome titles use the `title` role; buttons and labels use compact dedicated roles. Transcript text is 13px with generous line height. The larger `entry-title` and `entry-greeting` roles belong to login only. Login headings balance their text, and background copy uses pale blue-white text. The personal-AI statement has a 13ch maximum width on desktop, with supporting text at 14px and 1.6 line height. Login title size becomes 24px at 1100px and below and 26px at 700px and below; the statement becomes 40px and then 20px respectively. At desktop heights of 480px or less it becomes 28px.
+Workbench welcome titles use the `title` role; buttons and labels use compact dedicated roles. Transcript text is 13px with generous line height. The larger `entry-title` and `entry-greeting` roles belong to login only. Login headings balance their text, and background copy uses pale blue-white text. The personal-AI statement has a 13ch maximum width on desktop, with supporting text at 14px and 1.6 line height. Login title size becomes 26px at 850px and below. The statement becomes 40px at 1100px and below, is hidden at 850px and below, and becomes 28px on wider screens at heights of 550px or less.
 
 Keep monospace for code and technical values. English is the default, with Simplified Chinese support; layouts must accommodate both without fixed text-width assumptions.
 
@@ -209,19 +215,21 @@ Keep monospace for code and technical values. English is the default, with Simpl
 
 Workbench layout fills the viewport with a sidebar and flexible content. The sidebar is 228px, becoming 212px at the 850px breakpoint; content regions manage their own scrolling. The transcript has a 900px maximum width. Board pages have a 1400px maximum width, with padding reduced at 1024px and 600px. Shared spacing is implemented as literal CSS values; the frontmatter records reused steps, not nonexistent custom properties.
 
-**Login scope only:** the entry shell fills the viewport edge to edge with zero exterior padding and divides desktop width into 7fr / 3fr, with a small brand at the top left of the background and concise personal-AI copy centered vertically and aligned left. The desktop copy uses responsive horizontal insets from 40px to 104px. The form is centered vertically, capped at 408px wide. The page remains one viewport; the form region can scroll internally when space is short. Appearance and language controls remain above it.
+**Login scope only:** the shell fills one dynamic viewport with continuous artwork behind all content and square outer edges. Desktop uses a right-aligned floating panel (400px wide, capped by available width and height), inset with `clamp(24px, 5vw, 80px)` shell padding. The small brand sits at the top left; the personal-AI statement sits at the lower left, with horizontal insets of `clamp(32px, 5vw, 80px)` and a bottom inset of `clamp(40px, 8vh, 100px)`. Its width reserves room for the panel. There is no hard visual/form column split.
 
-At 700px and below, entry becomes one column with a compact visual header (24% of the shell, minimum 96px), zero exterior padding and a form-first hierarchy. The statement moves to the lower edge of this header and its supporting line is hidden. At heights of 650px or less in that narrow layout, the header becomes 72px and hides the greeting. The entry controls use 48px minimum heights; preference controls use 44px. These login proportions do not define other product surfaces.
+The panel is a vertical flex container. Appearance and language controls remain at its top with 16px 20px 0 padding; the form has 24px 32px 36px padding. Only the inner form region scrolls when content exceeds available height; the document stays within one viewport. Entry fields and actions have 48px minimum heights; preference controls have 44px minimum heights.
+
+At 850px and below, the panel is centered with shell padding of 88px 16px 24px, leaving the compact brand above. Hide the entire secondary statement, retain the full-screen artwork and position its cover crop at 35% horizontally. Form padding becomes 20px 24px 28px. At heights of 550px or less, shell vertical padding becomes 20px, form top/bottom padding becomes 16px/24px and preferences top padding becomes 8px. When both narrow and short, shell top/bottom padding is 72px/16px and the brand top inset is 20px. These constraints belong to login only.
 
 ## Elevation & Depth
 
 Operational surfaces rely primarily on tonal layering and borders. The soft-shadow token is explicitly `none`; panels do not need decorative glows. The existing overlay shadow is an offset, broad soft shadow, captured in the sidecar for both appearances.
 
-The entry bitmap provides subtle atmospheric tonal variation without pictorial foreground detail. A static, uniform transparent shade protects the overlaid brand and personal-AI copy. The background has no scenery, particles, canvas animation or floating icon badges and remains static under reduced motion.
+The entry bitmap provides the approved filament atmosphere. A static vertical shade (`linear-gradient(180deg, #05102b0a 40%, #05102b70)`) protects the lower-left HTML copy. The opaque floating login panel uses a restrained structural shadow (`0 24px 64px #020b2440`). The background remains static, including under reduced motion; do not add canvas animation or floating icon badges.
 
 ## Shapes
 
-Shared controls use compact corners, panels use slightly broader corners, and fields and dialogs use more generous curves as recorded in `rounded`. Preserve these existing role distinctions. The login shell has square outer corners at every breakpoint so its artwork and form meet the viewport edges. Full field outlines and clear focus rings provide affordance. The supplied brand PNGs retain their aspect ratio; the entry mark is 32px on desktop and 28px on narrow screens.
+Shared controls use compact corners, panels use slightly broader corners, and fields and dialogs use more generous curves as recorded in `rounded`. Preserve these existing role distinctions. The login shell has square outer corners at every breakpoint; its artwork reaches the viewport edges while the inset floating panel uses the existing dialog corner (20px). Full field outlines and clear focus rings provide affordance. The supplied brand PNGs retain their aspect ratio; the entry mark is 32px on desktop and 28px on narrow screens.
 
 ## Components
 
@@ -243,11 +251,11 @@ The existing board-stage chip uses a surface fill, full border, 5px corners, 4px
 
 ### Cards / Containers
 
-Board cards use a surface fill, a full structural border, panel corners and 20px padding. They are flat content containers. Transcript run cards instead separate entries with a bottom divider; they are not elevated boxes. The sidecar demonstrates the board container without inventing interactive card behavior.
+Board cards use a surface fill, a full structural border, panel corners and 20px padding. They are flat content containers. Transcript run cards instead separate entries with a bottom divider; they are not elevated boxes. The sidecar demonstrates the board container without inventing interactive card behavior. The login container is a separate floating variant with opaque panel fill, dialog corners, a structural shadow and an internally scrolling form; it does not change board-card styling.
 
 ### Brand and login artwork
 
-Use `BrandMark` and the supplied appearance-specific PNGs. The login scene deliberately keeps the dark-background mark in both themes because its artwork stays blue. Use Lucide or the existing authored geometry for interface icons. Login uses the local `ai-atmosphere-768.webp` and `ai-atmosphere-1536.webp` image variants through a responsive image source set, with cover cropping centered on desktop and positioned at 48% vertically on narrow screens. The image has empty alternative text and is decorative; its real HTML personal-AI copy and the login form carry the readable content. Keep the bitmap local, without runtime generation or external image requests.
+Use `BrandMark` and the supplied appearance-specific PNGs. The login scene deliberately keeps the dark-background mark in both themes because its artwork stays blue. Use Lucide or the existing authored geometry for interface icons. Login uses local `ai-flow-960.webp` and `ai-flow-1920.webp` variants derived from the approved `output/artwork/orcabot-poster/background.jpg`, with a responsive image source set sized to the full viewport. Cover cropping is centered on desktop and positioned at 35% horizontally on narrow screens. The image has empty alternative text and is decorative; its real HTML personal-AI copy and the login form carry the readable content. Keep the bitmap local, without runtime generation or external image requests.
 
 ## Do's and Don'ts
 
@@ -260,8 +268,8 @@ Use `BrandMark` and the supplied appearance-specific PNGs. The login scene delib
 
 ### Don't:
 
-- Don't apply the login split or its viewport constraint to every workbench screen.
+- Don't apply the login floating-panel composition or its viewport constraint to every workbench screen.
 - Don't turn entry into a marketing page or a simulated work dashboard.
 - Don't replace the supplied mark with a giant whale illustration on login.
-- Don't add ocean scenery, particles or ornamental motifs to the login background.
+- Don't replace the approved login artwork with ocean scenery or restore the hard 70/30 split.
 - Don't convert incidental legacy styling into new system-wide rules.
